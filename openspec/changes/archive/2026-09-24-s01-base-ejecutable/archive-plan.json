@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "change": "s01-base-ejecutable",
-  "source_fingerprint": "sha256:92adfdaba01409ba7c20e08bfa79984cfb774964e4b013e19f39964bd9f0fe1a",
+  "source_fingerprint": "sha256:13496312b3bf4459e81e17037692a951e375a9ee5ed3b917c04f5a7cecf4f838",
   "spec_writes": [
     {
       "domain": "base-ejecutable",
