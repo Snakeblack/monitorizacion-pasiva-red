@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "change": "s01-base-ejecutable",
+  "source_fingerprint": "sha256:92adfdaba01409ba7c20e08bfa79984cfb774964e4b013e19f39964bd9f0fe1a",
+  "spec_writes": [
+    {
+      "domain": "base-ejecutable",
+      "source_delta": "specs/base-ejecutable/spec-prepared.md",
+      "target": "openspec/specs/base-ejecutable/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:e97dd7dc58dd99c90e2db0caf0550a0117ca4e201e37a5d2ea6a7f44849618dd"
+    },
+    {
+      "domain": "verificacion-base",
+      "source_delta": "specs/verificacion-base/spec-prepared.md",
+      "target": "openspec/specs/verificacion-base/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:f93302a0783b18cc440489ffd86a12b0b33187154f9a09af552c638767db8a76"
+    }
+  ],
+  "adr_promotions": [
+    {
+      "source": "decisions/adr-001.md",
+      "target": "docs/adr/adr-20260924-001-frontera-de-dominio-y-migracion-postgresql-inicial.md",
+      "content_sha256": "sha256:2273b41c8cda99609efd28c950ada4d17b57678928d7f6e3ea185391d93aab75"
+    },
+    {
+      "source": "decisions/adr-002.md",
+      "target": "docs/adr/adr-20260924-002-verificacion-con-postgresql-desechable-en-pruebas-net.md",
+      "content_sha256": "sha256:01d243a50a463eaf625c1c368464117e21b726874ba28f29b18f02a7c47674fb"
+    }
+  ],
+  "archive_inventory": [
+    "apply-progress.md",
+    "archive-report.md",
+    "decisions/adr-001.md",
+    "decisions/adr-002.md",
+    "design.md",
+    "exploration.md",
+    "proposal.md",
+    "specs/base-ejecutable/spec-prepared.md",
+    "specs/base-ejecutable/spec.md",
+    "specs/verificacion-base/spec-prepared.md",
+    "specs/verificacion-base/spec.md",
+    "state.yaml",
+    "tasks.md",
+    "verify-report.md"
+  ],
+  "accepted_warnings": [],
+  "rollback": {
+    "strategy": "staging-rename"
+  }
+}
