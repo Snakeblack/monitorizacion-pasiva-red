@@ -59,7 +59,11 @@ traceability:
 mentorship:
   mode: balanced
 quality_gates:
-  on_fail: halt
+  tests:
+    required: true
+    on_fail: halt
+    command: dotnet test Monitoring.slnx
+    timeout_ms: 180000
 rules:
   foundation:
     - No inventar stack, capacidades, requisitos ni decisiones que no estén respaldados por los documentos o por respuestas del usuario.
