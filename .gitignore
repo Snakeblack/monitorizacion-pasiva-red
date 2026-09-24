@@ -1,0 +1,6 @@
+.ospec/
+**/bin/
+**/obj/
+.vs/
+*.user
+TestResults/

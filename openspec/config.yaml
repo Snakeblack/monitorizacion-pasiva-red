@@ -1,0 +1,84 @@
+schema: spec-driven
+scale: enterprise
+project:
+  status: foundation-defined
+  name: monitorizacion-pasiva-red
+  architecture: modular-ingestion-proposed
+  stack:
+    status: proposed
+    languages: [.NET/C#, TypeScript]
+    frameworks: [ASP.NET Core, Angular]
+    components: [tshark, PostgreSQL provisional per ADR-014, OIDC identity provider]
+    architecture: modular-api-and-ingestion-worker
+    package_managers: []
+  commands:
+    install: []
+    build: []
+    test: []
+    lint: []
+    format: []
+    typecheck: []
+context: |
+  Proyecto nuevo de monitorización pasiva de red con primera entrega de producción multisede y documentación arquitectónica justificativa.
+  El caso práctico se conserva en docs/references/raw/network-monitoring.pdf y se procesa en docs/references/processed/network-monitoring.md.
+  El análisis inicial se conserva en docs/references/raw/arquitectura-monitorizacion-red.pdf y se procesa en docs/references/processed/arquitectura-monitorizacion-red.md.
+  La documentación persistida del proyecto se escribirá en español y justificará decisiones, flujos y alternativas.
+  No existe aún código ni arquitectura implementada. ADR-010 propone las piezas; ADR-013 sustituye los límites de piloto de ADR-012 y fija objetivos de aceptación de producción (4 sedes, 8 sondas, 10 millones de sesiones/día, 30 días consultables). Son requisitos de ensayo, no capacidad medida ni política corporativa aprobada. S00 documenta un modelo de capacidad reproducible y ADR-014 adopta PostgreSQL provisionalmente para iniciar S01. Los ensayos de capacidad, recuperación y coste con la implementación confirman o revisan la decisión antes de liberar; Kafka, ClickHouse y otros servicios se deciden por cuello y coste demostrados. Producción exige validación de carga, datos, seguridad, continuidad, plataforma y guardia; no hay herramientas de prueba instaladas.
+testing:
+  tdd_mode: strict
+  runner: null
+  test_command: ""
+  test_layers:
+    unit: { available: false, tool: null }
+    integration: { available: false, tool: null }
+    e2e: { available: false, tool: null }
+  coverage: { available: false, command: "" }
+  quality_tools:
+    linter: { available: false, command: "" }
+    type_checker: { available: false, command: "" }
+    formatter: { available: false, command: "" }
+traceability:
+  trailers: required
+mentorship:
+  mode: balanced
+quality_gates:
+  on_fail: halt
+rules:
+  foundation:
+    - No inventar stack, capacidades, requisitos ni decisiones que no estén respaldados por los documentos o por respuestas del usuario.
+    - Persistir los documentos fuente bajo docs/references/raw/ y sus versiones Markdown en español bajo docs/references/processed/.
+    - Documentar decisiones arquitectónicas con contexto, alternativas consideradas, criterios, consecuencias y razones para elegir herramientas frente a otras.
+    - No crear código de aplicación durante la fase foundation.
+  proposal:
+    - Incluir plan de reversión para cambios de riesgo.
+  specs:
+    - Usar escenarios Given/When/Then y requisitos normativos claros.
+  design:
+    - Explicar decisiones arquitectónicas, flujos, límites y consecuencias; incluir diagramas de secuencia cuando aporten claridad.
+  tasks:
+    - Organizar tareas por fases y estimar el presupuesto de revisión de 400 líneas.
+  apply:
+    - Seguir Strict TDD; no iniciar implementación sin un runner de pruebas acordado y configurado.
+  verify:
+    - En escala enterprise, configurar las puertas de calidad con on_fail: halt cuando se hayan confirmado comandos y herramientas del proyecto.
+  archive:
+    - No archivar cambios sin verificación satisfactoria y riesgos aceptados.
+
+foundation:
+  product_brief: docs/product/brief.md
+  functional_scope: docs/product/functional-scope.md
+  glossary: docs/product/glossary.md
+  technical_baseline: docs/architecture/technical-baseline.md
+  decisions_index: docs/architecture/decisions/README.md
+  roadmap: docs/roadmap.md
+  roadmap_gaps: docs/roadmap-gaps.md
+  sources:
+    - docs/references/raw/network-monitoring.pdf
+    - docs/references/raw/arquitectura-monitorizacion-red.pdf
+  open_questions:
+    - Validar con la implementación el modelo S00, las cargas y consultas de ADR-013; confirmar o revisar PostgreSQL provisional y su coste antes de liberar.
+    - Medir perfil real de red por sede/sonda, pérdidas, tamaño de evento y distribución de consultas.
+    - Ratificar con producto, seguridad y cumplimiento plazos de datos, matriz de permisos y alcance contractual de disponibilidad/recuperación.
+    - Inventariar servicios corporativos de identidad, certificados, HA, copias, observabilidad y guardia; ensayar integración, conmutación y restauración.
+
+
