@@ -10,11 +10,11 @@ project:
     frameworks: [ASP.NET Core, Angular]
     components: [tshark, PostgreSQL provisional per ADR-014, OIDC identity provider]
     architecture: modular-api-and-ingestion-worker
-    package_managers: []
+    package_managers: [dotnet]
   commands:
-    install: []
-    build: []
-    test: []
+    install: dotnet restore Monitoring.slnx
+    build: dotnet build Monitoring.slnx --no-restore
+    test: dotnet test Monitoring.slnx
     lint: []
     format: []
     typecheck: []
@@ -30,13 +30,30 @@ testing:
   test_command: dotnet test Monitoring.slnx
   test_layers:
     unit: { available: true, tool: xUnit }
-    integration: { available: false, tool: null }
+    integration: { available: true, tool: Testcontainers PostgreSQL }
     e2e: { available: false, tool: null }
   coverage: { available: false, command: "" }
   quality_tools:
     linter: { available: false, command: "" }
     type_checker: { available: false, command: "" }
     formatter: { available: false, command: "" }
+capabilities:
+  - name: dotnet
+    version: "10.0.303"
+    source: declared
+  - name: xunit
+    version: "2.9.3"
+    source: declared
+  - name: testcontainers-postgresql
+    version: "4.15.0"
+    source: declared
+  - name: docker
+    source: declared
+  - name: github-actions
+    source: declared
+  - name: postgres
+    version: "18-alpine"
+    source: declared
 traceability:
   trailers: required
 mentorship:

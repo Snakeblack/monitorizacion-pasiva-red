@@ -138,6 +138,32 @@ The first slice includes task 2.1's empty domain project so the architecture tes
       },
       "triangulation": "The closed-port failure path is distinct from the successful disposable-PostgreSQL path.",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": [
+        "4.1",
+        "4.2"
+      ],
+      "test_file": "C:\\Users\\sn4ke\\AppData\\Local\\Temp\\s01-slice4-acceptance.ps1",
+      "test_name": "S01CiReadmeAndCapabilitiesAcceptance",
+      "layer": "static",
+      "red": {
+        "command": "C:\\Users\\sn4ke\\AppData\\Local\\Temp\\s01-slice4-acceptance.ps1",
+        "exit_code": 1,
+        "observed": "Before implementation, the workflow and README were absent and four expected config commands/capabilities were missing.",
+        "discovered": 6,
+        "passed": 0,
+        "failed": 6
+      },
+      "green": {
+        "command": "C:\\Users\\sn4ke\\AppData\\Local\\Temp\\s01-slice4-acceptance.ps1",
+        "exit_code": 0,
+        "discovered": 19,
+        "passed": 19,
+        "failed": 0
+      },
+      "triangulation": "One static contract checks the workflow, setup steps, developer commands, provisional database notice, and recorded capabilities.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -198,7 +224,16 @@ The first slice includes task 2.1's empty domain project so the architecture tes
     {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 2, "failed": 0},
     {"command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests", "exit_code": 0, "passed": 1, "failed": 0},
     {"command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure", "exit_code": 0, "passed": 1, "failed": 0},
-    {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 4, "failed": 0}
+    {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 4, "failed": 0},
+    {"command": "C:\\Users\\sn4ke\\AppData\\Local\\Temp\\s01-slice4-acceptance.ps1", "exit_code": 0, "passed": 19, "failed": 0},
+    {"command": "dotnet clean Monitoring.slnx", "exit_code": 0},
+    {"command": "dotnet restore Monitoring.slnx", "exit_code": 0},
+    {"command": "dotnet build Monitoring.slnx --no-restore", "exit_code": 0, "warnings": 0, "errors": 0},
+    {"command": "dotnet test Monitoring.slnx --no-build", "exit_code": 0, "passed": 4, "failed": 0},
+    {"command": "python YAML parse of .github/workflows/ci.yml and openspec/config.yaml", "exit_code": 0}
+,
+    {"command": "dotnet run --project src/Monitoring.Host -- --urls http://localhost:5080", "observed": "Host listened on http://localhost:5080; no database connection was required."},
+    {"command": "curl.exe --fail http://localhost:5080/health/live", "exit_code": 0, "observed": "GET /health/live returned HTTP 200."}
   ]
 }
 ```
@@ -282,3 +317,46 @@ None — implementation follows the design. Persistence/migration, CI, and READM
 ### Deviations and remaining work
 
 None — implementation matches the design. PR 4 still owns CI and README tasks 4.1–4.3.
+
+
+## Batch 4 — PR 4: CI y documentación reproducible
+
+**Delivery strategy:** auto-chain (`feature-branch-chain`). Esta slice parte de la PR 3 e incorpora CI limpia y documentación de los comandos S01.
+
+### Completed tasks
+
+- [x] 4.1 Added `.github/workflows/ci.yml` with GitHub-hosted Ubuntu, the SDK pinned by `global.json`, and restore/build/test steps. Static acceptance checks confirm a failing command is not ignored; workflow YAML parsed successfully.
+- [x] 4.2 Documented .NET/Docker prerequisites, local verification commands, explicit migration, liveness, cleanup, and PostgreSQL's provisional status. Updated verified OpenSpec commands and capabilities.
+- [x] 4.3 Ran clean, restore, build, and the full test suite after the documentation and workflow changes.
+
+### TDD Cycle Evidence
+
+| Task | Test file | Layer | Safety net | RED | GREEN | Triangulate | Refactor | Notes |
+|---|---|---|---|---|---|---|---|---|
+| 4.1 / 4.2 | Temporary `s01-slice4-acceptance.ps1` | Static acceptance | Existing suite: 4 passed | Script exited 1 with 6 missing-contract assertions before implementation | Script exited 0; 19 assertions passed | Checks cover workflow, README, and config contracts | Not needed | The temporary assertion script stayed outside the repository; the real GitHub-hosted job has not run in this local environment. |
+| 4.3 | `tests/Monitoring.Tests/**` | Integration | 4/4 passed before changes | N/A — verification task | `dotnet test Monitoring.slnx --no-build`: 4 passed | Includes disposable PostgreSQL migration tests | Not needed | Repeated from a `dotnet clean` state after restore and build. |
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `.github/workflows/ci.yml` | Adds clean .NET restore/build/test workflow; Docker-backed integration tests use Testcontainers. |
+| `README.md` | Documents prerequisites, commands, liveness, explicit migration, cleanup, and PostgreSQL's provisional status. |
+| `openspec/config.yaml` | Records verified commands, xUnit/Testcontainers integration capability, and relevant stack capabilities. |
+| `openspec/changes/s01-base-ejecutable/tasks.md` | Marks tasks 4.1–4.3 complete. |
+| `openspec/changes/s01-base-ejecutable/apply-progress.md` | Merges this batch and its TDD/verification evidence with prior batches. |
+
+### Verification
+
+- `dotnet clean Monitoring.slnx` — passed.
+- `dotnet restore Monitoring.slnx` — passed.
+- `dotnet build Monitoring.slnx --no-restore` — passed, 0 warnings and 0 errors.
+- `dotnet test Monitoring.slnx --no-build` — passed, 4 tests including Testcontainers PostgreSQL.
+- Temporary static acceptance script — RED before changes (6 missing contract checks), GREEN after changes (19 checks passed).
+- Python YAML parse of `.github/workflows/ci.yml` and `openspec/config.yaml` — passed.
+- Documented `dotnet run` liveness command and `curl.exe --fail http://localhost:5080/health/live` — passed; HTTP 200.
+- `git diff --check` — passed; Git reports only the repository's LF/CRLF normalization notice for `openspec/config.yaml`.
+
+### Deviations and remaining work
+
+The GitHub-hosted workflow itself cannot be dispatched from this local apply run, and `actionlint` is not installed. YAML parsing and contract checks passed locally; the hosted workflow result will be observable on the PR. PostgreSQL remains provisional and no production-capacity claim was added.
