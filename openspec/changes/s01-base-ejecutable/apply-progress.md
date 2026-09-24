@@ -16,7 +16,7 @@
 | Task | Test file | Layer | Safety net | RED | GREEN | Triangulate | Refactor | Notes |
 |---|---|---|---|---|---|---|---|---|
 | 1.1 | — | Runner bootstrap | N/A (new solution) | N/A (runner setup) | `dotnet --version` = `10.0.303`; restore succeeded | N/A | N/A | Tooling had to exist before executable tests could be authored. |
-| 1.2 / 2.1 | `tests/Monitoring.Tests/DomainDependencyTests.cs` | Unit / architecture | N/A (new test) | `dotnet test Monitoring.slnx --filter FullyQualifiedName~DomainDependency` exited 1; one test failed because the domain assembly was absent | Same focal command exited 0; 1 passed, 0 failed after adding the domain project | Not needed (one boundary scenario) | Not needed | Test reflects on the built domain assembly and rejects Persistence, EF Core, and Npgsql references. |
+| 1.2 / 2.1 | `tests/Monitoring.Tests/DomainDependencyTests.cs` | Unit / architecture | N/A (new test) | ✅ Written; `dotnet test Monitoring.slnx --filter FullyQualifiedName~DomainDependency` exited 1; one test failed because the domain assembly was absent | ✅ Passed; Same focal command exited 0; 1 passed, 0 failed after adding the domain project | Not needed (one boundary scenario) | Not needed | Test reflects on the built domain assembly and rejects Persistence, EF Core, and Npgsql references. |
 | 1.3 | `tests/Monitoring.Tests/DomainDependencyTests.cs` | Unit / runner | N/A (configuration) | Runner discovery and execution were demonstrated by the RED run above | `dotnet test Monitoring.slnx` exited 0; 1 passed, 0 failed | N/A | N/A | Runner metadata was recorded only after xUnit executed the architecture test. |
 
 ### Verification
@@ -251,7 +251,7 @@ The first slice includes task 2.1's empty domain project so the architecture tes
 
 | Task | Test file | Layer | Safety net | RED | GREEN | Triangulate | Refactor | Notes |
 |---|---|---|---|---|---|---|---|---|
-| 2.2 / 2.3 | `tests/Monitoring.Tests/HostStartupTests.cs` | Integration / ASP.NET TestServer | Existing suite: 1 passed | `dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartup` exited 1; expected 200, got 404 | Same focal command exited 0; 1 passed, 0 failed; full suite 2 passed | Not needed (single startup/liveness scenario) | Not needed | Host starts without a connection string and reports liveness through its HTTP pipeline. |
+| 2.2 / 2.3 | `tests/Monitoring.Tests/HostStartupTests.cs` | Integration / ASP.NET TestServer | Existing suite: 1 passed | ✅ Written; `dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartup` exited 1; expected 200, got 404 | ✅ Passed; Same focal command exited 0; 1 passed, 0 failed; full suite 2 passed | Not needed (single startup/liveness scenario) | Not needed | Host starts without a connection string and reports liveness through its HTTP pipeline. |
 
 ### Files changed
 
@@ -288,8 +288,8 @@ None — implementation follows the design. Persistence/migration, CI, and READM
 
 | Task | Test file | Layer | Safety Net | RED | GREEN | Triangulate | Refactor | Notes / Rationale |
 |---|---|---|---|---|---|---|---|---|
-| 3.1 / 3.2 / 3.4 | `tests/Monitoring.Tests/MigrationTests.cs` | Integration / Testcontainers PostgreSQL | 2/2 existing tests passed | `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests` exited 1; `--migrate` timed out before the command existed | Same focal command exited 0; 1 passed; full suite 4 passed | Closed-port failure covered by separate test | None needed | Confirms first and repeated migration on a newly created database, public history, and an empty `monitoring` schema. |
-| 3.3 | `tests/Monitoring.Tests/MigrationFailureTests.cs` | Integration / local closed TCP port | 2/2 existing tests passed | `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure` exited 1; no visible migration error | Same focal command exited 0; 1 passed; full suite 4 passed | Distinct failure path from Testcontainers success path | None needed | Verifies nonzero exit and secret-free diagnostic with a two-second connection timeout. |
+| 3.1 / 3.2 / 3.4 | `tests/Monitoring.Tests/MigrationTests.cs` | Integration / Testcontainers PostgreSQL | 2/2 existing tests passed | ✅ Written; `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests` exited 1; `--migrate` timed out before the command existed | ✅ Passed; Same focal command exited 0; 1 passed; full suite 4 passed | Closed-port failure covered by separate test | None needed | Confirms first and repeated migration on a newly created database, public history, and an empty `monitoring` schema. |
+| 3.3 | `tests/Monitoring.Tests/MigrationFailureTests.cs` | Integration / local closed TCP port | 2/2 existing tests passed | ✅ Written; `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure` exited 1; no visible migration error | ✅ Passed; Same focal command exited 0; 1 passed; full suite 4 passed | Distinct failure path from Testcontainers success path | None needed | Verifies nonzero exit and secret-free diagnostic with a two-second connection timeout. |
 
 ### Files changed
 
