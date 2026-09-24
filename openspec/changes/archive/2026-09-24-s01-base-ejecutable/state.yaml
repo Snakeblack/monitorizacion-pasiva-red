@@ -34,3 +34,20 @@ assumptions:
       action: confirm
       note: 'Usuario confirmó .NET 10 para S01 en chat el 2026-09-24.'
       resolved_at: 2026-09-24T16:00:53Z
+
+gates:
+  quality-gates:
+    status: pass
+    evaluated_at: 2026-09-24T16:12:34Z
+    gates:
+      tests:
+        status: pass
+        required: true
+        on_fail: halt
+        detail: 'dotnet test Monitoring.slnx: 4 passed, 0 failed; exit 0; 12.2 s.'
+
+phases:
+  verify:
+    status: done
+    verdict: PASS
+    artifact: openspec/changes/s01-base-ejecutable/verify-report.md
