@@ -72,6 +72,6 @@ Cada slice se revisa con diff limitado a su unidad y comandos focales; las PR 2�
 
 ## Phase 4: CI y reproducción limpia
 
-- [ ] 4.1 Crear `.github/workflows/ci.yml` con setup-dotnet 10 y pasos `dotnet restore Monitoring.slnx`, `dotnet build Monitoring.slnx --no-restore` y `dotnet test Monitoring.slnx --no-build`; comprobar que fallo de test hace fallar el job. [REQ-verificacion-base-002]
-- [ ] 4.2 Documentar SDK, Docker, configuración local, migración explícita, liveness y comandos en `README.md`; declarar `build`/`test` en `openspec/config.yaml` tras comprobarlos. [REQ-verificacion-base-003]
-- [ ] 4.3 Ejecutar desde checkout limpio `dotnet restore Monitoring.slnx`, `dotnet build Monitoring.slnx --no-restore` y `dotnet test Monitoring.slnx --no-build`; comprobar workflow y que la documentación identifica PostgreSQL como provisional, no validación de producción. [REQ-verificacion-base-001, REQ-verificacion-base-002, REQ-verificacion-base-003]
+- [x] 4.1 Crear `.github/workflows/ci.yml` con setup-dotnet 10 y pasos `dotnet restore Monitoring.slnx`, `dotnet build Monitoring.slnx --no-restore` y `dotnet test Monitoring.slnx --no-build`; comprobar que fallo de test hace fallar el job. [REQ-verificacion-base-002]
+- [x] 4.2 Documentar SDK, Docker, configuración local, migración explícita, liveness y comandos en `README.md`; declarar `build`/`test` en `openspec/config.yaml` tras comprobarlos. [REQ-verificacion-base-003]
+- [x] 4.3 Ejecutar desde checkout limpio `dotnet restore Monitoring.slnx`, `dotnet build Monitoring.slnx --no-restore` y `dotnet test Monitoring.slnx --no-build`; comprobar workflow y que la documentación identifica PostgreSQL como provisional, no validación de producción. [REQ-verificacion-base-001, REQ-verificacion-base-002, REQ-verificacion-base-003]

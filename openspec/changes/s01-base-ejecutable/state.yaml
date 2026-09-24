@@ -29,4 +29,8 @@ assumptions:
     reversibility: high
     basis: 'El SDK 10.0.303 está instalado localmente y el repositorio todavía no contiene proyectos .NET que condicionen la versión.'
     recorded_at: 2026-09-24T15:04:50Z
-    status: unresolved
+    status: confirmed
+    resolution:
+      action: confirm
+      note: 'Usuario confirmó .NET 10 para S01 en chat el 2026-09-24.'
+      resolved_at: 2026-09-24T16:00:53Z
