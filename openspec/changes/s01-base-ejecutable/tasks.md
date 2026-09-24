@@ -60,8 +60,8 @@ Cada slice se revisa con diff limitado a su unidad y comandos focales; las PR 2�
 ## Phase 2: Dominio y host mínimo
 
 - [x] 2.1 Crear `src/Monitoring.Domain/Monitoring.Domain.csproj` sin referencias de persistencia; hacer pasar la prueba de frontera con `dotnet test Monitoring.slnx --filter FullyQualifiedName~DomainDependency`. [REQ-base-ejecutable-001]
-- [ ] 2.2 Crear pruebas rojas de arranque/liveness en `tests/Monitoring.Tests/HostStartupTests.cs`; ejecutar `dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartup` antes de implementar el host. [REQ-base-ejecutable-001]
-- [ ] 2.3 Crear `src/Monitoring.Host/Monitoring.Host.csproj` y `Program.cs` con composición y `GET /health/live`; pasar la prueba de arranque con el filtro focal y después la suite. [REQ-base-ejecutable-001, REQ-base-ejecutable-003]
+- [x] 2.2 Crear pruebas rojas de arranque/liveness en `tests/Monitoring.Tests/HostStartupTests.cs`; ejecutar `dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartup` antes de implementar el host. [REQ-base-ejecutable-001]
+- [x] 2.3 Crear `src/Monitoring.Host/Monitoring.Host.csproj` y `Program.cs` con composición y `GET /health/live`; pasar la prueba de arranque con el filtro focal y después la suite. [REQ-base-ejecutable-001, REQ-base-ejecutable-003]
 
 ## Phase 3: Persistencia y migración
 

@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Monitoring.Domain/Monitoring.Domain.csproj" />
+    <Project Path="src/Monitoring.Host/Monitoring.Host.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Monitoring.Tests/Monitoring.Tests.csproj" />
