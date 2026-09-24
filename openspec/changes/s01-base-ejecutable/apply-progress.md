@@ -92,6 +92,52 @@ The first slice includes task 2.1's empty domain project so the architecture tes
       },
       "triangulation": "not-needed; one startup/liveness scenario",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": ["3.1", "3.2", "3.4"],
+      "test_file": "tests/Monitoring.Tests/MigrationTests.cs",
+      "test_name": "Monitoring.Tests.MigrationTests.MigrateCreatesOnlyInitialSchemaAndCanBeRepeated",
+      "layer": "integration",
+      "red": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests",
+        "exit_code": 1,
+        "observed": "The old host ignored --migrate and remained running until the 15-second process timeout; the expected successful migration command was absent.",
+        "discovered": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests",
+        "exit_code": 0,
+        "discovered": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "triangulation": "The test verifies a fresh database, first migration, repeated migration, public history, and no functional tables; unavailable PostgreSQL is covered separately.",
+      "refactor": "not-needed"
+    },
+    {
+      "tasks": ["3.3"],
+      "test_file": "tests/Monitoring.Tests/MigrationFailureTests.cs",
+      "test_name": "Monitoring.Tests.MigrationFailureTests.MigrateReportsUnavailableDatabaseWithoutPrintingCredentials",
+      "layer": "integration",
+      "red": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure",
+        "exit_code": 1,
+        "observed": "The old host did not report a migration failure when --migrate targeted a closed local port.",
+        "discovered": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure",
+        "exit_code": 0,
+        "discovered": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "triangulation": "The closed-port failure path is distinct from the successful disposable-PostgreSQL path.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -101,15 +147,15 @@ The first slice includes task 2.1's empty domain project so the architecture tes
     },
     {
       "path": "src/Monitoring.Host/Monitoring.Host.csproj",
-      "sha256": "E40BA49EDC06CF43276A87AE3568DE3BF9D6094F4F3DBFCD9536AFE89CD8A600"
+      "sha256": "A5984114D009A0C73D2EB31D677E197CFD7653C3671BE95B0569D318671B9993"
     },
     {
       "path": "src/Monitoring.Host/Program.cs",
-      "sha256": "10DF04C957CA375D94477575AC8596B3A1FAB7B0DAF297FBFE4AA66A6A6A656B"
+      "sha256": "41E59F8EAFE4B849AF3A11AF1807B54BBA2B195085F82A2A100AF38B0D800BD5"
     },
     {
       "path": "tests/Monitoring.Tests/Monitoring.Tests.csproj",
-      "sha256": "616AAD4CA7FC06A6BDE49B7D139438F7A414081A35B52DBD34D718FA70BAD733"
+      "sha256": "2B5CAC192D47F53CCB8510379350E48F4454237C04659860AA3BD2A3528D65B7"
     },
     {
       "path": "tests/Monitoring.Tests/DomainDependencyTests.cs",
@@ -118,6 +164,30 @@ The first slice includes task 2.1's empty domain project so the architecture tes
     {
       "path": "tests/Monitoring.Tests/HostStartupTests.cs",
       "sha256": "3F5FCE27DA403B624C9CD47237AA696F3554666E346455B0C68230733D87F7DF"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Monitoring.Persistence.csproj",
+      "sha256": "04B77ECC3240781979FADA82AF57DF4830806EC6A6FEA0E0B27CF62F0F43F349"
+    },
+    {
+      "path": "src/Monitoring.Persistence/MonitoringDbContext.cs",
+      "sha256": "19918FA595F03F79B5AC0AA7A45871A16C71F422CE087D6D44CCF15F27DFBCD6"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Migrations/202609240001_InitialSchema.cs",
+      "sha256": "B24E2E45C9F95D39C046A0E80F720F85342A059A60DE3A5314A61B6F6473A12D"
+    },
+    {
+      "path": "tests/Monitoring.Tests/PostgresFixture.cs",
+      "sha256": "DBC161101B74D21EB424DCE355B5F5636102F29D6D24F0D16592A4841942F8F1"
+    },
+    {
+      "path": "tests/Monitoring.Tests/MigrationTests.cs",
+      "sha256": "DF2224C849B895B5C20F1BF02FBC0F27FA91F9E23F8319020335015570910A17"
+    },
+    {
+      "path": "tests/Monitoring.Tests/MigrationFailureTests.cs",
+      "sha256": "01D0F113896D534FE719F3FBE430B71D0BDF535B35899F43110634CBE78087D4"
     }
   ],
   "full_verification": [
@@ -125,7 +195,10 @@ The first slice includes task 2.1's empty domain project so the architecture tes
     {"command": "dotnet build Monitoring.slnx --no-restore", "exit_code": 0, "warnings": 0, "errors": 0},
     {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 1, "failed": 0},
     {"command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartup", "exit_code": 0, "passed": 1, "failed": 0},
-    {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 2, "failed": 0}
+    {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 2, "failed": 0},
+    {"command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests", "exit_code": 0, "passed": 1, "failed": 0},
+    {"command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure", "exit_code": 0, "passed": 1, "failed": 0},
+    {"command": "dotnet test Monitoring.slnx", "exit_code": 0, "passed": 4, "failed": 0}
   ]
 }
 ```
@@ -164,3 +237,48 @@ The first slice includes task 2.1's empty domain project so the architecture tes
 ### Deviations and remaining work
 
 None — implementation follows the design. Persistence/migration, CI, and README remain for later chained slices; no S02 route or behavior was added.
+
+## Batch 3 — PR 3: persistencia PostgreSQL y migración explícita
+
+**Delivery strategy:** auto-chain (`feature-branch-chain`). Esta slice se apoya en PR 2 y termina con persistencia EF Core/Npgsql, una migración S01 explícita y pruebas reales con PostgreSQL desechable. CI y README quedan para PR 4.
+
+### Completed tasks
+
+- [x] 3.1 Added Testcontainers PostgreSQL and an isolated disposable database fixture.
+- [x] 3.2 Added red/green integration coverage for an empty database, repeated migration, schema/history creation, and no functional tables.
+- [x] 3.3 Added red/green closed-port failure coverage; the command exits nonzero, emits a visible error, and does not print the configured password.
+- [x] 3.4 Added `Monitoring.Persistence`, the empty `monitoring` schema migration, and the explicit `--migrate` command. Normal host startup remains independent of PostgreSQL.
+
+### TDD Cycle Evidence
+
+| Task | Test file | Layer | Safety Net | RED | GREEN | Triangulate | Refactor | Notes / Rationale |
+|---|---|---|---|---|---|---|---|---|
+| 3.1 / 3.2 / 3.4 | `tests/Monitoring.Tests/MigrationTests.cs` | Integration / Testcontainers PostgreSQL | 2/2 existing tests passed | `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests` exited 1; `--migrate` timed out before the command existed | Same focal command exited 0; 1 passed; full suite 4 passed | Closed-port failure covered by separate test | None needed | Confirms first and repeated migration on a newly created database, public history, and an empty `monitoring` schema. |
+| 3.3 | `tests/Monitoring.Tests/MigrationFailureTests.cs` | Integration / local closed TCP port | 2/2 existing tests passed | `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure` exited 1; no visible migration error | Same focal command exited 0; 1 passed; full suite 4 passed | Distinct failure path from Testcontainers success path | None needed | Verifies nonzero exit and secret-free diagnostic with a two-second connection timeout. |
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `Monitoring.slnx` | Registers `Monitoring.Persistence`. |
+| `src/Monitoring.Persistence/Monitoring.Persistence.csproj` | Adds EF Core 10 and the PostgreSQL provider. |
+| `src/Monitoring.Persistence/MonitoringDbContext.cs` | Adds the persistence context with no speculative S02 entities. |
+| `src/Monitoring.Persistence/Migrations/202609240001_InitialSchema.cs` | Creates only the `monitoring` schema. EF stores migration history in `public`. |
+| `src/Monitoring.Host/Monitoring.Host.csproj` | References the persistence module. |
+| `src/Monitoring.Host/Program.cs` | Runs migrations only for `--migrate`; reports sanitized failure and exits nonzero. |
+| `tests/Monitoring.Tests/Monitoring.Tests.csproj` | Adds Npgsql and Testcontainers PostgreSQL. |
+| `tests/Monitoring.Tests/PostgresFixture.cs` | Starts a disposable PostgreSQL container and creates isolated empty databases. |
+| `tests/Monitoring.Tests/MigrationTests.cs` | Verifies first/repeated migration and the absence of functional tables. |
+| `tests/Monitoring.Tests/MigrationFailureTests.cs` | Verifies closed-port failure and credential redaction. |
+| `openspec/changes/s01-base-ejecutable/tasks.md` | Marks tasks 3.1–3.4 complete. |
+
+### Verification
+
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationTests` — RED before `--migrate` implementation, then GREEN (1 passed) against Testcontainers PostgreSQL.
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~MigrationFailure` — RED before implementation, then GREEN (1 passed).
+- `dotnet test Monitoring.slnx` — passed (4 passed, 0 failed), including the PostgreSQL container test.
+- `git diff --check` — passed.
+
+### Deviations and remaining work
+
+None — implementation matches the design. PR 4 still owns CI and README tasks 4.1–4.3.
