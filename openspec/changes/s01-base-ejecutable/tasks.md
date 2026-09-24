@@ -65,10 +65,10 @@ Cada slice se revisa con diff limitado a su unidad y comandos focales; las PR 2�
 
 ## Phase 3: Persistencia y migración
 
-- [ ] 3.1 Configurar xUnit/Testcontainers PostgreSQL en `tests/Monitoring.Tests/Monitoring.Tests.csproj` y fixture aislada desechable en `tests/Monitoring.Tests/PostgresFixture.cs`; demostrar prueba roja de esquema ausente. [REQ-verificacion-base-001]
-- [ ] 3.2 Añadir prueba roja de primera migración y repetición en `tests/Monitoring.Tests/MigrationTests.cs`; verificar esquema `monitoring`, historial y ausencia de tablas funcionales contra base vacía. [REQ-base-ejecutable-002, REQ-base-ejecutable-003]
-- [ ] 3.3 Añadir prueba roja de indisponibilidad y fallo visible sin filtrar credenciales en `tests/Monitoring.Tests/MigrationFailureTests.cs`; usar endpoint cerrado y timeout acotado. [REQ-base-ejecutable-002]
-- [ ] 3.4 Crear `src/Monitoring.Persistence/Monitoring.Persistence.csproj`, `MonitoringDbContext.cs` y migración mínima; implementar `--migrate` en `src/Monitoring.Host/Program.cs` usando `ConnectionStrings:Monitoring`, sin migrar en arranque normal. Pasar pruebas focales y suite con `dotnet test Monitoring.slnx`. [REQ-base-ejecutable-002]
+- [x] 3.1 Configurar xUnit/Testcontainers PostgreSQL en `tests/Monitoring.Tests/Monitoring.Tests.csproj` y fixture aislada desechable en `tests/Monitoring.Tests/PostgresFixture.cs`; demostrar prueba roja de esquema ausente. [REQ-verificacion-base-001]
+- [x] 3.2 Añadir prueba roja de primera migración y repetición en `tests/Monitoring.Tests/MigrationTests.cs`; verificar esquema `monitoring`, historial y ausencia de tablas funcionales contra base vacía. [REQ-base-ejecutable-002, REQ-base-ejecutable-003]
+- [x] 3.3 Añadir prueba roja de indisponibilidad y fallo visible sin filtrar credenciales en `tests/Monitoring.Tests/MigrationFailureTests.cs`; usar endpoint cerrado y timeout acotado. [REQ-base-ejecutable-002]
+- [x] 3.4 Crear `src/Monitoring.Persistence/Monitoring.Persistence.csproj`, `MonitoringDbContext.cs` y migración mínima; implementar `--migrate` en `src/Monitoring.Host/Program.cs` usando `ConnectionStrings:Monitoring`, sin migrar en arranque normal. Pasar pruebas focales y suite con `dotnet test Monitoring.slnx`. [REQ-base-ejecutable-002]
 
 ## Phase 4: CI y reproducción limpia
 
