@@ -1,0 +1,32 @@
+status: active
+classification: normal
+approvals:
+  - id: intent-briefing-001
+    gate: intent-briefing
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T14:56:30Z
+    applies_to: [change-classification]
+    synthesis: 'Construir S01: base ASP.NET Core modular, dominio, pruebas .NET, CI y PostgreSQL desechable con arranque y migración desde cero.'
+    scope: 'S01 según docs/development/slices.md; excluye ingestión y lógica S02 en adelante.'
+  - id: execution-mode-001
+    gate: execution-mode
+    decision: auto
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T14:56:30Z
+    applies_to: [sdd-workflow]
+  - id: delivery-strategy-001
+    gate: delivery-strategy
+    decision: auto-chain
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T14:56:30Z
+    applies_to: [sdd-tasks, sdd-apply]
+
+assumptions:
+  - id: sdd-design-001
+    phase: sdd-design
+    statement: 'La solución S01 tendrá como objetivo net10.0.'
+    reversibility: high
+    basis: 'El SDK 10.0.303 está instalado localmente y el repositorio todavía no contiene proyectos .NET que condicionen la versión.'
+    recorded_at: 2026-09-24T15:04:50Z
+    status: unresolved
