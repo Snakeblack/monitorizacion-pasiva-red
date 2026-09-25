@@ -9,7 +9,8 @@ namespace Monitoring.Persistence.Ingestion;
 public enum InboxWriteResult
 {
     Accepted,
-    Conflict
+    Conflict,
+    RateLimited
 }
 
 public sealed class InboxWriter(MonitoringDbContext dbContext)
@@ -68,6 +69,13 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
                 Data = ingestionEvent.Data.GetRawText(),
                 AcceptedAt = acceptedAt
             });
+        }
+
+        var acceptedInWindow = await CountAcceptedInWindowAsync(siteId, sensorId, acceptedAt, transaction, cancellationToken);
+        if (acceptedInWindow + newEvents.Count > 500)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return InboxWriteResult.RateLimited;
         }
 
         dbContext.IngestionInbox.AddRange(newEvents);
@@ -142,6 +150,22 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
         command.Parameters.AddWithValue("left", left);
         command.Parameters.AddWithValue("right", right);
         return (bool)(await command.ExecuteScalarAsync(cancellationToken))!;
+    }
+
+    private async Task<long> CountAcceptedInWindowAsync(
+        string siteId,
+        string sensorId,
+        DateTimeOffset acceptedAt,
+        IDbContextTransaction transaction,
+        CancellationToken cancellationToken)
+    {
+        await using var command = Command(
+            "SELECT count(*) FROM monitoring.ingestion_inbox WHERE site_id = @site_id AND sensor_id = @sensor_id AND accepted_at > @window_start",
+            transaction);
+        command.Parameters.AddWithValue("site_id", siteId);
+        command.Parameters.AddWithValue("sensor_id", sensorId);
+        command.Parameters.AddWithValue("window_start", acceptedAt.AddSeconds(-60));
+        return (long)(await command.ExecuteScalarAsync(cancellationToken))!;
     }
 
     private NpgsqlCommand Command(string sql, IDbContextTransaction transaction) =>
