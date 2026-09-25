@@ -39,12 +39,114 @@ phases:
     status: failed
     artifact: openspec/changes/s02-contrato-ingestion-durable/verify-report.md
     summary: 'FAIL: C-01, occurredAt con distinto valor JSON se acepta como idéntico; 53 pruebas y build pasan.'
+approvals:
+  - id: s02-clarify-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:31:43Z
+    applies_to: [sdd-clarify, sdd-design, sdd-tasks, sdd-apply, sdd-verify]
+    details: 'IDs como cadenas no vacias de hasta 128 caracteres; occurredAt RFC 3339 UTC con Z y precision maxima de milisegundos; data objeto JSON; events con al menos un elemento. Cuota en ventana movil de 60 segundos para eventos nuevos confirmados; reenvios identicos no consumen. Contador una vez por solicitud rechazada con identidad confiable; sin identidad a contador agregado. HTTP 401 identidad ausente, 403 ambito discrepante. HTTP 200 con cuerpo vacio para nuevos y reenvios identicos.'
+  - id: intent-briefing-001
+    gate: intent-briefing
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:09:45Z
+    applies_to: [change-classification]
+    synthesis: 'Definir el contrato JSON v1 de S02 e implementar ingestión durable por sede y sonda con ACK solo tras commit, deduplicación de reenvíos idénticos y rechazo de IDs reutilizados con contenido distinto.'
+    scope: 'S02 según docs/development/slices.md; incluye validación, bandeja durable, cuotas y señales por sede/sonda, pruebas de rollback y aislamiento; excluye proyección, lectura y UI de S03 en adelante.'
+  - id: execution-mode-001
+    gate: execution-mode
+    decision: auto
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:13:02Z
+    applies_to: [sdd-workflow]
+  - id: delivery-strategy-001
+    gate: delivery-strategy
+    decision: auto-chain
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:13:02Z
+    applies_to: [sdd-tasks, sdd-apply]
+  - id: s02-contract-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:22:52Z
+    applies_to: [sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify]
+    details: 'Lote atomico JSON v1 con schemaVersion 1, batchId, siteId, sensorId y events; cada evento tiene eventId, occurredAt UTC y data. Maximo 1 MiB y 500 eventos; rechazar version o campos desconocidos. HTTP 200 tras commit para nuevo o reenvio identico, 400 invalido, 409 ID con contenido distinto, 429 cuota. Igualdad por valor JSON sin ordenar arrays. Identidad de sede y sonda de contexto confiable del host, coincidente con lote. Cuota por sonda de 500 eventos/minuto y contador de rechazos por sede/sonda.'
+  - id: s02-new-scope-001
+    gate: new-scope
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-25T19:41:31Z
+    applies_to: [verify_lineage, sdd-apply, sdd-verify]
+    details: 'Usuario autorizó ampliar exclusivamente C-01 a tests/Monitoring.Tests/InboxSchemaTests.cs para validar la nueva columna que conserva occurredAt original.'
 verify_lineage:
   schema_version: 1
+  lineage_id: sha256:2fb7b5f9a50b72ca9be8eafda625e691ad4082e990a27562f037123c3049e3d9
+  generation: 2
+  predecessor_id: sha256:2010a26896917ff60bfa6bc6e742adea27a42df4e99b3033a79b147a263f8728
+  status: remediation-pending
+  genesis_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+  current_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+  verified_candidate_id: null
+  contract_digest: sha256:6ddb9ab7fa36eb4c6a7722d4849eaa899c1cdb7cc37c45ce9deed53fc9909185
+  candidate_recovery:
+    schema_version: 1
+    genesis:
+      kind: candidate-recovery-ref/v1
+      schema_version: 1
+      candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+      content_digest: sha256:bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092
+      relative_path: .verify-lineage-candidate-bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092.json
+    current:
+      kind: candidate-recovery-ref/v1
+      schema_version: 1
+      candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+      content_digest: sha256:bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092
+      relative_path: .verify-lineage-candidate-bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092.json
+  remediation_attempts: 0
+  max_remediation_attempts: 2
+  findings:
+  - id: C-01
+    severity: CRITICAL
+    summary: Distinct occurredAt JSON strings for one instant are accepted as identical
+    origin: code-bug
+    allowed_paths:
+    - openspec/changes/s02-contrato-ingestion-durable/apply-progress.md
+    - openspec/changes/s02-contrato-ingestion-durable/state.yaml
+    - openspec/changes/s02-contrato-ingestion-durable/verify-report.md
+    - src/Monitoring.Persistence/Ingestion/InboxWriter.cs
+    - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+    - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+    - src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs
+    - tests/Monitoring.Tests/InboxSchemaTests.cs
+    - tests/Monitoring.Tests/IngestionPersistenceTests.cs
+    validation:
+      commands:
+      - dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests
+      - dotnet test Monitoring.slnx
+      expected_exit: 0
+      test_files:
+      - tests/Monitoring.Tests/InboxSchemaTests.cs
+      - tests/Monitoring.Tests/IngestionPersistenceTests.cs
+    status: unresolved
+  late_observations: []
+  terminal_reason: null
+  candidate_snapshot:
+    kind: candidate-snapshot-ref/v1
+    schema_version: 1
+    candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+    content_digest: sha256:ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0
+    relative_path: .verify-lineage-snapshot-ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0.json
+  successor_reason: new-scope-approved
+  approval_ref: s02-new-scope-001
+verify_lineage_history:
+- schema_version: 1
   lineage_id: sha256:2010a26896917ff60bfa6bc6e742adea27a42df4e99b3033a79b147a263f8728
   generation: 1
   predecessor_id: null
-  status: remediation-pending
+  status: superseded
   genesis_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
   current_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
   verified_candidate_id: null
@@ -88,7 +190,7 @@ verify_lineage:
       - tests/Monitoring.Tests/IngestionPersistenceTests.cs
     status: unresolved
   late_observations: []
-  terminal_reason: null
+  terminal_reason: new-scope-approved
   candidate_snapshot:
     kind: candidate-snapshot-ref/v1
     schema_version: 1
