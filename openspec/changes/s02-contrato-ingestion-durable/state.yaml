@@ -1,5 +1,5 @@
 change: s02-contrato-ingestion-durable
-status: ready-for-apply
+status: blocked
 revision: 3
 last_updated: "2026-09-24T17:39:12.475Z"
 blocking_questions: []
@@ -32,8 +32,26 @@ phases:
     artifact: openspec/changes/s02-contrato-ingestion-durable/tasks.md
     summary: 'Tres PR encadenadas, 650-900 líneas estimadas, con trazabilidad completa y TDD estricto.'
   apply:
-    status: pending
-    summary: 'Rama de feature disponible; implementación pendiente.'
+    status: done
+    artifact: openspec/changes/s02-contrato-ingestion-durable/apply-progress.md
+    summary: 'Contrato, host, bandeja, cuota y señales implementados en PR encadenadas #9-#15; 53 pruebas y build correctos.'
+  verify:
+    status: failed
+    artifact: openspec/changes/s02-contrato-ingestion-durable/verify-report.md
+    summary: 'FAIL: C-01, occurredAt con distinto valor JSON se acepta como idéntico; 53 pruebas y build pasan.'
+verify_lineage:
+  status: remediation-pending
+  candidate_commit: 9dd9bfba7d9db73f8e7932868380d8bb6ba8ffc0
+  findings:
+    - id: C-01
+      origin: code-bug
+      requirement: REQ-bandeja-ingestion-durable-002
+      paths:
+        - src/Monitoring.Persistence/Ingestion/InboxWriter.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+        - src/Monitoring.Persistence/Migrations/
+        - tests/Monitoring.Tests/IngestionPersistenceTests.cs
 approvals:
   - id: s02-clarify-001
     gate: architecture
