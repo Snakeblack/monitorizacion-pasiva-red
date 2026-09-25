@@ -132,6 +132,17 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       },
       "triangulation": "Los escenarios distinguen cuerpo inválido/sobredimensionado, identidad ausente, ámbito discrepante, aceptación, writer no configurado y claims de cliente ignorados.",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": ["2.2"],
+      "test_file": "tests/Monitoring.Tests/InboxSchemaTests.cs",
+      "test_name": "Monitoring.Tests.InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex",
+      "layer": "integration",
+      "safety_net": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~MigrationTests","exit_code":0,"discovered":1,"passed":1,"failed":0},
+      "red": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~InboxSchemaTests","exit_code":1,"observed":"Desde el historial limpio S01, --migrate no añadió la segunda migración: historial esperado 2, observado 1.","discovered":1,"passed":0,"failed":1},
+      "green": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~InboxSchemaTests","exit_code":0,"discovered":1,"passed":1,"failed":0},
+      "triangulation": "La misma clave eventId rechaza la segunda fila dentro del mismo origen y permite una fila en otra sede; también se consulta tipo JSONB e índice por origen/accepted_at.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -146,7 +157,15 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
     {"path":"src/Monitoring.Host/Program.cs","sha256":"9C699F8F6C6DA350288D6019019A38D185FCFC061BADB258D6A52E3C3C664304"},
     {"path":"src/Monitoring.Host/Ingestion/BatchEndpoint.cs","sha256":"94CAF0A90C8B84146EE4FD8A17D9AC051CF03E0375BDC1F705067223ABCB79B5"},
     {"path":"src/Monitoring.Host/Ingestion/TrustedSensorIdentity.cs","sha256":"465F4E39B32FAD00F1987B65B7D0D41F2312F45E8FC6C49322042C20203FD628"},
-    {"path":"tests/Monitoring.Tests/IngestionHostTests.cs","sha256":"B30756B366E7115E8A216D387889F80228CD75E7D46FDF967B8C0B727F2056F7"}
+    {"path":"tests/Monitoring.Tests/IngestionHostTests.cs","sha256":"B30756B366E7115E8A216D387889F80228CD75E7D46FDF967B8C0B727F2056F7"},
+    {"path":"src/Monitoring.Persistence/MonitoringDbContext.cs","sha256":"E36C31B196FFEC01D9928F554F0D7171DA8355BB2955A76E4ED48E16CDF4B780"},
+    {"path":"src/Monitoring.Persistence/Ingestion/IngestionOriginEntity.cs","sha256":"3A1E80A1209135B2EC97C01C0B4DEE6E5AEE7ACD4DCCA1453D8ADA664BFA0BFB"},
+    {"path":"src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs","sha256":"E0A293D14CEFFA52B9E6D2D1F6E4DE5247000B6B644EAC1127617820C9581B0A"},
+    {"path":"src/Monitoring.Persistence/Ingestion/IngestionOriginEntityConfiguration.cs","sha256":"C705BFF80C715E8D190994AF493CBBE587084645F439FA21B348069DE1C90E7E"},
+    {"path":"src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs","sha256":"292FB4F45571C51705C0CB24F461D97239FC39A2B342099760B8981CCE805B73"},
+    {"path":"src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs","sha256":"74940E6C04139513484DE88A964F4D2EE7F52FC539D8E1A3FCC47E12EED58CF3"},
+    {"path":"tests/Monitoring.Tests/InboxSchemaTests.cs","sha256":"93D4BC89E6471C2AB61C6E906BAB6C96F8C9C6700485A98E6D0F3208AB077B9A"},
+    {"path":"tests/Monitoring.Tests/MigrationTests.cs","sha256":"FF3F9AEE40A1723A8F44F6BD2CAEA66719D8ABA8386402996B6D92F52E6B97DA"}
   ],
   "full_verification": [
     {
@@ -162,7 +181,28 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       "errors": 0
     },
     {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionHostTests","exit_code":0,"passed":7,"failed":0},
-    {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartupTests","exit_code":0,"passed":1,"failed":0}
+    {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartupTests","exit_code":0,"passed":1,"failed":0},
+    {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~InboxSchemaTests|FullyQualifiedName~MigrationTests|FullyQualifiedName~MigrationFailureTests","exit_code":0,"passed":3,"failed":0},
+    {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0}
   ]
 }
 ```
+
+## Phase 2a — PR #2: esquema inbox PostgreSQL
+
+**Delivery:** auto-chain, feature-branch-chain. **Branch:** `feat/s02-inbox-schema`. **Base:** host PR #10.
+
+### Progreso y TDD
+
+- [x] 2.2 Migración incremental, mapeos de origen/bandeja y verificación de forma, unicidad compuesta e índice temporal.
+- [ ] 2.1 Aceptación, rollback, ACK, reenvío y conflicto del writer quedan para la siguiente porción de PR #2.
+
+| Task | Test / layer | Safety net | RED | GREEN | Triangulate | Refactor |
+|---|---|---|---|---|---|---|
+| 2.2 | `InboxSchemaTests` / PostgreSQL | `MigrationTests`: 1 aprobado | historial S01 sin migración nueva; 1 fallo | 1 aprobado | duplicate composite key falla; otra sede pasa; columnas, JSONB e índice consultados | No requerido |
+
+### Verificación y archivos
+
+`InboxSchemaTests` + migraciones: 3 aprobados; `dotnet build Monitoring.slnx --no-restore`: 0 advertencias, 0 errores.
+
+Archivos: `MonitoringDbContext.cs`, `IngestionOriginEntity.cs`, `IngestionInboxEntity.cs`, `IngestionOriginEntityConfiguration.cs`, `IngestionInboxEntityConfiguration.cs`, `202609240002_DurableInbox.cs`, `InboxSchemaTests.cs`, `MigrationTests.cs`, `tasks.md`.

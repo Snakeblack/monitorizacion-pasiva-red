@@ -5,7 +5,7 @@ namespace Monitoring.Tests;
 public sealed class MigrationTests(PostgresFixture postgres) : IClassFixture<PostgresFixture>
 {
     [Fact]
-    public async Task MigrateCreatesOnlyInitialSchemaAndCanBeRepeated()
+    public async Task MigrateCreatesInboxSchemaAndCanBeRepeated()
     {
         var connectionString = await postgres.CreateEmptyDatabaseAsync();
 
@@ -24,10 +24,10 @@ public sealed class MigrationTests(PostgresFixture postgres) : IClassFixture<Pos
         Assert.True(await ExistsAsync(
             connection,
             "SELECT EXISTS (SELECT 1 FROM information_schema.schemata WHERE schema_name = 'monitoring')"));
-        Assert.Equal(1L, await ScalarLongAsync(
+        Assert.Equal(2L, await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
-        Assert.Equal(0L, await ScalarLongAsync(
+        Assert.Equal(2L, await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'monitoring'"));
     }
