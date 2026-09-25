@@ -56,9 +56,9 @@ Cada PR debe quedar por debajo de 400 líneas cambiadas; si el slice excede el l
 
 - [x] 3.1 RED: probar 500 eventos nuevos por ventana móvil, lote que excede remanente sin inserción parcial, reenvíos sin consumo y aislamiento entre sondas (`REQ-bandeja-ingestion-durable-003`).
 - [x] 3.2 GREEN: en `InboxWriter.cs`, adquirir bloqueo transaccional por origen, usar instante PostgreSQL tras bloqueo y rechazar con 429 si aceptados en 60 s más nuevos exceden 500 (`REQ-bandeja-ingestion-durable-003`).
-- [ ] 3.3 RED/GREEN: probar un incremento por solicitud rechazada 400/403/409/429 usando identidad confiable, serie agregada cuando falta y ausencia de incremento en errores internos; emitir métricas en `BatchEndpoint.cs` con etiquetas de origen confiable solamente (`REQ-bandeja-ingestion-durable-003`).
-- [ ] 3.4 RED/GREEN: añadir escenario integral de lote mixto, respuesta perdida tras commit y reintento idéntico; comprobar estado PostgreSQL y cuerpo vacío en `tests/Monitoring.Tests/IngestionPersistenceTests.cs` (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
-- [ ] 3.5 REFACTOR/VERIFICACIÓN: revisar límites, filtros de identidad y atomicidad; ejecutar `dotnet test Monitoring.slnx` con migración aplicada desde base vacía. No declarar aptitud/capacidad de producción: queda pendiente S17.
+- [x] 3.3 RED/GREEN: probar un incremento por solicitud rechazada 400/403/409/429 usando identidad confiable, serie agregada cuando falta y ausencia de incremento en errores internos; emitir métricas en `BatchEndpoint.cs` con etiquetas de origen confiable solamente (`REQ-bandeja-ingestion-durable-003`).
+- [x] 3.4 RED/GREEN: añadir escenario integral de lote mixto, respuesta perdida tras commit y reintento idéntico; comprobar estado PostgreSQL y cuerpo vacío en `tests/Monitoring.Tests/IngestionPersistenceTests.cs` (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
+- [x] 3.5 REFACTOR/VERIFICACIÓN: revisar límites, filtros de identidad y atomicidad; ejecutar `dotnet test Monitoring.slnx` con migración aplicada desde base vacía. No declarar aptitud/capacidad de producción: queda pendiente S17.
 
 ## Strict TDD Evidence Plan
 

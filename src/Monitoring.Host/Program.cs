@@ -36,6 +36,7 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
 }
 
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
+builder.Services.TryAddSingleton<IngestionRejectionMetrics>();
 var monitoringConnection = builder.Configuration.GetConnectionString("Monitoring");
 if (string.IsNullOrWhiteSpace(monitoringConnection))
 {

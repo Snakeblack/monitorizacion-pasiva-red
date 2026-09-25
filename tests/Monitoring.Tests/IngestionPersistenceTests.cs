@@ -47,6 +47,43 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     }
 
     [Fact]
+    public async Task LostResponseAfterCommitCanBeRetriedWithEmptyAckAndOneStoredRow()
+    {
+        var connection = await CreateDatabaseAsync();
+        using var factory = CreateHost(connection);
+        using var handler = new LoseFirstResponseHandler(factory.Server.CreateHandler());
+        using var client = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
+        var payload = Batch(Event("event-1", "{\"value\":1}"));
+
+        await Assert.ThrowsAsync<HttpRequestException>(() => client.PostAsync(Route, Json(payload)));
+        Assert.Equal(1L, await InboxCountAsync(connection));
+
+        using var retry = await client.PostAsync(Route, Json(payload));
+
+        Assert.Equal(HttpStatusCode.OK, retry.StatusCode);
+        Assert.Empty(await retry.Content.ReadAsByteArrayAsync());
+        Assert.Equal(1L, await InboxCountAsync(connection));
+    }
+
+    [Fact]
+    public async Task HttpMixedConflictDoesNotPersistNewRowsOrReplaceAcceptedContent()
+    {
+        var connection = await CreateDatabaseAsync();
+        using var factory = CreateHost(connection);
+        using var client = factory.CreateClient();
+        using var seed = await client.PostAsync(Route, Json(Batch(Event("event-1", "{\"value\":1}"))));
+
+        using var conflict = await client.PostAsync(Route, Json(Batch(
+            Event("event-1", "{\"value\":2}"),
+            Event("event-2", "{\"value\":3}"))));
+
+        Assert.Equal(HttpStatusCode.OK, seed.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, conflict.StatusCode);
+        Assert.Equal(1L, await InboxCountAsync(connection));
+        Assert.Equal("{\"value\": 1}", await StoredDataAsync(connection, "site-1", "event-1"));
+    }
+
+    [Fact]
     public async Task MixedBatchConflictDoesNotPersistNewEvents()
     {
         var connection = await CreateDatabaseAsync();
@@ -256,5 +293,24 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     private sealed class FixedIdentityProvider : ITrustedSensorIdentityProvider
     {
         public TrustedSensorIdentity? Resolve(HttpContext context) => new("site-1", "sensor-1");
+    }
+
+    private sealed class LoseFirstResponseHandler(HttpMessageHandler innerHandler) : DelegatingHandler(innerHandler)
+    {
+        private int requestCount;
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var response = await base.SendAsync(request, cancellationToken);
+            if (Interlocked.Increment(ref requestCount) == 1)
+            {
+                response.Dispose();
+                throw new HttpRequestException("Simulated response loss after the server completed the request.");
+            }
+
+            return response;
+        }
     }
 }
