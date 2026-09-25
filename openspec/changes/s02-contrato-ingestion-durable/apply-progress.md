@@ -242,3 +242,33 @@ Archivos: `InboxWriter.cs`, `Monitoring.Persistence.csproj`, `Program.cs`, `Inge
 ### Límite de esta unidad
 
 No incluye cuota ni métricas; quedan asignadas a la Phase 3 / PR #3.
+
+## Phase 3a — PR #3: cuota móvil por origen
+
+**Delivery:** auto-chain, feature-branch-chain. **Branch:** `feat/s02-origin-quota`. **Scope:** tasks 3.1–3.2; métricas e integración posterior quedan para la siguiente porción.
+
+### Progreso y TDD
+
+- [x] 3.1 / 3.2: cuota exacta de 500 eventos nuevos confirmados por origen en los últimos 60 segundos; reenvíos idénticos no consumen cuota; lotes por encima del remanente se rechazan enteros y la admisión concurrente no supera el límite.
+
+| Tasks | Test / layer | Safety net | RED | GREEN | Triangulate | Refactor |
+|---|---|---|---|---|---|---|
+| 3.1 / 3.2 | `IngestionPersistenceTests` / PostgreSQL + HTTP | 4/4 pruebas existentes aprobadas antes del cambio | Filtro focal: exit 1; 9 descubiertas, 6 aprobadas y 3 fallidas. Sin cuota se aceptaron los excesos, ambas solicitudes concurrentes y HTTP 200 en vez de 429. | Filtro focal: exit 0; 9/9 aprobadas. Build: exit 0, 0 advertencias, 0 errores. | Casos de límite 499→500, lote mixto rechazado sin inserción, reenvío con cuota llena, origen distinto, expiración a 61 s y dos admisiones concurrentes. | No requerido; la consulta usa el índice existente por origen y `accepted_at`. |
+
+### Archivos
+
+| Archivo | Cambio |
+|---|---|
+| `src/Monitoring.Persistence/Ingestion/InboxWriter.cs` | Añade `RateLimited`, cuenta aceptaciones recientes por origen y revierte el lote si excede 500. |
+| `src/Monitoring.Host/Program.cs` | Propaga el resultado de cuota al estado HTTP 429; necesario porque el adaptador anterior convertía resultados desconocidos a 500. |
+| `tests/Monitoring.Tests/IngestionPersistenceTests.cs` | Añade pruebas PostgreSQL de cuota, ventana móvil, atomicidad, aislamiento, reenvío, concurrencia y HTTP 429. |
+| `openspec/changes/s02-contrato-ingestion-durable/tasks.md` | Marca 3.1 y 3.2 completas tras verificación local. |
+
+### Verificación
+
+- `dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests` — RED: exit 1; 9 descubiertas, 6 aprobadas y 3 fallidas. GREEN: exit 0; 9 aprobadas, 0 fallidas.
+- `dotnet build Monitoring.slnx --no-restore` — exit 0; 0 advertencias, 0 errores.
+
+### Límites de esta unidad
+
+No añade métricas de rechazo ni los escenarios integrales 3.3–3.5. El índice `(site_id, sensor_id, accepted_at)` de la migración previa se reutiliza; no requiere esquema nuevo.

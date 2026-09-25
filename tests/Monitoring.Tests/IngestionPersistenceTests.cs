@@ -105,6 +105,74 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
         Assert.Equal(1L, await InboxCountAsync(connection));
     }
 
+    [Fact]
+    public async Task EnforcesFiveHundredNewEventsAndRejectsAnOverLimitBatchAtomically()
+    {
+        var connection = await CreateDatabaseAsync();
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 499)));
+
+        var overLimit = await WriteAsync(connection, "site-1", "sensor-1", BatchOf(499, 2));
+        Assert.Equal(InboxWriteResult.RateLimited, overLimit);
+        Assert.Equal(499L, await InboxCountAsync(connection));
+
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(499, 1)));
+        Assert.Equal(InboxWriteResult.RateLimited, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(500, 1)));
+        Assert.Equal(500L, await InboxCountAsync(connection));
+    }
+
+    [Fact]
+    public async Task IdenticalResendsDoNotConsumeQuota()
+    {
+        var connection = await CreateDatabaseAsync();
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 500)));
+
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 1)));
+        Assert.Equal(500L, await InboxCountAsync(connection));
+    }
+
+    [Fact]
+    public async Task QuotaIsIsolatedByOriginAndExpiresOutsideTheRollingWindow()
+    {
+        var connection = await CreateDatabaseAsync();
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 500)));
+
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-2", BatchOf(0, 1)));
+        await ExpireOriginEventsAsync(connection, "site-1", "sensor-1");
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(500, 1)));
+        Assert.Equal(502L, await InboxCountAsync(connection));
+    }
+
+    [Fact]
+    public async Task ConcurrentNewEventsCannotOvershootOriginQuota()
+    {
+        var connection = await CreateDatabaseAsync();
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 499)));
+
+        var results = await Task.WhenAll(
+            WriteAsync(connection, "site-1", "sensor-1", BatchOf(499, 1)),
+            WriteAsync(connection, "site-1", "sensor-1", BatchOf(500, 1)));
+
+        Assert.Single(results, result => result == InboxWriteResult.Accepted);
+        Assert.Single(results, result => result == InboxWriteResult.RateLimited);
+        Assert.Equal(500L, await InboxCountAsync(connection));
+    }
+
+    [Fact]
+    public async Task HttpOverLimitResponseIs429AndDoesNotPersistNewRows()
+    {
+        var connection = await CreateDatabaseAsync();
+        using var factory = CreateHost(connection);
+        using var client = factory.CreateClient();
+
+        using var fullQuota = await client.PostAsync(Route, Json(Batch(QuotaEvents(0, 500))));
+        using var overLimit = await client.PostAsync(Route, Json(Batch(QuotaEvents(500, 1))));
+
+        Assert.Equal(HttpStatusCode.OK, fullQuota.StatusCode);
+        Assert.Empty(await fullQuota.Content.ReadAsByteArrayAsync());
+        Assert.Equal(HttpStatusCode.TooManyRequests, overLimit.StatusCode);
+        Assert.Equal(500L, await InboxCountAsync(connection));
+    }
+
     private async Task<string> CreateDatabaseAsync()
     {
         var connection = await postgres.CreateEmptyDatabaseAsync();
@@ -131,6 +199,26 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     {
         await using var db = CreateContext(connection);
         return await new InboxWriter(db).WriteAsync(site, sensor, batch, default);
+    }
+
+    private static IngestionBatch BatchOf(int firstEvent, int count) =>
+        Parse(QuotaEvents(firstEvent, count));
+
+    private static string[] QuotaEvents(int firstEvent, int count) =>
+        Enumerable.Range(firstEvent, count)
+            .Select(index => Event($"quota-{index}", "{}"))
+            .ToArray();
+
+    private static async Task ExpireOriginEventsAsync(string connection, string site, string sensor)
+    {
+        await using var db = new NpgsqlConnection(connection);
+        await db.OpenAsync();
+        await using var command = new NpgsqlCommand(
+            "UPDATE monitoring.ingestion_inbox SET accepted_at = clock_timestamp() - interval '61 seconds' WHERE site_id = @site AND sensor_id = @sensor",
+            db);
+        command.Parameters.AddWithValue("site", site);
+        command.Parameters.AddWithValue("sensor", sensor);
+        await command.ExecuteNonQueryAsync();
     }
 
     private static async Task<long> InboxCountAsync(string connection)

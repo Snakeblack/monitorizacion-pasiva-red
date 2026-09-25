@@ -69,6 +69,7 @@ internal sealed class PersistentIngestionBatchWriter(InboxWriter inboxWriter) : 
         {
             InboxWriteResult.Accepted => IngestionWriteResult.Accepted,
             InboxWriteResult.Conflict => IngestionWriteResult.Conflict,
+            InboxWriteResult.RateLimited => IngestionWriteResult.RateLimited,
             _ => IngestionWriteResult.Failed
         };
     }
