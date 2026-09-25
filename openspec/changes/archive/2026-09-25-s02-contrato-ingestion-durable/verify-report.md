@@ -2,7 +2,7 @@
 
 **Route:** standard fallback (no `routing:` in `openspec/config.yaml`).
 **Mode:** Strict TDD, targeted recheck of frozen finding C-01.
-**Verdict:** **PASS WITH WARNINGS**.
+**Verdict:** **PASS WITH WARNINGS** after the required quality gate passed on 2026-09-25T21:35:12.809Z. The targeted C-01 recheck remains closed and W-01 remains open for follow-up.
 
 ## Bounded lineage and candidate
 
@@ -53,3 +53,15 @@ Historical RED runner output is described in `apply-progress.md`; a current pass
 **SUGGESTION:** None added.
 
 `evaluateRecheck` returned `action: close`, `status: closed`, `terminal_reason: all-findings-verified` and `verified_candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c`; the runtime/orchestrator persisted that state transition in state.yaml. **PASS WITH WARNINGS** follows from C-01 passing both frozen commands with W-01 retained.
+
+## Quality Gates
+
+Policy: `openspec/config.yaml` declares a required `tests` gate with `on_fail: halt`. `parseQualityGates` and `validateQualityGates` accepted the policy without errors. Both executions of the same command completed within the configured 180000 ms timeout.
+
+| gate | status | required | on_fail | detail |
+|---|---|---|---|---|
+| tests | pass | true | halt | Latest `dotnet test Monitoring.slnx` exited 0: 54 passed, 0 failed, 0 skipped; 19796 ms. |
+
+The first execution at 2026-09-25T21:32:45.127Z exited 1 after 41795 ms: 53 passed and 1 failed. `MigrationTests.MigrateCreatesInboxSchemaAndCanBeRepeated` failed while Testcontainers inspected its Resource Reaper; Docker returned 404 `No such container`. This failure was recorded as a blocking gate result and was not suppressed. With no other test suites running, the same command was repeated at 2026-09-25T21:35:12.809Z and passed all 54 tests. The change from failure to success without code edits is consistent with a transient container-lifecycle fault; the precise cause is unconfirmed.
+
+For the latest execution, `classifyGate` returned `pass`; `enforceGate` returned no finding and `aggregateStatus` returned `pass`. The current audit is persisted at `state.yaml.gates.quality-gates` with `status: pass`. **verify_outcome: PASS WITH WARNINGS** reflects the passing gate and the existing W-01 follow-up at https://github.com/Snakeblack/monitorizacion-pasiva-red/issues/18. C-01 remains closed in its frozen verification lineage; no historical RED evidence has been inferred from either run.
