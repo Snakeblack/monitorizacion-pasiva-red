@@ -143,6 +143,17 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       "green": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~InboxSchemaTests","exit_code":0,"discovered":1,"passed":1,"failed":0},
       "triangulation": "La misma clave eventId rechaza la segunda fila dentro del mismo origen y permite una fila en otra sede; también se consulta tipo JSONB e índice por origen/accepted_at.",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": ["2.1", "2.3", "2.4", "2.5"],
+      "test_file": "tests/Monitoring.Tests/IngestionPersistenceTests.cs",
+      "test_name": "Monitoring.Tests.IngestionPersistenceTests",
+      "layer": "integration",
+      "safety_net": {"command":"dotnet test Monitoring.slnx --no-restore --filter 'FullyQualifiedName~IngestionHostTests|FullyQualifiedName~HostStartupTests'","exit_code":0,"discovered":8,"passed":8,"failed":0},
+      "red": {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests","exit_code":1,"observed":"Compilación fallida antes de InboxWriter: CS0246 InboxWriteResult no encontrado.","discovered":0,"passed":0,"failed":0},
+      "green": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests","exit_code":0,"discovered":4,"passed":4,"failed":0},
+      "triangulation": "PostgreSQL confirma ACK tras commit, rollback sin ACK/filas, igualdad JSONB sin ordenar propiedades, conflicto al reordenar arrays, aislamiento por origen y dos envíos concurrentes con una sola fila.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -154,7 +165,7 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       "path": "tests/Monitoring.Tests/IngestionContractTests.cs",
       "sha256": "57D535F1EEC3FA5812120438C54C6A4FBABF90B8655193189A26C4A790EC1B97"
     },
-    {"path":"src/Monitoring.Host/Program.cs","sha256":"9C699F8F6C6DA350288D6019019A38D185FCFC061BADB258D6A52E3C3C664304"},
+    {"path":"src/Monitoring.Host/Program.cs","sha256":"6D55630BF3B340A329324E7B0796A4FF56A1D7D31560E277E5A9C73D3DAC3FA2"},
     {"path":"src/Monitoring.Host/Ingestion/BatchEndpoint.cs","sha256":"94CAF0A90C8B84146EE4FD8A17D9AC051CF03E0375BDC1F705067223ABCB79B5"},
     {"path":"src/Monitoring.Host/Ingestion/TrustedSensorIdentity.cs","sha256":"465F4E39B32FAD00F1987B65B7D0D41F2312F45E8FC6C49322042C20203FD628"},
     {"path":"tests/Monitoring.Tests/IngestionHostTests.cs","sha256":"B30756B366E7115E8A216D387889F80228CD75E7D46FDF967B8C0B727F2056F7"},
@@ -165,7 +176,10 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
     {"path":"src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs","sha256":"292FB4F45571C51705C0CB24F461D97239FC39A2B342099760B8981CCE805B73"},
     {"path":"src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs","sha256":"74940E6C04139513484DE88A964F4D2EE7F52FC539D8E1A3FCC47E12EED58CF3"},
     {"path":"tests/Monitoring.Tests/InboxSchemaTests.cs","sha256":"93D4BC89E6471C2AB61C6E906BAB6C96F8C9C6700485A98E6D0F3208AB077B9A"},
-    {"path":"tests/Monitoring.Tests/MigrationTests.cs","sha256":"FF3F9AEE40A1723A8F44F6BD2CAEA66719D8ABA8386402996B6D92F52E6B97DA"}
+    {"path":"tests/Monitoring.Tests/MigrationTests.cs","sha256":"FF3F9AEE40A1723A8F44F6BD2CAEA66719D8ABA8386402996B6D92F52E6B97DA"},
+    {"path":"src/Monitoring.Persistence/Ingestion/InboxWriter.cs","sha256":"15CCE39FD6E7142E7F096FAAC917BCCA0C2C6AAED534D4D3EFDFBF9D443B0075"},
+    {"path":"tests/Monitoring.Tests/IngestionPersistenceTests.cs","sha256":"A71FE1437D181E292F7B8C0F9FBE129F11546CE5661FED81C0F95C112545771E"},
+    {"path":"src/Monitoring.Persistence/Monitoring.Persistence.csproj","sha256":"CE3B380AA87722919DBBB37FC1C6CF1827FF0EB459913D95311BD42A4366007D"}
   ],
   "full_verification": [
     {
@@ -206,3 +220,25 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
 `InboxSchemaTests` + migraciones: 3 aprobados; `dotnet build Monitoring.slnx --no-restore`: 0 advertencias, 0 errores.
 
 Archivos: `MonitoringDbContext.cs`, `IngestionOriginEntity.cs`, `IngestionInboxEntity.cs`, `IngestionOriginEntityConfiguration.cs`, `IngestionInboxEntityConfiguration.cs`, `202609240002_DurableInbox.cs`, `InboxSchemaTests.cs`, `MigrationTests.cs`, `tasks.md`.
+
+## Phase 2b — PR #2: writer durable e idempotencia
+
+**Delivery:** auto-chain, feature-branch-chain. **Branch:** `feat/s02-inbox-writer`. **Base:** esquema inbox PR #11.
+
+### Progreso y TDD
+
+- [x] 2.1, 2.3, 2.4 y 2.5: writer transaccional, ACK posterior al commit, rollback sin confirmación, idempotencia JSONB, conflicto 409, aislamiento y serialización concurrente.
+
+| Tasks | Test / layer | Safety net | RED | GREEN | Triangulate | Refactor |
+|---|---|---|---|---|---|---|
+| 2.1 / 2.3 / 2.4 / 2.5 | `IngestionPersistenceTests` / PostgreSQL + HTTP | 8/8 host tests | API `InboxWriteResult` ausente; compilación fallida | 4/4 aprobados | Objetos reordenados idempotentes; arrays reordenados conflictivos; rollback, origen y concurrencia | No requerido |
+
+### Verificación y archivos
+
+`dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests`: 4 aprobados. `dotnet build Monitoring.slnx --no-restore`: 0 advertencias, 0 errores.
+
+Archivos: `InboxWriter.cs`, `Monitoring.Persistence.csproj`, `Program.cs`, `IngestionPersistenceTests.cs`, `tasks.md`.
+
+### Límite de esta unidad
+
+No incluye cuota ni métricas; quedan asignadas a la Phase 3 / PR #3.
