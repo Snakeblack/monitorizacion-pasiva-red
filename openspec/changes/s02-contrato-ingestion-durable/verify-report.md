@@ -1,7 +1,7 @@
 # Verification Report: s02-contrato-ingestion-durable
 
-**Route:** standard fallback (no `routing:` in `openspec/config.yaml`).  
-**Mode:** Strict TDD.  
+**Route:** standard fallback (no `routing:` in `openspec/config.yaml`).
+**Mode:** Strict TDD.
 **Verdict:** **FAIL**.
 
 ## Completeness
