@@ -1,7 +1,7 @@
 change: s02-contrato-ingestion-durable
-status: blocked
-revision: 3
-last_updated: "2026-09-24T17:39:12.475Z"
+status: active
+revision: 4
+last_updated: "2026-09-25T20:01:43.792Z"
 blocking_questions: []
 classification: normal
 phases:
@@ -34,11 +34,11 @@ phases:
   apply:
     status: done
     artifact: openspec/changes/s02-contrato-ingestion-durable/apply-progress.md
-    summary: 'Contrato, host, bandeja, cuota y señales implementados en PR encadenadas #9-#15; 53 pruebas y build correctos.'
+    summary: 'C-01 remediado: occurredAt raw persistido y comparado ordinalmente; 54 pruebas y build correctos; recheck pendiente.'
   verify:
-    status: failed
+    status: pending
     artifact: openspec/changes/s02-contrato-ingestion-durable/verify-report.md
-    summary: 'FAIL: C-01, occurredAt con distinto valor JSON se acepta como idéntico; 53 pruebas y build pasan.'
+    summary: 'Recheck focal pendiente para C-01 tras corrección y un intento registrado en verify_lineage.'
 approvals:
   - id: s02-clarify-001
     gate: architecture
@@ -86,9 +86,9 @@ verify_lineage:
   lineage_id: sha256:2fb7b5f9a50b72ca9be8eafda625e691ad4082e990a27562f037123c3049e3d9
   generation: 2
   predecessor_id: sha256:2010a26896917ff60bfa6bc6e742adea27a42df4e99b3033a79b147a263f8728
-  status: remediation-pending
+  status: recheck-pending
   genesis_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
-  current_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
+  current_candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c
   verified_candidate_id: null
   contract_digest: sha256:6ddb9ab7fa36eb4c6a7722d4849eaa899c1cdb7cc37c45ce9deed53fc9909185
   candidate_recovery:
@@ -102,10 +102,10 @@ verify_lineage:
     current:
       kind: candidate-recovery-ref/v1
       schema_version: 1
-      candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
-      content_digest: sha256:bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092
-      relative_path: .verify-lineage-candidate-bf6a505d5c46422303565057dbf27b89acda496f57f6c6d0fc29f608e0a6d092.json
-  remediation_attempts: 0
+      candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c
+      content_digest: sha256:3ce214bb97915f5db811282d780c688b7933a17c04e691e68a5ff9b5412f93fe
+      relative_path: .verify-lineage-candidate-3ce214bb97915f5db811282d780c688b7933a17c04e691e68a5ff9b5412f93fe.json
+  remediation_attempts: 1
   max_remediation_attempts: 2
   findings:
   - id: C-01
@@ -136,9 +136,9 @@ verify_lineage:
   candidate_snapshot:
     kind: candidate-snapshot-ref/v1
     schema_version: 1
-    candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
-    content_digest: sha256:ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0
-    relative_path: .verify-lineage-snapshot-ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0.json
+    candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c
+    content_digest: sha256:0f7dbb5603b288fa14d24c225ee18f345a577c556123d915e4526540b0e630f3
+    relative_path: .verify-lineage-snapshot-0f7dbb5603b288fa14d24c225ee18f345a577c556123d915e4526540b0e630f3.json
   successor_reason: new-scope-approved
   approval_ref: s02-new-scope-001
 verify_lineage_history:

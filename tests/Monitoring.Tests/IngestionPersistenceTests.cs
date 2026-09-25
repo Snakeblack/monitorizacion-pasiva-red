@@ -47,6 +47,24 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     }
 
     [Fact]
+    public async Task DifferentOccurredAtTextForSameInstantConflictsAndPreservesOriginalValue()
+    {
+        var connection = await CreateDatabaseAsync();
+        using var factory = CreateHost(connection);
+        using var client = factory.CreateClient();
+        const string originalTimestamp = "2026-09-24T12:30:00Z";
+        const string equivalentTimestamp = "2026-09-24T12:30:00.000Z";
+
+        using var first = await client.PostAsync(Route, Json(Batch(Event("event-1", originalTimestamp, "{\"value\":1}"))));
+        using var resend = await client.PostAsync(Route, Json(Batch(Event("event-1", equivalentTimestamp, "{\"value\":1}"))));
+
+        Assert.Equal(HttpStatusCode.OK, first.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, resend.StatusCode);
+        Assert.Equal(1L, await InboxCountAsync(connection));
+        Assert.Equal(originalTimestamp, await StoredOccurredAtAsync(connection, "site-1", "event-1"));
+    }
+
+    [Fact]
     public async Task LostResponseAfterCommitCanBeRetriedWithEmptyAckAndOneStoredRow()
     {
         var connection = await CreateDatabaseAsync();
@@ -276,6 +294,16 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
         return (string)(await command.ExecuteScalarAsync())!;
     }
 
+    private static async Task<string> StoredOccurredAtAsync(string connection, string site, string eventId)
+    {
+        await using var db = new NpgsqlConnection(connection);
+        await db.OpenAsync();
+        await using var command = new NpgsqlCommand("SELECT occurred_at_text FROM monitoring.ingestion_inbox WHERE site_id = @site AND event_id = @event", db);
+        command.Parameters.AddWithValue("site", site);
+        command.Parameters.AddWithValue("event", eventId);
+        return (string)(await command.ExecuteScalarAsync())!;
+    }
+
     private static IngestionBatch Parse(params string[] events)
     {
         Assert.True(BatchContract.TryParse(Encoding.UTF8.GetBytes(Batch(events)), out var batch));
@@ -287,6 +315,9 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
 
     private static string Event(string id, string data) =>
         "{\"eventId\":\"" + id + "\",\"occurredAt\":\"2026-09-24T12:30:00.123Z\",\"data\":" + data + "}";
+
+    private static string Event(string id, string occurredAt, string data) =>
+        "{\"eventId\":\"" + id + "\",\"occurredAt\":\"" + occurredAt + "\",\"data\":" + data + "}";
 
     private static StringContent Json(string body) => new(body, Encoding.UTF8, "application/json");
 

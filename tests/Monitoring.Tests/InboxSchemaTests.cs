@@ -26,11 +26,12 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
             new[] { "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_origin"));
         Assert.Equal(
-            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "schema_version", "sensor_id", "site_id" },
+            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "schema_version", "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_inbox"));
 
         Assert.Equal("jsonb", await ColumnTypeAsync(connection, "ingestion_inbox", "data"));
         Assert.Equal("timestamp with time zone", await ColumnTypeAsync(connection, "ingestion_inbox", "occurred_at"));
+        Assert.Equal("text", await ColumnTypeAsync(connection, "ingestion_inbox", "occurred_at_text"));
         Assert.Equal("timestamp with time zone", await ColumnTypeAsync(connection, "ingestion_inbox", "accepted_at"));
         Assert.Equal(128, await CharacterLimitAsync(connection, "ingestion_inbox", "event_id"));
 
@@ -111,12 +112,13 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
     private static async Task InsertInboxAsync(NpgsqlConnection connection, string siteId, string sensorId, string eventId)
     {
         await using var command = new NpgsqlCommand(
-            "INSERT INTO monitoring.ingestion_inbox (site_id, sensor_id, event_id, batch_id, schema_version, occurred_at, data, accepted_at) " +
-            "VALUES (@site_id, @sensor_id, @event_id, 'batch-1', 1, TIMESTAMPTZ '2026-09-25 10:00:00+00', CAST('{}' AS jsonb), TIMESTAMPTZ '2026-09-25 10:00:01+00')",
+            "INSERT INTO monitoring.ingestion_inbox (site_id, sensor_id, event_id, batch_id, schema_version, occurred_at, occurred_at_text, data, accepted_at) " +
+            "VALUES (@site_id, @sensor_id, @event_id, 'batch-1', 1, TIMESTAMPTZ '2026-09-25 10:00:00+00', @occurred_at_text, CAST('{}' AS jsonb), TIMESTAMPTZ '2026-09-25 10:00:01+00')",
             connection);
         command.Parameters.AddWithValue("site_id", siteId);
         command.Parameters.AddWithValue("sensor_id", sensorId);
         command.Parameters.AddWithValue("event_id", eventId);
+        command.Parameters.AddWithValue("occurred_at_text", "2026-09-25T10:00:00Z");
         await command.ExecuteNonQueryAsync();
     }
 

@@ -66,6 +66,7 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
                 BatchId = batch.BatchId,
                 SchemaVersion = (short)batch.SchemaVersion,
                 OccurredAt = ParseTimestamp(ingestionEvent),
+                OccurredAtText = ingestionEvent.OccurredAt,
                 Data = ingestionEvent.Data.GetRawText(),
                 AcceptedAt = acceptedAt
             });
@@ -124,7 +125,7 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
         CancellationToken cancellationToken)
     {
         await using var command = Command(
-            "SELECT occurred_at, data = CAST(@data AS jsonb) FROM monitoring.ingestion_inbox WHERE site_id = @site_id AND sensor_id = @sensor_id AND event_id = @event_id",
+            "SELECT occurred_at_text, data = CAST(@data AS jsonb) FROM monitoring.ingestion_inbox WHERE site_id = @site_id AND sensor_id = @sensor_id AND event_id = @event_id",
             transaction);
         command.Parameters.AddWithValue("site_id", siteId);
         command.Parameters.AddWithValue("sensor_id", sensorId);
@@ -136,7 +137,7 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
             return (false, false);
         }
 
-        var sameTimestamp = reader.GetFieldValue<DateTimeOffset>(0) == ParseTimestamp(ingestionEvent);
+        var sameTimestamp = reader.GetString(0) == ingestionEvent.OccurredAt;
         return (true, sameTimestamp && reader.GetBoolean(1));
     }
 
@@ -172,7 +173,7 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
         new(sql, (NpgsqlConnection)dbContext.Database.GetDbConnection(), (NpgsqlTransaction)transaction.GetDbTransaction());
 
     private static bool SameTimestamp(IngestionEvent left, IngestionEvent right) =>
-        ParseTimestamp(left) == ParseTimestamp(right);
+        string.Equals(left.OccurredAt, right.OccurredAt, StringComparison.Ordinal);
 
     private static DateTimeOffset ParseTimestamp(IngestionEvent ingestionEvent) =>
         DateTimeOffset.Parse(ingestionEvent.OccurredAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
