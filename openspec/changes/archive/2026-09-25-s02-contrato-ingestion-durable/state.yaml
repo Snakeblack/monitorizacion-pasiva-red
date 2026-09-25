@@ -1,7 +1,7 @@
 change: s02-contrato-ingestion-durable
 status: verified
-revision: 5
-last_updated: "2026-09-25T20:11:53.783Z"
+revision: 7
+last_updated: "2026-09-25T21:35:12.809Z"
 blocking_questions: []
 classification: normal
 phases:
@@ -37,8 +37,9 @@ phases:
     summary: 'C-01 remediado: occurredAt raw persistido y comparado ordinalmente; 54 pruebas y build correctos; recheck pendiente.'
   verify:
     status: done
+    verdict: PASS WITH WARNINGS
     artifact: openspec/changes/s02-contrato-ingestion-durable/verify-report.md
-    summary: 'PASS WITH WARNINGS: C-01 resuelto en recheck focal; 54 pruebas pasan; W-01 histórica pendiente de seguimiento.'
+    summary: 'PASS WITH WARNINGS: puerta de pruebas 54/54 al repetir; W-01 sigue en #18; C-01 cerrado.'
 approvals:
   - id: s02-clarify-001
     gate: architecture
@@ -197,3 +198,12 @@ verify_lineage_history:
     candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
     content_digest: sha256:ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0
     relative_path: .verify-lineage-snapshot-ecc9eea0e777164a1610859bfd1a3f392c98d0303f192c8d07cef1b0ffe627d0.json
+gates:
+  quality-gates:
+    status: pass
+    evaluated_at: 2026-09-25T21:35:12.809Z
+    gates:
+      tests:
+        status: pass
+        required: true
+        on_fail: halt
