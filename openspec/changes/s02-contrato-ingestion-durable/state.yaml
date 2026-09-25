@@ -1,7 +1,7 @@
 change: s02-contrato-ingestion-durable
-status: active
-revision: 4
-last_updated: "2026-09-25T20:01:43.792Z"
+status: verified
+revision: 5
+last_updated: "2026-09-25T20:11:53.783Z"
 blocking_questions: []
 classification: normal
 phases:
@@ -36,9 +36,9 @@ phases:
     artifact: openspec/changes/s02-contrato-ingestion-durable/apply-progress.md
     summary: 'C-01 remediado: occurredAt raw persistido y comparado ordinalmente; 54 pruebas y build correctos; recheck pendiente.'
   verify:
-    status: pending
+    status: done
     artifact: openspec/changes/s02-contrato-ingestion-durable/verify-report.md
-    summary: 'Recheck focal pendiente para C-01 tras corrección y un intento registrado en verify_lineage.'
+    summary: 'PASS WITH WARNINGS: C-01 resuelto en recheck focal; 54 pruebas pasan; W-01 histórica pendiente de seguimiento.'
 approvals:
   - id: s02-clarify-001
     gate: architecture
@@ -86,10 +86,10 @@ verify_lineage:
   lineage_id: sha256:2fb7b5f9a50b72ca9be8eafda625e691ad4082e990a27562f037123c3049e3d9
   generation: 2
   predecessor_id: sha256:2010a26896917ff60bfa6bc6e742adea27a42df4e99b3033a79b147a263f8728
-  status: recheck-pending
+  status: closed
   genesis_candidate_id: sha256:566c586c4e0bc465e9ff3de772b7f8e1d5a38502895426af0c5a53a661a392fa
   current_candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c
-  verified_candidate_id: null
+  verified_candidate_id: sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c
   contract_digest: sha256:6ddb9ab7fa36eb4c6a7722d4849eaa899c1cdb7cc37c45ce9deed53fc9909185
   candidate_recovery:
     schema_version: 1
@@ -130,9 +130,9 @@ verify_lineage:
       test_files:
       - tests/Monitoring.Tests/InboxSchemaTests.cs
       - tests/Monitoring.Tests/IngestionPersistenceTests.cs
-    status: unresolved
+    status: resolved
   late_observations: []
-  terminal_reason: null
+  terminal_reason: all-findings-verified
   candidate_snapshot:
     kind: candidate-snapshot-ref/v1
     schema_version: 1
