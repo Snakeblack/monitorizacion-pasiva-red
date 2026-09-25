@@ -14,6 +14,8 @@ internal sealed class IngestionInboxEntity
 
     public DateTimeOffset OccurredAt { get; set; }
 
+    public string OccurredAtText { get; set; } = string.Empty;
+
     public string Data { get; set; } = "{}";
 
     public DateTimeOffset AcceptedAt { get; set; }

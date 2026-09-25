@@ -32,6 +32,10 @@ internal sealed class IngestionInboxEntityConfiguration : IEntityTypeConfigurati
         builder.Property(item => item.OccurredAt)
             .HasColumnName("occurred_at")
             .IsRequired();
+        builder.Property(item => item.OccurredAtText)
+            .HasColumnName("occurred_at_text")
+            .HasColumnType("text")
+            .IsRequired();
         builder.Property(item => item.Data)
             .HasColumnName("data")
             .HasColumnType("jsonb")

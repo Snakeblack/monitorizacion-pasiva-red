@@ -214,6 +214,71 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       },
       "triangulation": "El cliente descarta la primera respuesta HTTP ya completada y verifica una fila antes del retry; el retry idéntico responde 200 vacío y conserva una fila. El lote HTTP conflictivo conserva el contenido previo y no inserta su evento nuevo.",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": [
+        "C-01"
+      ],
+      "test_file": "tests/Monitoring.Tests/IngestionPersistenceTests.cs",
+      "test_name": "Monitoring.Tests.IngestionPersistenceTests.DifferentOccurredAtTextForSameInstantConflictsAndPreservesOriginalValue",
+      "layer": "integration",
+      "safety_net": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests",
+        "exit_code": 0,
+        "discovered": 11,
+        "passed": 11,
+        "failed": 0
+      },
+      "red": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~DifferentOccurredAtTextForSameInstantConflictsAndPreservesOriginalValue",
+        "exit_code": 1,
+        "observed": "El reenvío HTTP del mismo origen, evento y data con 2026-09-24T12:30:00.000Z respondió 200; la aserción esperaba 409.",
+        "discovered": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~DifferentOccurredAtTextForSameInstantConflictsAndPreservesOriginalValue",
+        "exit_code": 0,
+        "discovered": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "triangulation": "El recorrido HTTP/PostgreSQL comprueba conflicto por texto RFC 3339 distinto para el mismo instante, una fila y conservación de la cadena original.",
+      "refactor": "not-needed"
+    },
+    {
+      "tasks": [
+        "C-01"
+      ],
+      "test_file": "tests/Monitoring.Tests/InboxSchemaTests.cs",
+      "test_name": "Monitoring.Tests.InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex",
+      "layer": "integration",
+      "safety_net": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~InboxSchemaTests",
+        "exit_code": 1,
+        "observed": "La expectativa previa de ocho columnas falló tras añadir el almacenamiento raw autorizado al successor de alcance.",
+        "discovered": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "red": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~InboxSchemaTests",
+        "exit_code": 1,
+        "observed": "La prueba de esquema ya aceptaba la columna raw, pero el insert manual violó NOT NULL al omitir occurred_at_text.",
+        "discovered": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~InboxSchemaTests",
+        "exit_code": 0,
+        "discovered": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "triangulation": "Verifica nombres/tipos de columnas, valor raw requerido, clave compuesta y separación entre sedes.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -260,7 +325,43 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
     {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0},
     {"command":"dotnet test Monitoring.slnx --no-restore --filter 'FullyQualifiedName~IngestionHostTests|FullyQualifiedName~IngestionPersistenceTests'","exit_code":0,"passed":19,"failed":0},
     {"command":"dotnet test Monitoring.slnx","exit_code":0,"passed":53,"failed":0},
-    {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0}
+    {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0},
+    {
+      "command": "dotnet test Monitoring.slnx",
+      "exit_code": 1,
+      "passed": 53,
+      "failed": 1
+    },
+    {
+      "command": "dotnet build Monitoring.slnx --no-restore",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~InboxSchemaTests",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "command": "dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests",
+      "exit_code": 0,
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "command": "dotnet test Monitoring.slnx",
+      "exit_code": 0,
+      "passed": 54,
+      "failed": 0
+    },
+    {
+      "command": "dotnet build Monitoring.slnx --no-restore",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0
+    }
   ]
 }
 ```
@@ -336,6 +437,44 @@ No incluye cuota ni métricas; quedan asignadas a la Phase 3 / PR #3.
 
 No añade métricas de rechazo ni los escenarios integrales 3.3–3.5. El índice `(site_id, sensor_id, accepted_at)` de la migración previa se reutiliza; no requiere esquema nuevo.
 
+## Remediación C-01 — bloqueada por alcance de esquema
+
+El test de regresión HTTP/PostgreSQL cubre un reenvío del mismo origen, evento y `data` con `occurredAt` `2026-09-24T12:30:00Z` frente a `2026-09-24T12:30:00.000Z`. El ciclo focal está verde y conserva el timestamp original. La suite completa falla porque `InboxSchemaTests` fija la lista exacta de columnas de la migración; corregir ese contrato requiere un archivo fuera de los `allowed_paths` congelados para C-01. No se consumió un intento de remediación ni se ejecutó el recheck.
+
+### TDD Cycle Evidence
+
+| Task | Test file | Layer | Safety net | RED | GREEN | Triangulate | Refactor | Notes |
+|------|-----------|-------|------------|-----|-------|-------------|----------|-------|
+| C-01 | `tests/Monitoring.Tests/IngestionPersistenceTests.cs` | Integration (HTTP + PostgreSQL) | ✅ 11/11 antes de añadir el test | ✅ Exit 1: esperaba HTTP 409 y recibió HTTP 200 | ✅ Focal 1/1 | ➖ Caso focal de reenvío persistido; comprueba una fila y texto original | ➖ No hacía falta | La suite completa exige ampliar el alcance para validar el nuevo almacenamiento raw. |
+
+### Verificación y límite pendiente
+
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests` — línea base: exit 0; 11 aprobados.
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~DifferentOccurredAtTextForSameInstantConflictsAndPreservesOriginalValue` — RED: exit 1; HTTP 200 en vez de 409. GREEN: exit 0; 1 aprobado.
+- `dotnet test Monitoring.slnx` — exit 1; 53 aprobados y 1 fallido. `InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex` rechaza el cambio porque exige exactamente las 8 columnas actuales; en su línea 33 también verifica que `occurred_at` siga siendo `timestamp with time zone`.
+- `dotnet build Monitoring.slnx --no-restore` — exit 0; 0 advertencias, 0 errores.
+
+La prueba `InboxSchemaTests.cs` está fuera del allowlist congelado. No se modificó ni se amplió el scope; el orquestador debe tramitar un nuevo alcance antes de completar la remediación.
+
+## Continuación de C-01 — successor de alcance generación 2
+
+La aprobación `s02-new-scope-001` autorizó incluir `tests/Monitoring.Tests/InboxSchemaTests.cs`; el successor activo conserva solo C-01. Se actualizó la expectativa de columnas/tipo y su helper de inserción para proporcionar `occurred_at_text`. La escritura raw, el timestamp semántico y la idempotencia se verifican con PostgreSQL real en el recorrido HTTP.
+
+### TDD Cycle Evidence — esquema
+
+| Task | Test file | Layer | Safety net | RED | GREEN | Triangulate | Refactor | Notes |
+|------|-----------|-------|------------|-----|-------|-------------|----------|-------|
+| C-01 | `tests/Monitoring.Tests/InboxSchemaTests.cs` | Integration (PostgreSQL) | ⚠️ La expectativa anterior de 8 columnas falló con el cambio autorizado; se conservó `occurred_at` como `timestamptz` | ✅ Exit 1: el insert manual omitía el nuevo campo NOT NULL | ✅ Filtro `InboxSchemaTests`: 1/1 | ✅ Consulta nombres y tipos, y prueba inserts/clave compuesta en dos sedes | ➖ No hacía falta | El helper parametriza el texto RFC 3339 original. |
+
+### Verificación final de apply
+
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~InboxSchemaTests` — RED: exit 1 por `occurred_at_text` nulo; GREEN: exit 0, 1 aprobado.
+- `dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests` — exit 0; 12 aprobados.
+- `dotnet test Monitoring.slnx` — exit 0; 54 aprobados, 0 fallidos.
+- `dotnet build Monitoring.slnx --no-restore` — exit 0; 0 advertencias, 0 errores. `git diff --check` sin errores.
+
+La implementación y verificación local de C-01 están completas. Queda el recheck focal de la lineage como siguiente paso; esta ejecución no crea commit.
+
 ## Phase 3b — PR #3: señales de rechazo y aceptación integral
 
 **Delivery:** auto-chain, feature-branch-chain. **Branch:** `feat/s02-rejection-signals`. **Base:** cuota PR #14. **Scope:** tasks 3.3–3.5.
@@ -372,3 +511,9 @@ No añade métricas de rechazo ni los escenarios integrales 3.3–3.5. El índic
 ### Límite de esta unidad
 
 El test simula pérdida en el cliente descartando la respuesta HTTP ya completada por el servidor; valida la fila antes del reintento. Estas pruebas no miden capacidad de producción ni resuelven S17.
+
+### Registro de remediation C-01 — successor generación 2
+
+- prepareRemediation revalidó el único hallazgo congelado C-01 y su allowlist; el snapshot de baseline referenciado fue recuperado exactamente desde el worktree previo y el digest coincidió.
+- recordRemediationAttempt aceptó el delta y devolvió run-targeted-recheck. state.yaml conserva lineage sha256:2fb7b5f9..., generation 2, C-01 único, attempts 1/2, status recheck-pending y Candidate sha256:eba539f0167a64544598589d8d30a5800494fa5bae936ee6bc5769d00b377e0c.
+- El recheck focal del hallazgo queda pendiente para la fase verify; no se creó commit.

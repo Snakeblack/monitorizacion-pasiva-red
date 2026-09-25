@@ -33,6 +33,7 @@ public sealed class DurableInbox : Migration
                 batch_id = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                 schema_version = table.Column<short>(type: "smallint", nullable: false),
                 occurred_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                occurred_at_text = table.Column<string>(type: "text", nullable: false),
                 data = table.Column<string>(type: "jsonb", nullable: false),
                 accepted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
             },
