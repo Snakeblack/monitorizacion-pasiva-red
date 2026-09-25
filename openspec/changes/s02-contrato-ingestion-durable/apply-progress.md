@@ -154,6 +154,66 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       "green": {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests","exit_code":0,"discovered":4,"passed":4,"failed":0},
       "triangulation": "PostgreSQL confirma ACK tras commit, rollback sin ACK/filas, igualdad JSONB sin ordenar propiedades, conflicto al reordenar arrays, aislamiento por origen y dos envíos concurrentes con una sola fila.",
       "refactor": "not-needed"
+    },
+    {
+      "tasks": ["3.3"],
+      "test_file": "tests/Monitoring.Tests/IngestionHostTests.cs",
+      "test_name": "Monitoring.Tests.IngestionHostTests.RejectedRequestsIncrementOnceWithTrustedIdentityAndExcludeInternalErrors",
+      "layer": "integration",
+      "safety_net": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter 'FullyQualifiedName~IngestionHostTests|FullyQualifiedName~IngestionPersistenceTests'",
+        "exit_code": 0,
+        "discovered": 16,
+        "passed": 16,
+        "failed": 0
+      },
+      "red": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionHostTests",
+        "exit_code": 1,
+        "observed": "El nuevo test falló al compilar porque aún no existía IngestionRejectionMetrics (CS0246).",
+        "discovered": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionHostTests",
+        "exit_code": 0,
+        "discovered": 8,
+        "passed": 8,
+        "failed": 0
+      },
+      "triangulation": "Cuatro solicitudes 400/403/409/429 producen una medida cada una con solo site.id y sensor.id de identidad confiable; 401 produce una medida sin etiquetas y el 500 interno no añade otra.",
+      "refactor": "not-needed"
+    },
+    {
+      "tasks": ["3.4"],
+      "test_file": "tests/Monitoring.Tests/IngestionPersistenceTests.cs",
+      "test_name": "Monitoring.Tests.IngestionPersistenceTests.LostResponseAfterCommitCanBeRetriedWithEmptyAckAndOneStoredRow",
+      "layer": "integration",
+      "safety_net": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter 'FullyQualifiedName~IngestionHostTests|FullyQualifiedName~IngestionPersistenceTests'",
+        "exit_code": 0,
+        "discovered": 16,
+        "passed": 16,
+        "failed": 0
+      },
+      "red": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests",
+        "exit_code": 0,
+        "observed": "No se observó RED: los recorridos HTTP existentes ya cumplían la idempotencia y el rechazo atómico; estas pruebas de regresión pasaron en su primera ejecución.",
+        "discovered": 11,
+        "passed": 11,
+        "failed": 0
+      },
+      "green": {
+        "command": "dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~IngestionPersistenceTests",
+        "exit_code": 0,
+        "discovered": 11,
+        "passed": 11,
+        "failed": 0
+      },
+      "triangulation": "El cliente descarta la primera respuesta HTTP ya completada y verifica una fila antes del retry; el retry idéntico responde 200 vacío y conserva una fila. El lote HTTP conflictivo conserva el contenido previo y no inserta su evento nuevo.",
+      "refactor": "not-needed"
     }
   ],
   "functional_snapshot": [
@@ -165,10 +225,10 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
       "path": "tests/Monitoring.Tests/IngestionContractTests.cs",
       "sha256": "57D535F1EEC3FA5812120438C54C6A4FBABF90B8655193189A26C4A790EC1B97"
     },
-    {"path":"src/Monitoring.Host/Program.cs","sha256":"6D55630BF3B340A329324E7B0796A4FF56A1D7D31560E277E5A9C73D3DAC3FA2"},
-    {"path":"src/Monitoring.Host/Ingestion/BatchEndpoint.cs","sha256":"94CAF0A90C8B84146EE4FD8A17D9AC051CF03E0375BDC1F705067223ABCB79B5"},
+    {"path":"src/Monitoring.Host/Program.cs","sha256":"0D86EE95A70660244D3C4A076F0E9604CBA0657E8ACB5219870FCF6618AD5615"},
+    {"path":"src/Monitoring.Host/Ingestion/BatchEndpoint.cs","sha256":"58B3BE05D2CB58D28CFDBF1DB6400EA51D5DD45198D01ABB032F0463418DE65A"},
     {"path":"src/Monitoring.Host/Ingestion/TrustedSensorIdentity.cs","sha256":"465F4E39B32FAD00F1987B65B7D0D41F2312F45E8FC6C49322042C20203FD628"},
-    {"path":"tests/Monitoring.Tests/IngestionHostTests.cs","sha256":"B30756B366E7115E8A216D387889F80228CD75E7D46FDF967B8C0B727F2056F7"},
+    {"path":"tests/Monitoring.Tests/IngestionHostTests.cs","sha256":"AEF2291AD2794682FDAD6D1C7B8589A4496A317881773F8C5C7F7831867A2D48"},
     {"path":"src/Monitoring.Persistence/MonitoringDbContext.cs","sha256":"E36C31B196FFEC01D9928F554F0D7171DA8355BB2955A76E4ED48E16CDF4B780"},
     {"path":"src/Monitoring.Persistence/Ingestion/IngestionOriginEntity.cs","sha256":"3A1E80A1209135B2EC97C01C0B4DEE6E5AEE7ACD4DCCA1453D8ADA664BFA0BFB"},
     {"path":"src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs","sha256":"E0A293D14CEFFA52B9E6D2D1F6E4DE5247000B6B644EAC1127617820C9581B0A"},
@@ -177,8 +237,8 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
     {"path":"src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs","sha256":"74940E6C04139513484DE88A964F4D2EE7F52FC539D8E1A3FCC47E12EED58CF3"},
     {"path":"tests/Monitoring.Tests/InboxSchemaTests.cs","sha256":"93D4BC89E6471C2AB61C6E906BAB6C96F8C9C6700485A98E6D0F3208AB077B9A"},
     {"path":"tests/Monitoring.Tests/MigrationTests.cs","sha256":"FF3F9AEE40A1723A8F44F6BD2CAEA66719D8ABA8386402996B6D92F52E6B97DA"},
-    {"path":"src/Monitoring.Persistence/Ingestion/InboxWriter.cs","sha256":"15CCE39FD6E7142E7F096FAAC917BCCA0C2C6AAED534D4D3EFDFBF9D443B0075"},
-    {"path":"tests/Monitoring.Tests/IngestionPersistenceTests.cs","sha256":"A71FE1437D181E292F7B8C0F9FBE129F11546CE5661FED81C0F95C112545771E"},
+    {"path":"src/Monitoring.Persistence/Ingestion/InboxWriter.cs","sha256":"3DDAE8A1F074300F017871467A2BAE7703778AC643D22E28DF6A55364D323F8E"},
+    {"path":"tests/Monitoring.Tests/IngestionPersistenceTests.cs","sha256":"9D93D904275C3EF69486DAE9CBE1C6634465FFDE0FD6F70237D9DD935C12424C"},
     {"path":"src/Monitoring.Persistence/Monitoring.Persistence.csproj","sha256":"CE3B380AA87722919DBBB37FC1C6CF1827FF0EB459913D95311BD42A4366007D"}
   ],
   "full_verification": [
@@ -197,6 +257,9 @@ No se implementó persistencia durable ni cuota. El writer predeterminado falla 
     {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionHostTests","exit_code":0,"passed":7,"failed":0},
     {"command":"dotnet test Monitoring.slnx --filter FullyQualifiedName~HostStartupTests","exit_code":0,"passed":1,"failed":0},
     {"command":"dotnet test Monitoring.slnx --no-restore --filter FullyQualifiedName~InboxSchemaTests|FullyQualifiedName~MigrationTests|FullyQualifiedName~MigrationFailureTests","exit_code":0,"passed":3,"failed":0},
+    {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0},
+    {"command":"dotnet test Monitoring.slnx --no-restore --filter 'FullyQualifiedName~IngestionHostTests|FullyQualifiedName~IngestionPersistenceTests'","exit_code":0,"passed":19,"failed":0},
+    {"command":"dotnet test Monitoring.slnx","exit_code":0,"passed":53,"failed":0},
     {"command":"dotnet build Monitoring.slnx --no-restore","exit_code":0,"warnings":0,"errors":0}
   ]
 }
@@ -272,3 +335,40 @@ No incluye cuota ni métricas; quedan asignadas a la Phase 3 / PR #3.
 ### Límites de esta unidad
 
 No añade métricas de rechazo ni los escenarios integrales 3.3–3.5. El índice `(site_id, sensor_id, accepted_at)` de la migración previa se reutiliza; no requiere esquema nuevo.
+
+## Phase 3b — PR #3: señales de rechazo y aceptación integral
+
+**Delivery:** auto-chain, feature-branch-chain. **Branch:** `feat/s02-rejection-signals`. **Base:** cuota PR #14. **Scope:** tasks 3.3–3.5.
+
+### Progreso y TDD
+
+- [x] 3.3 Un contador `System.Diagnostics.Metrics` incrementa una vez por respuesta 400/403/409/429. Usa etiquetas solo desde la identidad confiable; 401 registra una medida agregada sin etiquetas y 500 no incrementa.
+- [x] 3.4 Pruebas HTTP + PostgreSQL cubren la pérdida de la primera respuesta después del commit y su reintento idéntico, además de un lote con conflicto y evento nuevo sin inserción parcial.
+- [x] 3.5 Revisados identidad, límites y atomicidad; pruebas focales, suite completa y build pasan. No se requiere refactor adicional ni cambio de esquema.
+
+| Task | Test / layer | Safety net | RED | GREEN | Triangulate | Refactor |
+|---|---|---|---|---|---|---|
+| 3.3 | `IngestionHostTests` / integración HTTP | 16/16 host + persistencia | Exit 1: CS0246, faltaba `IngestionRejectionMetrics` | 8/8 host tests | 400/403/409/429 con etiquetas confiables; 401 sin etiquetas; 500 sin incremento | No requerido |
+| 3.4 | `IngestionPersistenceTests` / HTTP + PostgreSQL | 16/16 host + persistencia | Sin RED observado: el comportamiento ya existía en el código base; las pruebas de regresión pasaron al primer intento | 11/11 persistencia | Se confirma la fila antes del retry; respuesta 200 vacía y una fila después; 409 conserva evento previo y no guarda el nuevo | No requerido |
+| 3.5 | Suite completa / PostgreSQL desechable | N/A | N/A — verificación final | 53/53 pruebas y build sin advertencias | Migraciones y escenarios de persistencia se ejecutan sobre bases vacías por fixture | No hacía falta |
+
+### Verificación
+
+- `dotnet test Monitoring.slnx --no-restore --filter "FullyQualifiedName~IngestionHostTests|FullyQualifiedName~IngestionPersistenceTests"` — exit 0; 19 aprobadas.
+- `dotnet test Monitoring.slnx` — exit 0; 53 aprobadas, 0 fallidas. Testcontainers levantó PostgreSQL 18 y las pruebas de ingestión migraron bases vacías.
+- `dotnet build Monitoring.slnx --no-restore` — exit 0; 0 advertencias, 0 errores.
+- `git diff --check` — sin errores de whitespace.
+
+### Archivos
+
+| Archivo | Cambio |
+|---|---|
+| `src/Monitoring.Host/Ingestion/BatchEndpoint.cs` | Emite contadores de rechazo y limita las etiquetas a la identidad confiable. |
+| `src/Monitoring.Host/Program.cs` | Registra el contador como singleton del host. |
+| `tests/Monitoring.Tests/IngestionHostTests.cs` | Verifica incrementos por estado, etiquetas confiables, 401 agregado y exclusión de 500. |
+| `tests/Monitoring.Tests/IngestionPersistenceTests.cs` | Verifica pérdida de respuesta tras commit, retry idempotente y conflicto mixto por HTTP. |
+| `openspec/changes/s02-contrato-ingestion-durable/tasks.md` | Marca 3.3–3.5 completas tras la verificación. |
+
+### Límite de esta unidad
+
+El test simula pérdida en el cliente descartando la respuesta HTTP ya completada por el servidor; valida la fila antes del reintento. Estas pruebas no miden capacidad de producción ni resuelven S17.
