@@ -1,0 +1,71 @@
+change: s02-contrato-ingestion-durable
+status: ready-for-apply
+revision: 3
+last_updated: "2026-09-24T17:39:12.475Z"
+blocking_questions: []
+classification: normal
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/s02-contrato-ingestion-durable/exploration.md
+    summary: 'S01 deja host, dominio separado y migración inicial; S02 requiere contrato, bandeja y vínculo de origen confiable.'
+  proposal:
+    status: done
+    artifact: openspec/changes/s02-contrato-ingestion-durable/proposal.md
+    summary: 'Contrato JSON v1, bandeja durable idempotente y ACK tras commit; PostgreSQL provisional, sin mTLS ni proyección.'
+  spec:
+    status: done
+    artifacts:
+      - openspec/changes/s02-contrato-ingestion-durable/specs/contrato-ingestion-v1/spec.md
+      - openspec/changes/s02-contrato-ingestion-durable/specs/bandeja-ingestion-durable/spec.md
+    summary: 'Dos capacidades nuevas especificadas y precisadas por las cinco aclaraciones aprobadas.'
+  clarify:
+    status: done
+    questions_asked: 5
+    summary: "Cinco decisiones aprobadas incorporadas en las dos specs S02."
+  design:
+    status: done
+    artifact: openspec/changes/s02-contrato-ingestion-durable/design.md
+    summary: 'Bandeja jsonb por evento; transacción serializada por origen para cuota e idempotencia; identidad confiable del host.'
+  tasks:
+    status: done
+    artifact: openspec/changes/s02-contrato-ingestion-durable/tasks.md
+    summary: 'Tres PR encadenadas, 650-900 líneas estimadas, con trazabilidad completa y TDD estricto.'
+  apply:
+    status: pending
+    summary: 'Rama de feature disponible; implementación pendiente.'
+approvals:
+  - id: s02-clarify-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:31:43Z
+    applies_to: [sdd-clarify, sdd-design, sdd-tasks, sdd-apply, sdd-verify]
+    details: 'IDs como cadenas no vacias de hasta 128 caracteres; occurredAt RFC 3339 UTC con Z y precision maxima de milisegundos; data objeto JSON; events con al menos un elemento. Cuota en ventana movil de 60 segundos para eventos nuevos confirmados; reenvios identicos no consumen. Contador una vez por solicitud rechazada con identidad confiable; sin identidad a contador agregado. HTTP 401 identidad ausente, 403 ambito discrepante. HTTP 200 con cuerpo vacio para nuevos y reenvios identicos.'
+  - id: intent-briefing-001
+    gate: intent-briefing
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:09:45Z
+    applies_to: [change-classification]
+    synthesis: 'Definir el contrato JSON v1 de S02 e implementar ingestión durable por sede y sonda con ACK solo tras commit, deduplicación de reenvíos idénticos y rechazo de IDs reutilizados con contenido distinto.'
+    scope: 'S02 según docs/development/slices.md; incluye validación, bandeja durable, cuotas y señales por sede/sonda, pruebas de rollback y aislamiento; excluye proyección, lectura y UI de S03 en adelante.'
+  - id: execution-mode-001
+    gate: execution-mode
+    decision: auto
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:13:02Z
+    applies_to: [sdd-workflow]
+  - id: delivery-strategy-001
+    gate: delivery-strategy
+    decision: auto-chain
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:13:02Z
+    applies_to: [sdd-tasks, sdd-apply]
+  - id: s02-contract-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-09-24T17:22:52Z
+    applies_to: [sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify]
+    details: 'Lote atomico JSON v1 con schemaVersion 1, batchId, siteId, sensorId y events; cada evento tiene eventId, occurredAt UTC y data. Maximo 1 MiB y 500 eventos; rechazar version o campos desconocidos. HTTP 200 tras commit para nuevo o reenvio identico, 400 invalido, 409 ID con contenido distinto, 429 cuota. Igualdad por valor JSON sin ordenar arrays. Identidad de sede y sonda de contexto confiable del host, coincidente con lote. Cuota por sonda de 500 eventos/minuto y contador de rechazos por sede/sonda.'
