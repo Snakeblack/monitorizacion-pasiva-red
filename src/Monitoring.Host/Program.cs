@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Host.Ingestion;
 using Monitoring.Persistence;
+using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,17 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
 }
 
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
-builder.Services.TryAddSingleton<IIngestionBatchWriter, UnconfiguredIngestionBatchWriter>();
+var monitoringConnection = builder.Configuration.GetConnectionString("Monitoring");
+if (string.IsNullOrWhiteSpace(monitoringConnection))
+{
+    builder.Services.TryAddSingleton<IIngestionBatchWriter, UnconfiguredIngestionBatchWriter>();
+}
+else
+{
+    builder.Services.AddDbContext<MonitoringDbContext>(options => options.UseNpgsql(monitoringConnection));
+    builder.Services.TryAddScoped<InboxWriter>();
+    builder.Services.TryAddScoped<IIngestionBatchWriter, PersistentIngestionBatchWriter>();
+}
 
 var app = builder.Build();
 
@@ -45,3 +56,20 @@ app.MapBatchEndpoint();
 app.Run();
 
 public partial class Program;
+
+internal sealed class PersistentIngestionBatchWriter(InboxWriter inboxWriter) : IIngestionBatchWriter
+{
+    public async Task<IngestionWriteResult> WriteAsync(
+        TrustedSensorIdentity identity,
+        Monitoring.Domain.Ingestion.IngestionBatch batch,
+        CancellationToken cancellationToken)
+    {
+        var result = await inboxWriter.WriteAsync(identity.SiteId, identity.SensorId, batch, cancellationToken);
+        return result switch
+        {
+            InboxWriteResult.Accepted => IngestionWriteResult.Accepted,
+            InboxWriteResult.Conflict => IngestionWriteResult.Conflict,
+            _ => IngestionWriteResult.Failed
+        };
+    }
+}
