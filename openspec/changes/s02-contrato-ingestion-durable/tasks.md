@@ -38,8 +38,8 @@ Cada PR debe quedar por debajo de 400 líneas cambiadas; si el slice excede el l
 
 ## Phase 1: Contrato y frontera del host (PR #1)
 
-- [ ] 1.1 RED: añadir pruebas de contrato en `tests/Monitoring.Tests/IngestionContractTests.cs` para versión/campos/tipos, IDs (1–128), UTC `Z` hasta milisegundos, `data` objeto, 1–500 eventos y cuerpo de 1 MiB (`REQ-contrato-ingestion-v1-001`).
-- [ ] 1.2 GREEN: implementar modelos y validación JSON estricta en `src/Monitoring.Domain/Ingestion/BatchContract.cs`; probar rechazo 400 sin acceso a persistencia (`REQ-contrato-ingestion-v1-001`).
+- [x] 1.1 RED: añadir pruebas de contrato en `tests/Monitoring.Tests/IngestionContractTests.cs` para versión/campos/tipos, IDs (1–128), UTC `Z` hasta milisegundos, `data` objeto, 1–500 eventos y cuerpo de 1 MiB (`REQ-contrato-ingestion-v1-001`).
+- [~] 1.2 GREEN: implementar modelos y validación JSON estricta en `src/Monitoring.Domain/Ingestion/BatchContract.cs`; probar rechazo 400 sin acceso a persistencia (`REQ-contrato-ingestion-v1-001`).
 - [ ] 1.3 RED/GREEN: cubrir identidad ausente, coincidencia y discrepancia; implementar `src/Monitoring.Host/Ingestion/TrustedSensorIdentity.cs` y comprobar ámbito antes de tocar la bandeja (401/403) (`REQ-contrato-ingestion-v1-002`).
 - [ ] 1.4 RED/GREEN: probar registro de Minimal API, límite de lectura y respuesta 200 vacía; implementar `src/Monitoring.Host/Ingestion/BatchEndpoint.cs` y registrar ruta, dependencias y límite de cuerpo en `src/Monitoring.Host/Program.cs` (`REQ-contrato-ingestion-v1-001`, `REQ-contrato-ingestion-v1-002`).
 - [ ] 1.5 REFACTOR: consolidar validación y mapeo de errores sin alterar contratos; ejecutar `dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionContractTests`.
