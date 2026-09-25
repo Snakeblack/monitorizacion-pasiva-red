@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Monitoring.Host.Ingestion;
 using Monitoring.Persistence;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +34,13 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
     return;
 }
 
+builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
+builder.Services.TryAddSingleton<IIngestionBatchWriter, UnconfiguredIngestionBatchWriter>();
+
 var app = builder.Build();
 
 app.MapGet("/health/live", () => Results.Ok());
+app.MapBatchEndpoint();
 
 app.Run();
 
