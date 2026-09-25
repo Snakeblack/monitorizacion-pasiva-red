@@ -46,11 +46,11 @@ Cada PR debe quedar por debajo de 400 líneas cambiadas; si el slice excede el l
 
 ## Phase 2: Bandeja durable e idempotencia (PR #2)
 
-- [ ] 2.1 RED: ampliar `tests/Monitoring.Tests/IngestionPersistenceTests.cs` para ACK después de commit, fallo anterior al commit sin filas/200, reenvío idéntico sin duplicar, contenido distinto 409 y conservación del evento original (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
+- [x] 2.1 RED: ampliar `tests/Monitoring.Tests/IngestionPersistenceTests.cs` para ACK después de commit, fallo anterior al commit sin filas/200, reenvío idéntico sin duplicar, contenido distinto 409 y conservación del evento original (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
 - [x] 2.2 GREEN: agregar tabla de origen y bandeja por evento, clave única `(site_id, sensor_id, event_id)` e índice `(site_id, sensor_id, accepted_at)` en `src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs`; mapear entidades en `MonitoringDbContext.cs` y verificar el esquema incremental desde S01.
-- [ ] 2.3 GREEN: implementar `src/Monitoring.Persistence/Ingestion/InboxWriter.cs` con transacción de lote, bloqueo por origen, comparación estructural `jsonb`, deduplicación local del lote, inserción solo de nuevos y rollback en conflicto/fallo (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
-- [ ] 2.4 RED/GREEN: añadir prueba con envíos concurrentes del mismo evento y objetos JSON reordenados/arrays reordenados; asegurar una fila, equivalencia solo para orden de propiedades y respuesta conforme a contrato (`REQ-bandeja-ingestion-durable-002`).
-- [ ] 2.5 REFACTOR: verificar rollback y unicidad a nivel de base; ejecutar `dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests` contra PostgreSQL desechable.
+- [x] 2.3 GREEN: implementar `src/Monitoring.Persistence/Ingestion/InboxWriter.cs` con transacción de lote, bloqueo por origen, comparación estructural `jsonb`, deduplicación local del lote, inserción solo de nuevos y rollback en conflicto/fallo (`REQ-bandeja-ingestion-durable-001`, `REQ-bandeja-ingestion-durable-002`).
+- [x] 2.4 RED/GREEN: añadir prueba con envíos concurrentes del mismo evento y objetos JSON reordenados/arrays reordenados; asegurar una fila, equivalencia solo para orden de propiedades y respuesta conforme a contrato (`REQ-bandeja-ingestion-durable-002`).
+- [x] 2.5 REFACTOR: verificar rollback y unicidad a nivel de base; ejecutar `dotnet test Monitoring.slnx --filter FullyQualifiedName~IngestionPersistenceTests` contra PostgreSQL desechable.
 
 ## Phase 3: Cuota, señales y aceptación integral (PR #3)
 
