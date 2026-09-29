@@ -4,3 +4,5 @@
 .vs/
 *.user
 TestResults/
+# Local Pi runtime state
+.atl/

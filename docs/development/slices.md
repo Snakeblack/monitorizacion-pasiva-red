@@ -49,7 +49,7 @@ El [alcance F-01–F-09](../product/functional-scope.md) define las funciones. [
 
 **Vista Angular de extremo a extremo.**
 
-- **Entrega:** UI interna que muestra detalle, vacío y error usando el fixture S02–S03; runner frontend y CI. Acceso limitado al entorno de desarrollo hasta S12–S13.
+- **Entrega:** UI interna que muestra detalle, vacío y error usando el fixture S02–S03; runner frontend y CI. Construcción de la UI con la skill `linear-attio-ui` (perfil híbrido: chrome sobrio tipo Linear + superficies de datos tipo Attio) como lenguaje de diseño de herramientas internas densas en datos, también en las extensiones de UI de S09–S12. Acceso limitado al entorno de desarrollo hasta S12–S13.
 - **Aceptación TDD:** prueba de componente e integración fixture → ACK → worker → API → UI. **Depende de:** S03. **Traza:** F-05/F-07; G-03/G-07.
 
 ## S05
