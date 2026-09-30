@@ -3,6 +3,7 @@ scale: enterprise
 project:
   status: foundation-defined
   name: monitorizacion-pasiva-red
+  version: "0.1.0"
   architecture: modular-ingestion-proposed
   stack:
     status: proposed
