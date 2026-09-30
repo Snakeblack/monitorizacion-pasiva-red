@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "d40679cf-5904-4629-9e7f-922fd0786981",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\Users\\sn4ke\\dev\\activos\\monitorizacion-pasiva-red\\.archify\\workflow-slices-entrega-20260930-140450\\candidate.json",
+  "output": "C:\\Users\\sn4ke\\dev\\activos\\monitorizacion-pasiva-red\\.archify\\workflow-slices-entrega-20260930-140450\\slices-entrega.html",
+  "specification": {
+    "sha256": "b6c26d2fcd223ba50c617cf02277691dc063fb4e748d1d1c10f94339dc6a708c",
+    "bytes": 34602
+  },
+  "artifact": {
+    "sha256": "7cc7c6ba59a7b1ae5e0c5dc01d92b4aa0e8b49b35823424b5fe3daadd56a6034",
+    "bytes": 762729
+  }
+}
