@@ -1,0 +1,298 @@
+{
+  "contract": "readable-v2",
+  "viewBox": [
+    1299,
+    542
+  ],
+  "requiredViewBox": [
+    1299,
+    542
+  ],
+  "columns": [
+    122,
+    242,
+    489.6,
+    669.6,
+    886.8,
+    1133.6
+  ],
+  "nodes": [
+    {
+      "id": "s00",
+      "lane": "plan",
+      "col": 0,
+      "x": 48,
+      "y": 86,
+      "width": 148,
+      "height": 68
+    },
+    {
+      "id": "release",
+      "lane": "plan",
+      "col": 5,
+      "x": 1059.6,
+      "y": 94,
+      "width": 148,
+      "height": 52
+    },
+    {
+      "id": "vertical",
+      "lane": "build",
+      "col": 1,
+      "x": 168,
+      "y": 219,
+      "width": 148,
+      "height": 68
+    },
+    {
+      "id": "captura",
+      "lane": "build",
+      "col": 2,
+      "x": 415.6,
+      "y": 227,
+      "width": 148,
+      "height": 52
+    },
+    {
+      "id": "uso",
+      "lane": "build",
+      "col": 3,
+      "x": 591.6,
+      "y": 227,
+      "width": 156,
+      "height": 52
+    },
+    {
+      "id": "proteccion",
+      "lane": "build",
+      "col": 4,
+      "x": 808.8,
+      "y": 227,
+      "width": 156,
+      "height": 52
+    },
+    {
+      "id": "rechazo",
+      "lane": "gate",
+      "col": 4,
+      "x": 808.8,
+      "y": 354,
+      "width": 156,
+      "height": 52
+    },
+    {
+      "id": "ensayo",
+      "lane": "gate",
+      "col": 5,
+      "x": 1059.6,
+      "y": 346,
+      "width": 148,
+      "height": 68
+    }
+  ],
+  "edges": [
+    {
+      "id": "open-s01",
+      "from": "s00",
+      "to": "vertical",
+      "points": [
+        [
+          48,
+          120
+        ],
+        [
+          32,
+          120
+        ],
+        [
+          32,
+          308
+        ],
+        [
+          242,
+          308
+        ],
+        [
+          242,
+          287
+        ]
+      ]
+    },
+    {
+      "id": "revise",
+      "from": "rechazo",
+      "to": "proteccion",
+      "points": [
+        [
+          886.8,
+          354
+        ],
+        [
+          886.8,
+          279
+        ]
+      ]
+    },
+    {
+      "id": "to-capture",
+      "from": "vertical",
+      "to": "captura",
+      "points": [
+        [
+          316,
+          253
+        ],
+        [
+          415.6,
+          253
+        ]
+      ]
+    },
+    {
+      "id": "to-release",
+      "from": "ensayo",
+      "to": "release",
+      "points": [
+        [
+          1207.6,
+          380
+        ],
+        [
+          1280.8,
+          380
+        ],
+        [
+          1280.8,
+          120
+        ],
+        [
+          1207.6,
+          120
+        ]
+      ]
+    },
+    {
+      "id": "to-shield",
+      "from": "uso",
+      "to": "proteccion",
+      "points": [
+        [
+          747.6,
+          253
+        ],
+        [
+          808.8,
+          253
+        ]
+      ]
+    },
+    {
+      "id": "to-trial",
+      "from": "proteccion",
+      "to": "ensayo",
+      "points": [
+        [
+          964.8,
+          253
+        ],
+        [
+          1126.6,
+          253
+        ],
+        [
+          1126.6,
+          346
+        ]
+      ]
+    },
+    {
+      "id": "to-use",
+      "from": "captura",
+      "to": "uso",
+      "points": [
+        [
+          563.6,
+          253
+        ],
+        [
+          591.6,
+          253
+        ]
+      ]
+    },
+    {
+      "id": "trial-fail",
+      "from": "ensayo",
+      "to": "rechazo",
+      "points": [
+        [
+          1059.6,
+          380
+        ],
+        [
+          964.8,
+          380
+        ]
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "edge": "open-s01",
+      "label": "abre S01",
+      "x": 137,
+      "y": 298,
+      "width": 48.4,
+      "height": 14
+    },
+    {
+      "edge": "revise",
+      "label": "ajustar",
+      "x": 886.8,
+      "y": 316.5,
+      "width": 43.6,
+      "height": 14
+    },
+    {
+      "edge": "to-capture",
+      "label": "sintético primero",
+      "x": 365.8,
+      "y": 243,
+      "width": 91.6,
+      "height": 14
+    },
+    {
+      "edge": "to-release",
+      "label": "cumple ADR-013",
+      "x": 1244.1999999999998,
+      "y": 370,
+      "width": 77.2,
+      "height": 14
+    },
+    {
+      "edge": "to-shield",
+      "label": "políticas",
+      "x": 778.2,
+      "y": 243,
+      "width": 53.199999999999996,
+      "height": 14
+    },
+    {
+      "edge": "to-trial",
+      "label": "ensayar",
+      "x": 1045.6999999999998,
+      "y": 243,
+      "width": 43.6,
+      "height": 14
+    },
+    {
+      "edge": "trial-fail",
+      "label": "objetivo fallido",
+      "x": 1012.1999999999999,
+      "y": 370,
+      "width": 86.8,
+      "height": 14
+    }
+  ],
+  "diagnostics": []
+}

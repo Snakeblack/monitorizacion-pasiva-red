@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "1b50453b-a268-44d8-afac-b86c97f4e0a8",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\sn4ke\\dev\\activos\\monitorizacion-pasiva-red\\.archify\\architecture-flujo-produccion-20260930-140450\\candidate.json",
+  "output": "C:\\Users\\sn4ke\\dev\\activos\\monitorizacion-pasiva-red\\.archify\\architecture-flujo-produccion-20260930-140450\\flujo-produccion.html",
+  "specification": {
+    "sha256": "7a26c2c3a1edd05c5647d4b0886288fa128e74ca702d21baa70473d728973cb7",
+    "bytes": 37411
+  },
+  "artifact": {
+    "sha256": "ae822225a4145bc600122488c49e675e7e87ec3f4156a40bdcf7c082533289a5",
+    "bytes": 781117
+  }
+}
