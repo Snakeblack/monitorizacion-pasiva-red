@@ -103,3 +103,13 @@ foundation:
     - Inventariar servicios corporativos de identidad, certificados, HA, copias, observabilidad y guardia; ensayar integración, conmutación y restauración.
 
 
+
+routing:
+  - name: standard
+    description: Flujo SDD completo para cambios normales y de alto riesgo.
+    classification: [normal, high-risk]
+    conditions:
+      classification: [normal, high-risk]
+    phases: [sdd-explore, sdd-propose, sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify, sdd-archive]
+    gates: [clarify, review-workload, quality-review-gate]
+

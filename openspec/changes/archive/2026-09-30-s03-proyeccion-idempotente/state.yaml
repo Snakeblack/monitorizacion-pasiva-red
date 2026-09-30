@@ -1,0 +1,607 @@
+change: s03-proyeccion-idempotente
+status: verified
+revision: 6
+last_updated: '2026-09-29T23:01:46.8332088Z'
+classification: normal
+blocking_questions: []
+owner:
+  author: Manuel Retamozo
+  branch: main
+execution_mode: auto
+delivery_strategy: single-pr
+approvals:
+- id: intent-briefing-001
+  gate: intent-briefing
+  decision: accepted
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T21:17:20.6100285Z'
+  applies_to:
+  - change-classification
+  synthesis: Worker que proyecta eventos sintÃƒÂ©ticos y marca procesado en una transacciÃƒÂ³n PostgreSQL; API de detalle por ID aislada por sede/sonda; pruebas de
+    idempotencia y recuperaciÃƒÂ³n.
+  scope: S03 segÃƒÂºn roadmap; depende de S02 y S00. Excluye UI, captura real, correlaciÃƒÂ³n y consultas de listado de slices posteriores.
+- id: execution-mode-001
+  gate: execution-mode
+  decision: auto
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T21:17:20.6100285Z'
+  applies_to:
+  - sdd-workflow
+- id: delivery-strategy-001
+  gate: delivery-strategy
+  decision: single-pr
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T21:17:20.6100285Z'
+  applies_to:
+  - sdd-tasks
+  - sdd-apply
+- id: routing-config-001
+  gate: architecture
+  decision: accepted
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T21:19:33.9085651Z'
+  applies_to:
+  - route-dispatch
+  - sdd-workflow
+  details: Usuario autorizÃƒÂ³ completar routing con ruta estÃƒÂ¡ndar y puertas de calidad para continuar S03.
+- id: s03-contract-001
+  gate: architecture
+  decision: accepted
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T21:26:10.6543222Z'
+  applies_to:
+  - sdd-propose
+  - sdd-spec
+  - sdd-clarify
+  - sdd-design
+  - sdd-tasks
+  - sdd-apply
+  - sdd-verify
+  details: 'Contrato recomendado confirmado: kind synthetic-session, version1, IP/puertos vÃƒÂ¡lidos0Ã¢â‚¬â€œ65535, TCP/UDP, startedAt/endedAt UTC Z hasta milisegundos
+    y fin>=inicio; obligatorios sin adicionales. InvÃƒÂ¡lidos/desconocidos pendientes sin bloquear vÃƒÂ¡lidos. eventId por sede/sonda; respuesta eventId/siteId/sensorId/occurredAt/data.
+    Lectura confiable solo desarrollo/pruebas separada de sonda;401 sin contexto,404 ausente/fuera ÃƒÂ¡mbito,200 encontrado.'
+- id: s03-size-exception-001
+  gate: review-workload
+  decision: size:exception
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T22:04:46.4179751Z'
+  applies_to:
+  - sdd-apply
+  - delivery
+  details: Usuario aprobÃƒÂ³ explÃƒÂ­citamente size:exception para una sola PR pese a 1200Ã¢â‚¬â€œ1700 lÃƒÂ­neas estimadas mÃƒÂ¡s artefactos SDD.
+- id: s03-assumptions-001
+  gate: architecture
+  decision: accepted
+  source: codex/plain-chat
+  accepted_at: '2026-09-29T22:51:44.2718839Z'
+  applies_to:
+  - sdd-verify
+  - assumption-reconciliation
+  details: 'Respuesta explÃƒÂ­cita Ã‚Â«si lo exige, resuelveloÃ‚Â» autoriza resolver checklist con opciones recomendadas: JSONB y pÃƒÂ¡ginas100/pausa1s/reintentos30s.'
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/exploration.md
+    summary: S02 admite data arbitrario; S03 requiere payload sintÃƒÂ©tico y lectura con ÃƒÂ¡mbito separado.
+  proposal:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/proposal.md
+    summary: Contrato synthetic-session v1 confirmado; transacciÃƒÂ³n por evento; detalle con ÃƒÂ¡mbito confiable solo desarrollo/pruebas.
+  spec:
+    status: done
+    artifacts:
+    - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+    - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+    - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+    - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+    summary: Tres capacidades nuevas y delta de bandeja; sin ambigÃƒÂ¼edades residuales.
+  clarify:
+    status: skipped
+    summary: 'Envelope validado: residual_ambiguity false y tres arrays vacÃƒÂ­os.'
+  design:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/design.md
+    summary: JSONB y PK/FK compuesta; processed_at; transacciÃƒÂ³n por evento; cursor/cota superior; lectura Development/Testing.
+    key_decisions:
+    - transaccion-por-evento
+    - cursor-con-cota-superior
+    - contexto-lectura-separado
+  tasks:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/tasks.md
+    summary: 14 tareas en seis unidades; single-pr con size:exception aprobado.
+  apply:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/apply-progress.md
+    summary: 14 tareas verificadas;109/109;build0warnings/errors;evidencia legacy-unverifiable con TRX reales.
+    key_decisions:
+    - transaccion-proyeccion-marcado
+    - cursor-sin-starvation
+    - logs-saneados
+    - evidencia-historica-explicita
+  verify:
+    status: done
+    verdict: PASS WITH WARNINGS
+    artifact: openspec/changes/s03-proyeccion-idempotente/verify-report.md
+    summary: 19 escenarios MUST,14 tareas y109/109 pruebas;sin CRITICAL;S03-W001 convertido en seguimiento.
+    key_decisions:
+    - evidencia-historica-valida-con-warning
+    - sin-lineage-remediacion
+    - quality-gates-pass-readback
+route:
+  intended_route: standard
+  actual_route: standard
+  route_rationale: S03 aÃƒÂ±ade worker, persistencia transaccional y API; cambio normal con ruta estÃƒÂ¡ndar autorizada.
+  validated: true
+  validation_errors: []
+baseline_fingerprints:
+  bandeja-ingestion-durable: 712c842cb725ae790b99e92956e50f7cc6dc0646aa31f60c88213644836f1b30
+assumptions:
+- id: sdd-design-001
+  phase: sdd-design
+  statement: La proyecciÃƒÂ³n S03 almacenarÃƒÂ¡ el data validado como JSONB sin columnas separadas para IP, puertos o tiempos de sesiÃƒÂ³n.
+  reversibility: low
+  basis: S03 solo consulta por identidad;JSONB existente;cambios posteriores requieren migraciÃƒÂ³n.
+  recorded_at: '2026-09-29T21:36:41.8426655Z'
+  status: confirmed
+  resolution:
+    action: confirm
+    note: OpciÃƒÂ³n recomendada resuelta con autorizaciÃƒÂ³n explÃƒÂ­cita s03-assumptions-001; verificaciÃƒÂ³n confirma resoluciÃƒÂ³n.
+    resolved_at: '2026-09-29T22:57:58.096Z'
+- id: sdd-design-002
+  phase: sdd-design
+  statement: PÃƒÂ¡ginas internas de100 claves,espera normal1s y reintentos transitorios exponenciales acotados30s.
+  reversibility: high
+  basis: Acota memoria y consultas durante indisponibilidad;ajustable sin alterar datos/contratos/SLA.
+  recorded_at: '2026-09-29T21:36:41.8426655Z'
+  status: confirmed
+  resolution:
+    action: confirm
+    note: OpciÃƒÂ³n recomendada resuelta con autorizaciÃƒÂ³n explÃƒÂ­cita s03-assumptions-001; verificaciÃƒÂ³n confirma resoluciÃƒÂ³n.
+    resolved_at: '2026-09-29T22:57:58.096Z'
+review_workload:
+  status: accepted
+  strategy: single-pr
+  exception: size:exception
+  approval_ref: s03-size-exception-001
+gates:
+  quality-gates:
+    status: pass
+    evaluated_at: '2026-09-29T22:53:56.202Z'
+    gates:
+      tests:
+        status: pass
+        required: true
+        on_fail: halt
+  quality-review-gate:
+    status: done
+    schema_version: 2
+    classification: normal
+    classification_status: sufficient
+    selected_domains:
+    - trust
+    - runtime
+    - evolution
+    - efficiency
+    capability_coverage:
+    - id: bandeja-ingestion-durable
+      behavioral: true
+      scoped: true
+      attributed_domains:
+      - runtime
+      - evolution
+      - efficiency
+      fact_codes:
+      - error-flow
+      - loop-io
+      - structural-complexity
+    - id: contrato-sesion-sintetica
+      behavioral: true
+      scoped: true
+      attributed_domains:
+      - evolution
+      fact_codes:
+      - structural-complexity
+    - id: detalle-sesion-ambito
+      behavioral: true
+      scoped: true
+      attributed_domains:
+      - trust
+      - evolution
+      fact_codes:
+      - design-trust
+      - structural-complexity
+    - id: proyeccion-sesiones-idempotente
+      behavioral: true
+      scoped: true
+      attributed_domains:
+      - runtime
+      - evolution
+      - efficiency
+      fact_codes:
+      - error-flow
+      - loop-io
+      - structural-complexity
+    ambiguity_reasons: []
+    evidence:
+      schema_version: 2
+      fingerprint: sha256:ea2af76758eacc7acd792dc4f4b68020cee82c9166c421fdc6ac1f873a2054b4
+      sources:
+        paths:
+        - README.md
+        - docs/roadmap.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-001.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-002.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-003.md
+        - openspec/changes/s03-proyeccion-idempotente/design.md
+        - openspec/changes/s03-proyeccion-idempotente/proposal.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+        - src/Monitoring.Domain/Sessions/SessionDetail.cs
+        - src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/SessionEndpoint.cs
+        - src/Monitoring.Host/Sessions/SessionProjectionWorker.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+        - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+        - src/Monitoring.Persistence/MonitoringDbContext.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+        - src/Monitoring.Persistence/Sessions/SessionReader.cs
+        - tests/Monitoring.Tests/HostStartupTests.cs
+        - tests/Monitoring.Tests/InboxSchemaTests.cs
+        - tests/Monitoring.Tests/MigrationTests.cs
+        - tests/Monitoring.Tests/SessionHostTests.cs
+        - tests/Monitoring.Tests/SessionProjectionTests.cs
+        - tests/Monitoring.Tests/SessionSchemaTests.cs
+        - tests/Monitoring.Tests/SessionWorkerTests.cs
+        - tests/Monitoring.Tests/SyntheticSessionContractTests.cs
+        capabilities:
+        - bandeja-ingestion-durable
+        - contrato-sesion-sintetica
+        - detalle-sesion-ambito
+        - proyeccion-sesiones-idempotente
+        operation_types:
+        - add
+        - modify
+        dependencies: []
+        facts:
+        - code: design-trust
+          source: design
+          detail: Development/Testing-only reader feature and scoped identity boundary; design.md ADR-003
+          attributed_capabilities:
+          - detalle-sesion-ambito
+        - code: error-flow
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          attributed_capabilities:
+          - bandeja-ingestion-durable
+          - proyeccion-sesiones-idempotente
+        - code: loop-io
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          attributed_capabilities:
+          - bandeja-ingestion-durable
+          - proyeccion-sesiones-idempotente
+        - code: structural-complexity
+          source: real-diff
+          detail: src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs,src/Monitoring.Host/Sessions/SessionEndpoint.cs,src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs,src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs,src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs,src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs,src/Monitoring.Persistence/Sessions/SessionReader.cs
+          attributed_capabilities:
+          - bandeja-ingestion-durable
+          - contrato-sesion-sintetica
+          - detalle-sesion-ambito
+          - proyeccion-sesiones-idempotente
+        capability_scopes:
+        - id: bandeja-ingestion-durable
+          paths:
+          - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+          - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+          - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+          - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+          - src/Monitoring.Persistence/MonitoringDbContext.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          - tests/Monitoring.Tests/InboxSchemaTests.cs
+          - tests/Monitoring.Tests/MigrationTests.cs
+        - id: contrato-sesion-sintetica
+          paths:
+          - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+          - src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs
+          - tests/Monitoring.Tests/SyntheticSessionContractTests.cs
+        - id: detalle-sesion-ambito
+          paths:
+          - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+          - src/Monitoring.Domain/Sessions/SessionDetail.cs
+          - src/Monitoring.Host/Program.cs
+          - src/Monitoring.Host/Sessions/SessionEndpoint.cs
+          - src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs
+          - src/Monitoring.Persistence/Sessions/SessionReader.cs
+          - tests/Monitoring.Tests/SessionHostTests.cs
+        - id: proyeccion-sesiones-idempotente
+          paths:
+          - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+          - src/Monitoring.Host/Program.cs
+          - src/Monitoring.Host/Sessions/SessionProjectionWorker.cs
+          - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+          - src/Monitoring.Persistence/MonitoringDbContext.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          - tests/Monitoring.Tests/HostStartupTests.cs
+          - tests/Monitoring.Tests/SessionProjectionTests.cs
+          - tests/Monitoring.Tests/SessionSchemaTests.cs
+          - tests/Monitoring.Tests/SessionWorkerTests.cs
+        capability_coverage:
+        - id: bandeja-ingestion-durable
+          behavioral: true
+          scoped: true
+          attributed_domains:
+          - runtime
+          - evolution
+          - efficiency
+          fact_codes:
+          - error-flow
+          - loop-io
+          - structural-complexity
+        - id: contrato-sesion-sintetica
+          behavioral: true
+          scoped: true
+          attributed_domains:
+          - evolution
+          fact_codes:
+          - structural-complexity
+        - id: detalle-sesion-ambito
+          behavioral: true
+          scoped: true
+          attributed_domains:
+          - trust
+          - evolution
+          fact_codes:
+          - design-trust
+          - structural-complexity
+        - id: proyeccion-sesiones-idempotente
+          behavioral: true
+          scoped: true
+          attributed_domains:
+          - runtime
+          - evolution
+          - efficiency
+          fact_codes:
+          - error-flow
+          - loop-io
+          - structural-complexity
+    domains:
+      trust:
+        selected: true
+        reasons:
+        - code: design-trust
+          source: design
+          detail: Development/Testing-only reader feature and scoped identity boundary; design.md ADR-003
+          precedence: 4
+      runtime:
+        selected: true
+        reasons:
+        - code: error-flow
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          precedence: 2
+      evolution:
+        selected: true
+        reasons:
+        - code: structural-complexity
+          source: real-diff
+          detail: src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs,src/Monitoring.Host/Sessions/SessionEndpoint.cs,src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs,src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs,src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs,src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs,src/Monitoring.Persistence/Sessions/SessionReader.cs
+          precedence: 2
+      efficiency:
+        selected: true
+        reasons:
+        - code: loop-io
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/SessionProjectionWorker.cs,src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          precedence: 2
+    lineage:
+      schema_version: 2
+      lineage_id: sha256:8df68a8e4bcce93f55720a6a78371992eb8d5c18cb79928f65f9f9e4f90f3a9a
+      generation: 1
+      predecessor_lineage_id: null
+      migration: null
+      recovery: null
+      revision: 9
+      status: approved
+      genesis:
+        candidate:
+          projection: quality-review-worktree-v1
+          base_tree: 3740f9c91169c6d82527f011214a922489fc3895
+          candidate_tree: sha256:099f619f3633a384573ad9c4acab6970145c320b787579a424be64ff2206b2a0
+          paths:
+          - README.md
+          - docs/roadmap.md
+          - openspec/changes/s03-proyeccion-idempotente/decisions/adr-001.md
+          - openspec/changes/s03-proyeccion-idempotente/decisions/adr-002.md
+          - openspec/changes/s03-proyeccion-idempotente/decisions/adr-003.md
+          - openspec/changes/s03-proyeccion-idempotente/design.md
+          - openspec/changes/s03-proyeccion-idempotente/proposal.md
+          - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+          - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+          - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+          - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+          - src/Monitoring.Domain/Sessions/SessionDetail.cs
+          - src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs
+          - src/Monitoring.Host/Program.cs
+          - src/Monitoring.Host/Sessions/SessionEndpoint.cs
+          - src/Monitoring.Host/Sessions/SessionProjectionWorker.cs
+          - src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs
+          - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+          - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+          - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+          - src/Monitoring.Persistence/MonitoringDbContext.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs
+          - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+          - src/Monitoring.Persistence/Sessions/SessionReader.cs
+          - tests/Monitoring.Tests/HostStartupTests.cs
+          - tests/Monitoring.Tests/InboxSchemaTests.cs
+          - tests/Monitoring.Tests/MigrationTests.cs
+          - tests/Monitoring.Tests/SessionHostTests.cs
+          - tests/Monitoring.Tests/SessionProjectionTests.cs
+          - tests/Monitoring.Tests/SessionSchemaTests.cs
+          - tests/Monitoring.Tests/SessionWorkerTests.cs
+          - tests/Monitoring.Tests/SyntheticSessionContractTests.cs
+          diff_hash: sha256:b0ff6d85ec9adafd65d7638b23df447fe864927e00f22d36c2a254e5827794b7
+          paths_digest: sha256:5392a342558d8e02f45692e55e29a88bef55f39a5670d721a9ead116b07bb607
+          authored_lines: 1529
+          original_changed_lines: 1539
+        candidate_id: sha256:d40522b44b88f40eb155eb42bdf7276cd7c626fb0c4bd425317cb0c711e2f747
+        paths:
+        - README.md
+        - docs/roadmap.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-001.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-002.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-003.md
+        - openspec/changes/s03-proyeccion-idempotente/design.md
+        - openspec/changes/s03-proyeccion-idempotente/proposal.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+        - src/Monitoring.Domain/Sessions/SessionDetail.cs
+        - src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/SessionEndpoint.cs
+        - src/Monitoring.Host/Sessions/SessionProjectionWorker.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+        - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+        - src/Monitoring.Persistence/MonitoringDbContext.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+        - src/Monitoring.Persistence/Sessions/SessionReader.cs
+        - tests/Monitoring.Tests/HostStartupTests.cs
+        - tests/Monitoring.Tests/InboxSchemaTests.cs
+        - tests/Monitoring.Tests/MigrationTests.cs
+        - tests/Monitoring.Tests/SessionHostTests.cs
+        - tests/Monitoring.Tests/SessionProjectionTests.cs
+        - tests/Monitoring.Tests/SessionSchemaTests.cs
+        - tests/Monitoring.Tests/SessionWorkerTests.cs
+        - tests/Monitoring.Tests/SyntheticSessionContractTests.cs
+        classification: normal
+        selected_domains:
+        - trust
+        - runtime
+        - evolution
+        - efficiency
+        evidence_fingerprint: sha256:ea2af76758eacc7acd792dc4f4b68020cee82c9166c421fdc6ac1f873a2054b4
+        original_changed_lines: 1539
+        authored_lines: 1529
+      current_candidate_id: sha256:d40522b44b88f40eb155eb42bdf7276cd7c626fb0c4bd425317cb0c711e2f747
+      current_candidate:
+        projection: quality-review-worktree-v1
+        base_tree: 3740f9c91169c6d82527f011214a922489fc3895
+        candidate_tree: sha256:099f619f3633a384573ad9c4acab6970145c320b787579a424be64ff2206b2a0
+        paths:
+        - README.md
+        - docs/roadmap.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-001.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-002.md
+        - openspec/changes/s03-proyeccion-idempotente/decisions/adr-003.md
+        - openspec/changes/s03-proyeccion-idempotente/design.md
+        - openspec/changes/s03-proyeccion-idempotente/proposal.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+        - src/Monitoring.Domain/Sessions/SessionDetail.cs
+        - src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/SessionEndpoint.cs
+        - src/Monitoring.Host/Sessions/SessionProjectionWorker.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs
+        - src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs
+        - src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs
+        - src/Monitoring.Persistence/MonitoringDbContext.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs
+        - src/Monitoring.Persistence/Sessions/SessionProjector.cs
+        - src/Monitoring.Persistence/Sessions/SessionReader.cs
+        - tests/Monitoring.Tests/HostStartupTests.cs
+        - tests/Monitoring.Tests/InboxSchemaTests.cs
+        - tests/Monitoring.Tests/MigrationTests.cs
+        - tests/Monitoring.Tests/SessionHostTests.cs
+        - tests/Monitoring.Tests/SessionProjectionTests.cs
+        - tests/Monitoring.Tests/SessionSchemaTests.cs
+        - tests/Monitoring.Tests/SessionWorkerTests.cs
+        - tests/Monitoring.Tests/SyntheticSessionContractTests.cs
+        diff_hash: sha256:b0ff6d85ec9adafd65d7638b23df447fe864927e00f22d36c2a254e5827794b7
+        paths_digest: sha256:5392a342558d8e02f45692e55e29a88bef55f39a5670d721a9ead116b07bb607
+        authored_lines: 1529
+        original_changed_lines: 1539
+      lenses:
+        trust:
+          selected: true
+          status: completed
+          request_id: s03-trust-f9e4f90f3a9a
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s03-trust-f9e4f90f3a9a
+        runtime:
+          selected: true
+          status: completed
+          request_id: s03-runtime-f9e4f90f3a9a
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s03-runtime-f9e4f90f3a9a
+        evolution:
+          selected: true
+          status: completed
+          request_id: s03-evolution-f9e4f90f3a9a
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s03-evolution-f9e4f90f3a9a
+        efficiency:
+          selected: true
+          status: completed
+          request_id: s03-efficiency-f9e4f90f3a9a
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s03-efficiency-f9e4f90f3a9a
+      findings: []
+      findings_digest: sha256:4d59fd4aa8eefff6dbf7cd085cc100ee928217573658f8bbc301aa4a3f1adc0f
+      correction_budget:
+        limit_lines: 200
+        used_lines: 0
+        failed_attempts: 0
+        max_failed_attempts: 3
+      correction_history: []
+      validation_history: []
+      follow_ups: []
+      pending_operation: null
+      pending_correction: null
+      terminal_reason: no-unresolved-blocking-findings
+    findings_summary: 0 BLOCKER, 0 CRITICAL, 0 WARNING, 0 SUGGESTION
+follow_up_work:
+- id: S03-W001
+  artifact: openspec/changes/s03-proyeccion-idempotente/follow-up.md
+  status: scheduled
+runtime_hints:
+  state_recovery:
+    reason: Restaurado tras truncado observado antes de quality-review; sin pÃƒÂ©rdida funcional.
+    sources:
+    - previous-tool-readbacks
+    - phase-envelopes
+    - phase-artifacts
+    previous_revision: 5

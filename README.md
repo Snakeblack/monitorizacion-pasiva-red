@@ -1,6 +1,6 @@
 # Monitorización pasiva de red
 
-Base ejecutable S01 del sistema de monitorización. Este slice ofrece un host ASP.NET Core mínimo, el límite vacío del dominio, una migración inicial y pruebas con PostgreSQL desechable. No incluye ingestión, sesiones, inventario, API funcional ni interfaz.
+Base ejecutable S01–S03 del sistema de monitorización: host ASP.NET Core, ingestión durable S02 y proyección idempotente de sesiones sintéticas S03 con detalle aislado por sede/sonda. Las pruebas usan PostgreSQL desechable. La interfaz Angular S04, captura real, inventario y acceso humano de producción pertenecen a slices posteriores.
 
 ## Requisitos
 
@@ -33,9 +33,9 @@ Comprueba el endpoint de liveness, que devuelve HTTP 200 sin consultar la base d
 curl.exe --fail http://localhost:5080/health/live
 ```
 
-## Aplicar la migración inicial
+## Aplicar las migraciones
 
-La migración es explícita. Para una base local desechable, inicia PostgreSQL con Docker:
+La migración es explícita e incremental: esquema S01, bandeja S02 y proyección/marca S03. Para una base local desechable, inicia PostgreSQL con Docker:
 
 ```sh
 docker run --name s01-postgres \
@@ -54,4 +54,20 @@ dotnet run --project src/Monitoring.Host -- --migrate
 
 En PowerShell, define la variable con `$env:ConnectionStrings__Monitoring = "Host=localhost;Port=5432;Database=monitoring;Username=monitoring;Password=monitoring-local"` antes de ejecutar la migración. El comando puede repetirse; el arranque normal sigue sin modificar el esquema. Al terminar, elimina el contenedor desechable con `docker rm -f s01-postgres`.
 
-PostgreSQL se adopta provisionalmente para S01 según ADR-014. Estas pruebas verifican el esquema mínimo y la migración; no validan capacidad, seguridad ni preparación para producción.
+## Ingestión y sesiones sintéticas
+
+Con `ConnectionStrings__Monitoring` configurada y las migraciones aplicadas, el arranque normal activa el worker S03. `--migrate` aplica el esquema y termina sin arrancar workers. Sin conexión, liveness sigue disponible y el worker no se registra.
+
+`POST /api/v1/ingestion/batches` conserva el contrato S02: HTTP 200 vacío tras aceptar durablemente el lote, sin esperar proyección. Cualquier objeto `data` sigue siendo aceptable para ingestión. S03 reconoce exclusivamente este contrato de desarrollo/pruebas:
+
+```json
+{"kind":"synthetic-session","version":1,"sourceIp":"192.0.2.1","destinationIp":"2001:db8::2","sourcePort":0,"destinationPort":65535,"protocol":"TCP","startedAt":"2026-09-29T12:00:00Z","endedAt":"2026-09-29T12:00:00.123Z"}
+```
+
+Todos los campos son obligatorios; no se admiten adicionales. Protocolos TCP/UDP, IP válidas, puertos enteros 0–65535, instantes UTC `Z` con 0–3 decimales y fin ≥ inicio. Los datos inválidos/desconocidos permanecen pendientes sin impedir el procesamiento de los válidos; su tratamiento durable se reserva a S08.
+
+La sesión conserva la identidad `(siteId, sensorId, eventId)`, `occurredAt` original y `data` JSONB. Proyección y `processed_at` se confirman en una transacción por evento; replay y concurrencia no duplican ni sobrescriben. El worker usa scopes nuevos por pasada, páginas de 100, espera cancelable de 1 segundo y reintento transitorio hasta 30 segundos; los errores no transitorios detienen el host. Revertir el código conserva proyecciones y marcas; no se admite un downgrade destructivo de S03.
+
+`GET /api/v1/sessions/{eventId}` devuelve exactamente `eventId`, `siteId`, `sensorId`, `occurredAt` y `data` si existe dentro del ámbito confiable (200), o 404 si falta/es ajena. Exige un feature interno de lectura distinto de la identidad de ingestión y solo admite Development/Testing. Sin ese contexto responde 401; headers y query no conceden acceso. El host público no crea ese feature: las pruebas lo suministran desde el servidor. Production y entornos desconocidos responden 401 incluso con proveedor sustituido. OIDC/RBAC humano corresponde a S12.
+
+PostgreSQL se adopta provisionalmente según ADR-014. Las pruebas S01/S02/S03 verifican migración, aceptación, rollback, replay, recuperación, concurrencia y aislamiento; la capacidad y preparación para producción se acreditarán en S17.

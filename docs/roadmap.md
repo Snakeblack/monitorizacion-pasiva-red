@@ -1,6 +1,6 @@
 # Hoja de ruta de la primera entrega de producción
 
-La primera entrega debe operar en varias sedes, con continuidad, seguridad y capacidad demostradas. [ADR-013](architecture/decisions/ADR-013.md) fija el **perfil de aceptación propuesto**: cuatro sedes, ocho sondas, 10 millones de sesiones inferidas al día, 30 días consultables y 20 consultas simultáneas. Son objetivos de ensayo; aún no se ha medido que la arquitectura los cumpla ni se han ratificado las políticas corporativas. **No ha comenzado la implementación.**
+La primera entrega debe operar en varias sedes, con continuidad, seguridad y capacidad demostradas. [ADR-013](architecture/decisions/ADR-013.md) fija el **perfil de aceptación propuesto**: cuatro sedes, ocho sondas, 10 millones de sesiones inferidas al día, 30 días consultables y 20 consultas simultáneas. Son objetivos de ensayo; aún no se ha medido que la arquitectura los cumpla ni se han ratificado las políticas corporativas. **S01/S02/S03 implementan y prueban la base, ingestión durable y proyección sintética idempotente con detalle por ámbito en desarrollo/pruebas; S04 y los slices posteriores siguen pendientes.**
 
 ## Decisiones y fuentes
 

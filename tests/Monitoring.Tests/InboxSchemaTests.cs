@@ -21,12 +21,12 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
             migration.ExitCode == 0,
             $"Migration process failed: {Redact(migration.StandardError, connectionString)} {Redact(migration.StandardOutput, connectionString)}");
 
-        Assert.Equal(2L, await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
+        Assert.Equal(3L, await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
         Assert.Equal(
             new[] { "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_origin"));
         Assert.Equal(
-            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "schema_version", "sensor_id", "site_id" },
+            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "processed_at", "schema_version", "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_inbox"));
 
         Assert.Equal("jsonb", await ColumnTypeAsync(connection, "ingestion_inbox", "data"));
@@ -48,7 +48,7 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
 
         var indexDefinition = await ScalarStringAsync(
             connection,
-            "SELECT indexdef FROM pg_indexes WHERE schemaname = 'monitoring' AND tablename = 'ingestion_inbox' AND indexdef LIKE '%accepted_at%'");
+            "SELECT indexdef FROM pg_indexes WHERE schemaname = 'monitoring' AND tablename = 'ingestion_inbox' AND indexname = 'IX_ingestion_inbox_site_id_sensor_id_accepted_at'");
         Assert.Contains("(site_id, sensor_id, accepted_at)", indexDefinition, StringComparison.Ordinal);
     }
 

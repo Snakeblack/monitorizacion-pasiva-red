@@ -45,6 +45,9 @@ internal sealed class IngestionInboxEntityConfiguration : IEntityTypeConfigurati
             .IsRequired();
         builder.HasIndex(item => new { item.SiteId, item.SensorId, item.AcceptedAt })
             .HasDatabaseName("IX_ingestion_inbox_site_id_sensor_id_accepted_at");
+        builder.Property(item => item.ProcessedAt).HasColumnName("processed_at");
+        builder.HasIndex(item => new { item.AcceptedAt, item.SiteId, item.SensorId, item.EventId })
+            .HasDatabaseName("IX_ingestion_inbox_pending").HasFilter("processed_at IS NULL");
         builder.HasOne<IngestionOriginEntity>()
             .WithMany()
             .HasForeignKey(item => new { item.SiteId, item.SensorId })

@@ -3,6 +3,8 @@ using Monitoring.Host.Ingestion;
 using Monitoring.Persistence;
 using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Monitoring.Host.Sessions;
+using Monitoring.Persistence.Sessions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,22 +39,29 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
 
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
 builder.Services.TryAddSingleton<IngestionRejectionMetrics>();
+builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContextTrustedSessionReadContextProvider>();
 var monitoringConnection = builder.Configuration.GetConnectionString("Monitoring");
 if (string.IsNullOrWhiteSpace(monitoringConnection))
 {
     builder.Services.TryAddSingleton<IIngestionBatchWriter, UnconfiguredIngestionBatchWriter>();
+    builder.Services.TryAddSingleton<ISessionReader, UnconfiguredSessionReader>();
 }
 else
 {
     builder.Services.AddDbContext<MonitoringDbContext>(options => options.UseNpgsql(monitoringConnection));
     builder.Services.TryAddScoped<InboxWriter>();
     builder.Services.TryAddScoped<IIngestionBatchWriter, PersistentIngestionBatchWriter>();
+    builder.Services.TryAddScoped<SessionReader>();
+    builder.Services.TryAddScoped<ISessionReader, PersistentSessionReader>();
+    builder.Services.TryAddScoped<SessionProjector>();
+    builder.Services.AddHostedService<SessionProjectionWorker>();
 }
 
 var app = builder.Build();
 
 app.MapGet("/health/live", () => Results.Ok());
 app.MapBatchEndpoint();
+app.MapSessionEndpoint();
 
 app.Run();
 

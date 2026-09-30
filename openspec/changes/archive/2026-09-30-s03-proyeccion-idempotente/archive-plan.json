@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "change": "s03-proyeccion-idempotente",
+  "source_fingerprint": "sha256:de33a7b0bdda429df7be45596533682ddf94ea5455da72eeafc81155b8a1883a",
+  "spec_writes": [
+    {
+      "domain": "contrato-sesion-sintetica",
+      "source_delta": "archive-prepared/specs/contrato-sesion-sintetica/spec.md",
+      "target": "openspec/specs/contrato-sesion-sintetica/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:280deb88e03e5c006aa1d4fb179ea67aa13dfd3e7eb4ff4f804bf9330b2e6301"
+    },
+    {
+      "domain": "proyeccion-sesiones-idempotente",
+      "source_delta": "archive-prepared/specs/proyeccion-sesiones-idempotente/spec.md",
+      "target": "openspec/specs/proyeccion-sesiones-idempotente/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:82b01c471e7687e460e1f4a56445a66919257773ba7689d334139551354f7cb4"
+    },
+    {
+      "domain": "detalle-sesion-ambito",
+      "source_delta": "archive-prepared/specs/detalle-sesion-ambito/spec.md",
+      "target": "openspec/specs/detalle-sesion-ambito/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:0095afd464aa17da453487abe0658581cf92ef6bec1f5665c5db2ac8bfc53e7e"
+    },
+    {
+      "domain": "bandeja-ingestion-durable",
+      "source_delta": "archive-prepared/specs/bandeja-ingestion-durable/spec.md",
+      "target": "openspec/specs/bandeja-ingestion-durable/spec.md",
+      "target_before_sha256": "sha256:712c842cb725ae790b99e92956e50f7cc6dc0646aa31f60c88213644836f1b30",
+      "content_sha256": "sha256:bb8a6d70b3e60f3bcb6865d49f783652889086a81237c4647701d89d883d226c"
+    }
+  ],
+  "adr_promotions": [
+    {
+      "source": "decisions/adr-001.md",
+      "target": "docs/adr/adr-20260930-001-proyeccion-y-marcado-atomicos-por-identidad-de-evento.md",
+      "content_sha256": "sha256:a1bb19466791ae5019fa5b5384f937d6fe1afb2d260f112540a635548a226a44"
+    },
+    {
+      "source": "decisions/adr-002.md",
+      "target": "docs/adr/adr-20260930-002-pasadas-paginadas-sin-bloqueo-por-invalidos.md",
+      "content_sha256": "sha256:de7a96dd547243866f26c83890b1e204fb5517a63bb8b54cee123a7636003470"
+    },
+    {
+      "source": "decisions/adr-003.md",
+      "target": "docs/adr/adr-20260930-003-detalle-por-ambito-confiable-separado-de-ingestion.md",
+      "content_sha256": "sha256:3cd1eb119de7aac12c0a23a5b274263957674f23615f204b2b1fc5d560ebee7a"
+    }
+  ],
+  "archive_inventory": [
+    "apply-progress.md",
+    "archive-prepared/specs/bandeja-ingestion-durable/spec.md",
+    "archive-prepared/specs/contrato-sesion-sintetica/spec.md",
+    "archive-prepared/specs/detalle-sesion-ambito/spec.md",
+    "archive-prepared/specs/proyeccion-sesiones-idempotente/spec.md",
+    "archive-report.md",
+    "decisions/adr-001.md",
+    "decisions/adr-002.md",
+    "decisions/adr-003.md",
+    "design.md",
+    "evidence/functional-manifest.json",
+    "evidence/quality-review-results.json",
+    "evidence/state-recovery-snapshot.yaml",
+    "evidence/test-runs.json",
+    "evidence/wiring-red-snapshot.json",
+    "exploration.md",
+    "follow-up.md",
+    "proposal.md",
+    "specs/bandeja-ingestion-durable/spec.md",
+    "specs/contrato-sesion-sintetica/spec.md",
+    "specs/detalle-sesion-ambito/spec.md",
+    "specs/proyeccion-sesiones-idempotente/spec.md",
+    "state.yaml",
+    "tasks.md",
+    "verify-report.md"
+  ],
+  "accepted_warnings": [
+    {
+      "id": "S03-W001",
+      "disposition": "converted-to-follow-up",
+      "artifact": "follow-up.md",
+      "status": "scheduled"
+    }
+  ],
+  "rollback": {
+    "strategy": "staging-rename"
+  },
+  "intended_archive_destination": "openspec/changes/archive/2026-09-30-s03-proyeccion-idempotente",
+  "archive_date": "2026-09-30",
+  "archive_timezone": "Europe/Madrid"
+}
