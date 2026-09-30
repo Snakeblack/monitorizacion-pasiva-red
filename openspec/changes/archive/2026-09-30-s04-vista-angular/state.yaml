@@ -1,0 +1,958 @@
+change: s04-vista-angular
+status: verified
+last_updated: '2026-09-30T20:46:42.364Z'
+classification: normal
+owner:
+  author: Manuel Retamozo
+  branch: feature/diagramas_generales
+route:
+  intended_route: standard
+  actual_route: standard
+  route_rationale: Clasificación explícita normal; classifyChange devolvió confidence deterministic. selectRoute eligió standard
+    como primera ruta elegible (classification normal|high-risk). validateRouteTable valid=true.
+  validated: true
+  validation_errors: []
+approvals:
+- id: intent-briefing-001
+  gate: intent-briefing
+  decision: accepted
+  source: AskQuestion
+  accepted_at: '2026-09-30T12:51:45.829Z'
+  applies_to:
+  - change-classification
+  synthesis: UI interna Angular que muestra el detalle de una sesión sintética proyectada, más los estados vacío y error,
+    con runner de frontend, CI y prueba de componente e integración desde el fixture hasta la UI. Lenguaje visual híbrido
+    linear-attio-ui. Acceso limitado a desarrollo.
+  scope: S04 según docs/development/slices.md; depende de S03. Excluye el listado de 30 días (S09), la captura real (S05)
+    y el acceso OIDC/RBAC (S12).
+- id: execution-mode-001
+  gate: execution-mode
+  decision: auto
+  source: AskQuestion
+  accepted_at: '2026-09-30T13:00:48.649Z'
+  applies_to:
+  - sdd-workflow
+- id: delivery-strategy-001
+  gate: delivery-strategy
+  decision: single-pr
+  source: AskQuestion
+  accepted_at: '2026-09-30T13:00:48.649Z'
+  applies_to:
+  - sdd-tasks
+  - sdd-apply
+- id: s04-size-exception-001
+  gate: review-workload
+  decision: size:exception
+  source: AskQuestion
+  accepted_at: '2026-09-30T13:43:37.962Z'
+  applies_to:
+  - sdd-apply
+  - delivery
+  details: El usuario aprobó size:exception para una sola PR pese a un forecast de 1100–1700 líneas.
+- id: quality-gate-blocker-001
+  gate: quality-gates
+  decision: reverify
+  source: cursor/plain-chat-numbered-gate
+  accepted_at: '2026-09-30T18:25:53.144Z'
+  applies_to:
+  - sdd-verify
+  details: 'El usuario respondió 1: volver a verificar para reconstruir la auditoría de calidad.'
+- id: s04-bounded-review-002
+  gate: quality-review-gate
+  decision: new-candidate
+  source: cursor/plain-chat
+  accepted_at: '2026-09-30T20:28:00.000Z'
+  applies_to:
+  - sdd-verify
+  details: El usuario autorizó una revisión nueva del árbol actual, sucesora de la revisión terminal aprobada, porque las
+    correcciones de prueba cambiaron el candidato. S04-W001 y S04-W002 quedan convertidas en follow-up.md.
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/s04-vista-angular/exploration.md
+    summary: No hay frontend. La API de detalle S03 exige Development/Testing y un contexto de lectura de confianza que el
+      host no expone al navegador. Recomendado Angular en src/monitoring-web, pruebas con @angular/build:unit-test y un puente
+      de ámbito solo en desarrollo, configurado en el servidor.
+    key_decisions:
+    - spa-en-src-monitoring-web
+    - runner-angular-build-unit-test
+    - puente-ambito-dev-por-configuracion-servidor
+  proposal:
+    status: done
+    artifact: openspec/changes/s04-vista-angular/proposal.md
+    summary: SPA en src/monitoring-web, cliente HTTP del detalle existente. El host instala el ámbito solo en Development/Testing
+      desde configuración de servidor. La prueba de componente y la cadena hasta la UI usan el runner oficial de Angular;
+      la versión se confirma en diseño. Sin Playwright.
+    key_decisions:
+    - spa-con-proxy-sin-servirla-desde-el-host
+    - contexto-lectura-por-configuracion-servidor
+    - runner-oficial-sin-playwright
+  spec:
+    status: done
+    artifacts:
+    - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+    - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+    summary: Vista nueva con detalle, vacío y error, y delta del ámbito de lectura solo desde configuración del servidor en
+      Development/Testing. Sin ambigüedad residual.
+  clarify:
+    status: skipped
+    summary: 'Envelope validado: residual_ambiguity false y tres arrays vacíos.'
+  design:
+    status: done
+    artifact: openspec/changes/s04-vista-angular/design.md
+    summary: SPA Angular 22.2.0 en src/monitoring-web, cliente del GET, no servida por el host. El ámbito sale de TrustedSessionRead:SiteId
+      y TrustedSessionRead:SensorId solo en Development/Testing. La cadena usa @angular/build:unit-test y Kestrel en loopback.
+      ADR-001 y ADR-002.
+    key_decisions:
+    - angular-22-2-0-sin-servir-desde-el-host
+    - ambito-por-configuracion-dev-testing
+    - cadena-unit-test-kestrel-loopback
+  tasks:
+    status: done
+    artifact: openspec/changes/s04-vista-angular/tasks.md
+    summary: 30 tareas en cinco fases. MUST cubiertos. Forecast 1100–1700 líneas, riesgo High, chained PRs recomendadas, chain
+      strategy pending. Apply detenido hasta decisión de carga de revisión.
+    key_decisions:
+    - host-antes-de-la-spa
+    - tdd-por-escenario
+    - size-exception-pendiente
+  apply:
+    status: done
+    artifact: openspec/changes/s04-vista-angular/apply-progress.md
+    summary: 30 tareas verificadas en cinco lotes. Host con ámbito por configuración, SPA Angular 22.2.0, ficha con estados,
+      cadena fixture→UI y CI. dotnet test Monitoring.slnx 122/122. Entrega size:exception.
+    key_decisions:
+    - feature-solo-dev-testing-desde-configuracion
+    - cadena-en-el-mismo-job-de-ci
+    - publish-del-host-sin-spa
+  verify:
+    status: done
+    verdict: PASS WITH WARNINGS
+    artifact: openspec/changes/s04-vista-angular/verify-report.md
+    summary: Recheck cerró S04-C001; ng test en rojo y centinela ausente. W001 y W002 siguen advisory.
+    key_decisions:
+    - S04-C001 queda resuelto por la observación del ng test en rojo
+    - La puerta tests no se reejecutó; valen los comandos congelados
+    - S04-W001 y S04-W002 siguen advisory
+assumptions:
+- id: sdd-propose-001
+  phase: sdd-propose
+  statement: La integración hasta la UI renderiza el GET real con @angular/build:unit-test contra el host de Testing, sin
+    herramienta E2E.
+  reversibility: high
+  basis: openspec/config.yaml declara e2e no disponible y la entrega persistida es un solo PR.
+  recorded_at: '2026-09-30T13:14:34.531Z'
+  status: unresolved
+- id: sdd-apply-001
+  phase: sdd-apply
+  statement: Ambos valores de TrustedSessionRead se consideran ausentes si son null o whitespace (IsNullOrWhiteSpace); no
+    se rechazan espacios internos.
+  reversibility: high
+  basis: 'design.md: los dos valores, sin espacios, o no hay feature; patrón de IConfiguration en el host.'
+  recorded_at: '2026-09-30T13:53:52.254Z'
+  status: unresolved
+- id: sdd-apply-002
+  phase: sdd-apply
+  statement: SessionDetailPage en Phase 2 es un placeholder OnPush vacío para que compile la ruta /sessions/:eventId; GET
+    y estados quedan en Phase 3.
+  reversibility: high
+  basis: tasks.md 2.4 vs 3.3–3.10; design.md asigna la ficha y HttpTestingController a Phase 3.
+  recorded_at: '2026-09-30T14:06:16.115Z'
+  status: unresolved
+- id: sdd-apply-003
+  phase: sdd-apply
+  statement: SESSION_DETAIL_API_ORIGIN se inyecta con factory vacía; Phase 4 lo sobreescribe para la cadena.
+  reversibility: high
+  basis: 'design.md: origin vacío usa el proxy; SESSION_DETAIL_API_ORIGIN solo lo pone la cadena.'
+  recorded_at: '2026-09-30T14:29:18.497Z'
+  status: unresolved
+- id: sdd-apply-004
+  phase: sdd-apply
+  statement: SessionViewChainHost fija UseContentRoot a src/Monitoring.Host caminando hasta Monitoring.slnx porque dotnet
+    run no aplica el manifest de testhost.
+  reversibility: high
+  basis: DirectoryNotFoundException de {cwd}/Monitoring.Host al lanzar --view-chain desde la raíz del repo.
+  recorded_at: '2026-09-30T14:48:55.772Z'
+  status: unresolved
+- id: sdd-apply-005
+  phase: sdd-apply
+  statement: 'El spec de cadena usa shims locales de módulos node: en lugar de añadir @types/node.'
+  reversibility: high
+  basis: El compilador Angular exige tipos Node para spawn; el contrato prohíbe un runner Vitest de terceros, no tipos.
+  recorded_at: '2026-09-30T14:48:55.772Z'
+  status: unresolved
+baseline_fingerprints:
+  detalle-sesion-ambito: 1d1d9f197c4a418472ed5bdb8919b2c464cd0147e6cde84600ea55872c57fc24
+  vista-detalle-sesion: null
+gates:
+  quality-review-gate:
+    status: done
+    schema_version: 2
+    classification: normal
+    classification_status: sufficient
+    selected_domains:
+    - trust
+    - runtime
+    - evolution
+    capability_coverage: []
+    ambiguity_reasons: []
+    evidence:
+      schema_version: 2
+      fingerprint: sha256:56b1f3991a603f19d18afb4acab4dedb7459fb51a6f1543b722f953657e2aa63
+      sources:
+        paths:
+        - .github/workflows/ci.yml
+        - .gitignore
+        - DESIGN.md
+        - README.md
+        - openspec/changes/s04-vista-angular/apply-progress.md
+        - openspec/changes/s04-vista-angular/decisions/adr-001.md
+        - openspec/changes/s04-vista-angular/decisions/adr-002.md
+        - openspec/changes/s04-vista-angular/design.md
+        - openspec/changes/s04-vista-angular/exploration.md
+        - openspec/changes/s04-vista-angular/follow-up.md
+        - openspec/changes/s04-vista-angular/proposal.md
+        - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+        - openspec/changes/s04-vista-angular/state.yaml
+        - openspec/changes/s04-vista-angular/tasks.md
+        - openspec/changes/s04-vista-angular/verify-report.md
+        - openspec/config.yaml
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+        - src/monitoring-web/.editorconfig
+        - src/monitoring-web/.gitignore
+        - src/monitoring-web/.prettierrc
+        - src/monitoring-web/.vscode/extensions.json
+        - src/monitoring-web/.vscode/launch.json
+        - src/monitoring-web/.vscode/tasks.json
+        - src/monitoring-web/README.md
+        - src/monitoring-web/angular.json
+        - src/monitoring-web/package-lock.json
+        - src/monitoring-web/package.json
+        - src/monitoring-web/proxy.conf.json
+        - src/monitoring-web/src/app/app.component.css
+        - src/monitoring-web/src/app/app.component.html
+        - src/monitoring-web/src/app/app.component.spec.ts
+        - src/monitoring-web/src/app/app.component.ts
+        - src/monitoring-web/src/app/app.config.ts
+        - src/monitoring-web/src/app/app.routes.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+        - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+        - src/monitoring-web/src/index.html
+        - src/monitoring-web/src/main.ts
+        - src/monitoring-web/src/styles.css
+        - src/monitoring-web/tsconfig.app.json
+        - src/monitoring-web/tsconfig.json
+        - src/monitoring-web/tsconfig.spec.json
+        - tests/Monitoring.Tests/Monitoring.Tests.csproj
+        - tests/Monitoring.Tests/SessionViewChainHost.cs
+        - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+        - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+        capabilities: []
+        operation_types:
+        - add
+        - modify
+        dependencies: []
+        facts:
+        - code: error-flow
+          source: real-diff
+          detail: src/monitoring-web/src/main.ts
+          attributed_capabilities: []
+        - code: network-flow
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          attributed_capabilities: []
+        - code: process-execution
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+          attributed_capabilities: []
+        - code: retry-flow
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          attributed_capabilities: []
+        - code: structural-complexity
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs,src/monitoring-web/src/app/app.component.ts,src/monitoring-web/src/app/session-detail/session-detail-api.ts,src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          attributed_capabilities: []
+        capability_scopes: []
+        capability_coverage: []
+    domains:
+      trust:
+        selected: true
+        reasons:
+        - code: process-execution
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+          precedence: 2
+      runtime:
+        selected: true
+        reasons:
+        - code: error-flow
+          source: real-diff
+          detail: src/monitoring-web/src/main.ts
+          precedence: 2
+        - code: network-flow
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          precedence: 2
+        - code: retry-flow
+          source: real-diff
+          detail: src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          precedence: 2
+      evolution:
+        selected: true
+        reasons:
+        - code: structural-complexity
+          source: real-diff
+          detail: src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs,src/monitoring-web/src/app/app.component.ts,src/monitoring-web/src/app/session-detail/session-detail-api.ts,src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          precedence: 2
+      efficiency:
+        selected: false
+        reasons:
+        - code: no-efficiency-signal
+          source: classifier
+          detail: No positive signal
+          precedence: 5
+    lineage:
+      schema_version: 2
+      lineage_id: sha256:2a99c418addba16de3c5ae83192a9f821d8077252d1bdd5551fe194f756947f2
+      generation: 2
+      predecessor_lineage_id: sha256:adc7ec1bf9713dd4f08507f37367af3dd032ff9e3366166c5162fc0b10793c56
+      migration: null
+      recovery:
+        reason: new-candidate
+        approval_reference: s04-bounded-review-002
+      revision: 10
+      status: approved
+      genesis:
+        candidate:
+          projection: working-tree
+          base_tree: 134962a0821ff805156f4b09e58370e0ff6e67ab
+          candidate_tree: b00ce62b8ac63465595a6639cc0068a511ce9797
+          paths:
+          - .github/workflows/ci.yml
+          - .gitignore
+          - DESIGN.md
+          - README.md
+          - openspec/changes/s04-vista-angular/apply-progress.md
+          - openspec/changes/s04-vista-angular/decisions/adr-001.md
+          - openspec/changes/s04-vista-angular/decisions/adr-002.md
+          - openspec/changes/s04-vista-angular/design.md
+          - openspec/changes/s04-vista-angular/exploration.md
+          - openspec/changes/s04-vista-angular/follow-up.md
+          - openspec/changes/s04-vista-angular/proposal.md
+          - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+          - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+          - openspec/changes/s04-vista-angular/state.yaml
+          - openspec/changes/s04-vista-angular/tasks.md
+          - openspec/changes/s04-vista-angular/verify-report.md
+          - openspec/config.yaml
+          - src/Monitoring.Host/Program.cs
+          - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+          - src/monitoring-web/.editorconfig
+          - src/monitoring-web/.gitignore
+          - src/monitoring-web/.prettierrc
+          - src/monitoring-web/.vscode/extensions.json
+          - src/monitoring-web/.vscode/launch.json
+          - src/monitoring-web/.vscode/tasks.json
+          - src/monitoring-web/README.md
+          - src/monitoring-web/angular.json
+          - src/monitoring-web/package-lock.json
+          - src/monitoring-web/package.json
+          - src/monitoring-web/proxy.conf.json
+          - src/monitoring-web/src/app/app.component.css
+          - src/monitoring-web/src/app/app.component.html
+          - src/monitoring-web/src/app/app.component.spec.ts
+          - src/monitoring-web/src/app/app.component.ts
+          - src/monitoring-web/src/app/app.config.ts
+          - src/monitoring-web/src/app/app.routes.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+          - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+          - src/monitoring-web/src/index.html
+          - src/monitoring-web/src/main.ts
+          - src/monitoring-web/src/styles.css
+          - src/monitoring-web/tsconfig.app.json
+          - src/monitoring-web/tsconfig.json
+          - src/monitoring-web/tsconfig.spec.json
+          - tests/Monitoring.Tests/Monitoring.Tests.csproj
+          - tests/Monitoring.Tests/SessionViewChainHost.cs
+          - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+          - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+          diff_hash: sha256:2a4d58f13483f28e59b5e1d14dab9ebdd3f398993cf4b4ab8cafc8e63522a952
+          paths_digest: sha256:c82f9e01811b8e35a53f6e59d05efcc44e5a342ff790e9514888b3a5c51dbc77
+          authored_lines: 11942
+          original_changed_lines: 11946
+        candidate_id: sha256:f2248297009097f384368734c440a5cd5b48f345fe0cb66a34d1b6c30628b660
+        paths:
+        - .github/workflows/ci.yml
+        - .gitignore
+        - DESIGN.md
+        - README.md
+        - openspec/changes/s04-vista-angular/apply-progress.md
+        - openspec/changes/s04-vista-angular/decisions/adr-001.md
+        - openspec/changes/s04-vista-angular/decisions/adr-002.md
+        - openspec/changes/s04-vista-angular/design.md
+        - openspec/changes/s04-vista-angular/exploration.md
+        - openspec/changes/s04-vista-angular/follow-up.md
+        - openspec/changes/s04-vista-angular/proposal.md
+        - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+        - openspec/changes/s04-vista-angular/state.yaml
+        - openspec/changes/s04-vista-angular/tasks.md
+        - openspec/changes/s04-vista-angular/verify-report.md
+        - openspec/config.yaml
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+        - src/monitoring-web/.editorconfig
+        - src/monitoring-web/.gitignore
+        - src/monitoring-web/.prettierrc
+        - src/monitoring-web/.vscode/extensions.json
+        - src/monitoring-web/.vscode/launch.json
+        - src/monitoring-web/.vscode/tasks.json
+        - src/monitoring-web/README.md
+        - src/monitoring-web/angular.json
+        - src/monitoring-web/package-lock.json
+        - src/monitoring-web/package.json
+        - src/monitoring-web/proxy.conf.json
+        - src/monitoring-web/src/app/app.component.css
+        - src/monitoring-web/src/app/app.component.html
+        - src/monitoring-web/src/app/app.component.spec.ts
+        - src/monitoring-web/src/app/app.component.ts
+        - src/monitoring-web/src/app/app.config.ts
+        - src/monitoring-web/src/app/app.routes.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+        - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+        - src/monitoring-web/src/index.html
+        - src/monitoring-web/src/main.ts
+        - src/monitoring-web/src/styles.css
+        - src/monitoring-web/tsconfig.app.json
+        - src/monitoring-web/tsconfig.json
+        - src/monitoring-web/tsconfig.spec.json
+        - tests/Monitoring.Tests/Monitoring.Tests.csproj
+        - tests/Monitoring.Tests/SessionViewChainHost.cs
+        - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+        - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+        classification: normal
+        selected_domains:
+        - trust
+        - runtime
+        - evolution
+        evidence_fingerprint: sha256:56b1f3991a603f19d18afb4acab4dedb7459fb51a6f1543b722f953657e2aa63
+        original_changed_lines: 11946
+        authored_lines: 11942
+      current_candidate_id: sha256:e9aa1d75b5bcf7174f3dc2b360735d0384c76bde970087e31692f109e81806e1
+      current_candidate:
+        projection: working-tree
+        base_tree: 134962a0821ff805156f4b09e58370e0ff6e67ab
+        candidate_tree: d15dcc7a340fea65ac64f4ab3566634cac70e4dc
+        paths:
+        - .github/workflows/ci.yml
+        - .gitignore
+        - DESIGN.md
+        - README.md
+        - openspec/changes/s04-vista-angular/apply-progress.md
+        - openspec/changes/s04-vista-angular/decisions/adr-001.md
+        - openspec/changes/s04-vista-angular/decisions/adr-002.md
+        - openspec/changes/s04-vista-angular/design.md
+        - openspec/changes/s04-vista-angular/exploration.md
+        - openspec/changes/s04-vista-angular/follow-up.md
+        - openspec/changes/s04-vista-angular/proposal.md
+        - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+        - openspec/changes/s04-vista-angular/state.yaml
+        - openspec/changes/s04-vista-angular/tasks.md
+        - openspec/changes/s04-vista-angular/verify-report.md
+        - openspec/config.yaml
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+        - src/monitoring-web/.editorconfig
+        - src/monitoring-web/.gitignore
+        - src/monitoring-web/.prettierrc
+        - src/monitoring-web/.vscode/extensions.json
+        - src/monitoring-web/.vscode/launch.json
+        - src/monitoring-web/.vscode/tasks.json
+        - src/monitoring-web/README.md
+        - src/monitoring-web/angular.json
+        - src/monitoring-web/package-lock.json
+        - src/monitoring-web/package.json
+        - src/monitoring-web/proxy.conf.json
+        - src/monitoring-web/src/app/app.component.css
+        - src/monitoring-web/src/app/app.component.html
+        - src/monitoring-web/src/app/app.component.spec.ts
+        - src/monitoring-web/src/app/app.component.ts
+        - src/monitoring-web/src/app/app.config.ts
+        - src/monitoring-web/src/app/app.routes.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+        - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+        - src/monitoring-web/src/index.html
+        - src/monitoring-web/src/main.ts
+        - src/monitoring-web/src/styles.css
+        - src/monitoring-web/tsconfig.app.json
+        - src/monitoring-web/tsconfig.json
+        - src/monitoring-web/tsconfig.spec.json
+        - tests/Monitoring.Tests/Monitoring.Tests.csproj
+        - tests/Monitoring.Tests/SessionViewChainHost.cs
+        - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+        - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+        diff_hash: sha256:6cda3d6b6b9154671ce306994fc4a5e643cd181e231bad0cc24ab9eb47b89cff
+        paths_digest: sha256:c82f9e01811b8e35a53f6e59d05efcc44e5a342ff790e9514888b3a5c51dbc77
+        authored_lines: 12256
+        original_changed_lines: 12260
+      lenses:
+        trust:
+          selected: true
+          status: completed
+          request_id: s04-trust-gen2-7c1a9e20-4b6d-4f31-9a55-0d2e8c44b701
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s04-trust-gen2-7c1a9e20-4b6d-4f31-9a55-0d2e8c44b701
+        runtime:
+          selected: true
+          status: completed
+          request_id: s04-runtime-gen2-3e8b1d44-91aa-4c72-b0e1-6f5a2d90c812
+          result_digest: sha256:3e541d3ea2f8b3f5de4628d8233c77a97d60878f8fb4a50c91a705a7d7980798
+          result:
+            findings:
+            - severity: CRITICAL
+              summary: CiVerifyJobStopsBeforePublishWhenAngularViewCheckFails (VistaAngularDeliveryTests.cs:38-109) spawns
+                `npx ng test --watch=false --include=src/app/this-file-does-not-exist.spec.ts` from src/monitoring-web during
+                `dotnet test`. ci.yml runs that step (line 38) before `npm ci` (line 41). On a clean Actions runner, Node
+                is on PATH but node_modules is absent (.gitignore), so the process cannot emit `No tests found matching`;
+                the fact fails or hits the 120s Kill/Assert.Fail, and verify never reaches `npm test` or Publish host.
+              acceptance_criteria: A clean verify job without a pre-existing src/monitoring-web/node_modules still gets a
+                green dotnet test that does not fail only because Angular packages are missing, and when the missing-spec
+                ng test runs against an installed SPA it still shows No tests found matching, a non-zero exit, and no publish
+                sentinel.
+          operation: null
+          result_request_id: s04-runtime-gen2-3e8b1d44-91aa-4c72-b0e1-6f5a2d90c812
+        evolution:
+          selected: true
+          status: completed
+          request_id: s04-evolution-gen2-9d4c6a18-2f70-4e55-8b33-1a7e5c60d903
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s04-evolution-gen2-9d4c6a18-2f70-4e55-8b33-1a7e5c60d903
+        efficiency:
+          selected: false
+          status: skipped
+          request_id: null
+          result_digest: null
+          result: null
+          operation: null
+      findings:
+      - id: F-44a720cadedc5092
+        owner: runtime
+        severity: CRITICAL
+        summary: CiVerifyJobStopsBeforePublishWhenAngularViewCheckFails (VistaAngularDeliveryTests.cs:38-109) spawns `npx
+          ng test --watch=false --include=src/app/this-file-does-not-exist.spec.ts` from src/monitoring-web during `dotnet
+          test`. ci.yml runs that step (line 38) before `npm ci` (line 41). On a clean Actions runner, Node is on PATH but
+          node_modules is absent (.gitignore), so the process cannot emit `No tests found matching`; the fact fails or hits
+          the 120s Kill/Assert.Fail, and verify never reaches `npm test` or Publish host.
+        acceptance_criteria: A clean verify job without a pre-existing src/monitoring-web/node_modules still gets a green
+          dotnet test that does not fail only because Angular packages are missing, and when the missing-spec ng test runs
+          against an installed SPA it still shows No tests found matching, a non-zero exit, and no publish sentinel.
+        blocking: true
+        resolution: resolved
+      findings_digest: sha256:d7ddf2c484ac457a55e9baf3eaf8da54785ceb403254d6575d1ab57cb58e51ab
+      correction_budget:
+        limit_lines: 200
+        used_lines: 0
+        failed_attempts: 0
+        max_failed_attempts: 3
+      correction_history: []
+      validation_history: []
+      follow_ups: []
+      pending_operation: null
+      pending_correction: null
+      terminal_reason: all-remediation-slices-passed
+      remediation_schema_version: 2
+      remediation_migration:
+        source_digest: sha256:c24a14ea53c3959334a057d072b66d49d7ab7d36a379499e65ade8e49fbbd575
+        manifest_digest: sha256:e78cc0e7c199890f603128fc0d0c3acb33bdd1d663696895a8cd6812c8081008
+        legacy_used_lines: 0
+        legacy_failed_attempts: 0
+        migrated_at: deterministic
+      slice_order:
+      - S-47d0789bb2914be7
+      active_slice_id: null
+      correction_slices:
+        S-47d0789bb2914be7:
+          slice_id: S-47d0789bb2914be7
+          root_cause_key: ci-ng-before-install
+          finding_ids:
+          - F-44a720cadedc5092
+          evidence_digests:
+          - sha256:445a0dabf419dee31d6590cbb58c3841ee3a3d3805018d6f3ff1f6c04f6bc4d6
+          permitted_paths:
+          - .github/workflows/ci.yml
+          - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+          resolutions:
+            F-44a720cadedc5092: unresolved
+          status: passed
+          used_lines: 8
+          failed_attempts: 0
+          limit_lines: 200
+          max_failed_attempts: 3
+          correction_history:
+          - slice_id: S-47d0789bb2914be7
+            request_id: s04-slice-gen2-5b2e9a10-7c44-4d61-8e30-1f6a4b80c215
+            finding_ids:
+            - F-44a720cadedc5092
+            paths:
+            - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+            base_candidate_id: sha256:f2248297009097f384368734c440a5cd5b48f345fe0cb66a34d1b6c30628b660
+            forecast_lines: 20
+            actual_changed_lines: 8
+            record_request_id: s04-record-gen2-8c3f1d20-6e55-4a71-9b40-2d7e6a90c418
+            corrected_candidate_id: sha256:e9aa1d75b5bcf7174f3dc2b360735d0384c76bde970087e31692f109e81806e1
+          validation_history:
+          - request_id: s04-validate-gen2-1a9c4e30-8d22-4b65-9f10-6c3e7a20d551
+            outcomes:
+            - id: F-44a720cadedc5092
+              status: resolved
+            regression:
+              detected: false
+              evidence:
+              - dotnet test filter CiVerifyJobStopsBeforePublishWhenAngularViewCheckFails and CiWorkflowPinsNodeAndRunsAngularTests
+                exited 0, 2 passed, 0 failed, 1 s; @angular/build present so the spawn path ran; no passed slice to reopen
+              impacted_slices: []
+            result: passed
+          regression_history: []
+          legacy_correction_refs: []
+          legacy_validation_refs: []
+    findings_summary: 0 BLOCKER, 0 CRITICAL, 0 WARNING, 0 SUGGESTION
+    terminal_predecessor:
+      schema_version: 2
+      lineage_id: sha256:adc7ec1bf9713dd4f08507f37367af3dd032ff9e3366166c5162fc0b10793c56
+      generation: 1
+      predecessor_lineage_id: null
+      migration: null
+      recovery: null
+      revision: 7
+      status: approved
+      genesis:
+        candidate:
+          projection: working-tree
+          base_tree: 134962a0821ff805156f4b09e58370e0ff6e67ab
+          candidate_tree: ef0a5424fe15e2f84032ae4c7a20c923d2b3972b
+          paths:
+          - .github/workflows/ci.yml
+          - .gitignore
+          - DESIGN.md
+          - README.md
+          - openspec/changes/s04-vista-angular/apply-progress.md
+          - openspec/changes/s04-vista-angular/decisions/adr-001.md
+          - openspec/changes/s04-vista-angular/decisions/adr-002.md
+          - openspec/changes/s04-vista-angular/design.md
+          - openspec/changes/s04-vista-angular/exploration.md
+          - openspec/changes/s04-vista-angular/proposal.md
+          - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+          - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+          - openspec/changes/s04-vista-angular/state.yaml
+          - openspec/changes/s04-vista-angular/tasks.md
+          - openspec/changes/s04-vista-angular/verify-report.md
+          - openspec/config.yaml
+          - src/Monitoring.Host/Program.cs
+          - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+          - src/monitoring-web/.editorconfig
+          - src/monitoring-web/.gitignore
+          - src/monitoring-web/.prettierrc
+          - src/monitoring-web/.vscode/extensions.json
+          - src/monitoring-web/.vscode/launch.json
+          - src/monitoring-web/.vscode/tasks.json
+          - src/monitoring-web/README.md
+          - src/monitoring-web/angular.json
+          - src/monitoring-web/package-lock.json
+          - src/monitoring-web/package.json
+          - src/monitoring-web/proxy.conf.json
+          - src/monitoring-web/src/app/app.component.css
+          - src/monitoring-web/src/app/app.component.html
+          - src/monitoring-web/src/app/app.component.spec.ts
+          - src/monitoring-web/src/app/app.component.ts
+          - src/monitoring-web/src/app/app.config.ts
+          - src/monitoring-web/src/app/app.routes.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+          - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+          - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+          - src/monitoring-web/src/index.html
+          - src/monitoring-web/src/main.ts
+          - src/monitoring-web/src/styles.css
+          - src/monitoring-web/tsconfig.app.json
+          - src/monitoring-web/tsconfig.json
+          - src/monitoring-web/tsconfig.spec.json
+          - tests/Monitoring.Tests/Monitoring.Tests.csproj
+          - tests/Monitoring.Tests/SessionViewChainHost.cs
+          - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+          - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+          diff_hash: sha256:d9f83e21a9f172bc44e17131065f22386bb1541553e8a31195c71f1c7a971510
+          paths_digest: sha256:41b7a18a420c1290d5cde80cf87f5bf54dd4e995caa52ce5d8f9e8e4b152082d
+          authored_lines: 11280
+          original_changed_lines: 11284
+        candidate_id: sha256:5a18e990d555cfd39ce3ccc532e79ab814d430d4926cbb3ebb307878116db692
+        paths:
+        - .github/workflows/ci.yml
+        - .gitignore
+        - DESIGN.md
+        - README.md
+        - openspec/changes/s04-vista-angular/apply-progress.md
+        - openspec/changes/s04-vista-angular/decisions/adr-001.md
+        - openspec/changes/s04-vista-angular/decisions/adr-002.md
+        - openspec/changes/s04-vista-angular/design.md
+        - openspec/changes/s04-vista-angular/exploration.md
+        - openspec/changes/s04-vista-angular/proposal.md
+        - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+        - openspec/changes/s04-vista-angular/state.yaml
+        - openspec/changes/s04-vista-angular/tasks.md
+        - openspec/changes/s04-vista-angular/verify-report.md
+        - openspec/config.yaml
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+        - src/monitoring-web/.editorconfig
+        - src/monitoring-web/.gitignore
+        - src/monitoring-web/.prettierrc
+        - src/monitoring-web/.vscode/extensions.json
+        - src/monitoring-web/.vscode/launch.json
+        - src/monitoring-web/.vscode/tasks.json
+        - src/monitoring-web/README.md
+        - src/monitoring-web/angular.json
+        - src/monitoring-web/package-lock.json
+        - src/monitoring-web/package.json
+        - src/monitoring-web/proxy.conf.json
+        - src/monitoring-web/src/app/app.component.css
+        - src/monitoring-web/src/app/app.component.html
+        - src/monitoring-web/src/app/app.component.spec.ts
+        - src/monitoring-web/src/app/app.component.ts
+        - src/monitoring-web/src/app/app.config.ts
+        - src/monitoring-web/src/app/app.routes.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+        - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+        - src/monitoring-web/src/index.html
+        - src/monitoring-web/src/main.ts
+        - src/monitoring-web/src/styles.css
+        - src/monitoring-web/tsconfig.app.json
+        - src/monitoring-web/tsconfig.json
+        - src/monitoring-web/tsconfig.spec.json
+        - tests/Monitoring.Tests/Monitoring.Tests.csproj
+        - tests/Monitoring.Tests/SessionViewChainHost.cs
+        - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+        - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+        classification: normal
+        selected_domains:
+        - trust
+        - runtime
+        - evolution
+        evidence_fingerprint: sha256:208e46b597c80a6a1df6588675856f8fff08891c8b542634c551e8876e1dec5c
+        original_changed_lines: 11284
+        authored_lines: 11280
+      current_candidate_id: sha256:5a18e990d555cfd39ce3ccc532e79ab814d430d4926cbb3ebb307878116db692
+      current_candidate:
+        projection: working-tree
+        base_tree: 134962a0821ff805156f4b09e58370e0ff6e67ab
+        candidate_tree: ef0a5424fe15e2f84032ae4c7a20c923d2b3972b
+        paths:
+        - .github/workflows/ci.yml
+        - .gitignore
+        - DESIGN.md
+        - README.md
+        - openspec/changes/s04-vista-angular/apply-progress.md
+        - openspec/changes/s04-vista-angular/decisions/adr-001.md
+        - openspec/changes/s04-vista-angular/decisions/adr-002.md
+        - openspec/changes/s04-vista-angular/design.md
+        - openspec/changes/s04-vista-angular/exploration.md
+        - openspec/changes/s04-vista-angular/proposal.md
+        - openspec/changes/s04-vista-angular/specs/detalle-sesion-ambito/spec.md
+        - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+        - openspec/changes/s04-vista-angular/state.yaml
+        - openspec/changes/s04-vista-angular/tasks.md
+        - openspec/changes/s04-vista-angular/verify-report.md
+        - openspec/config.yaml
+        - src/Monitoring.Host/Program.cs
+        - src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs
+        - src/monitoring-web/.editorconfig
+        - src/monitoring-web/.gitignore
+        - src/monitoring-web/.prettierrc
+        - src/monitoring-web/.vscode/extensions.json
+        - src/monitoring-web/.vscode/launch.json
+        - src/monitoring-web/.vscode/tasks.json
+        - src/monitoring-web/README.md
+        - src/monitoring-web/angular.json
+        - src/monitoring-web/package-lock.json
+        - src/monitoring-web/package.json
+        - src/monitoring-web/proxy.conf.json
+        - src/monitoring-web/src/app/app.component.css
+        - src/monitoring-web/src/app/app.component.html
+        - src/monitoring-web/src/app/app.component.spec.ts
+        - src/monitoring-web/src/app/app.component.ts
+        - src/monitoring-web/src/app/app.config.ts
+        - src/monitoring-web/src/app/app.routes.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-api.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.css
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.html
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.spec.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-page.component.ts
+        - src/monitoring-web/src/app/session-detail/session-detail-view-chain.spec.ts
+        - src/monitoring-web/src/app/session-detail/view-chain-node.shims.d.ts
+        - src/monitoring-web/src/index.html
+        - src/monitoring-web/src/main.ts
+        - src/monitoring-web/src/styles.css
+        - src/monitoring-web/tsconfig.app.json
+        - src/monitoring-web/tsconfig.json
+        - src/monitoring-web/tsconfig.spec.json
+        - tests/Monitoring.Tests/Monitoring.Tests.csproj
+        - tests/Monitoring.Tests/SessionViewChainHost.cs
+        - tests/Monitoring.Tests/TrustedSessionReadScopeTests.cs
+        - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+        diff_hash: sha256:d9f83e21a9f172bc44e17131065f22386bb1541553e8a31195c71f1c7a971510
+        paths_digest: sha256:41b7a18a420c1290d5cde80cf87f5bf54dd4e995caa52ce5d8f9e8e4b152082d
+        authored_lines: 11280
+        original_changed_lines: 11284
+      lenses:
+        trust:
+          selected: true
+          status: completed
+          request_id: s04-trust-210a5b4c-44e7-4ebe-bb78-94ef35d88341
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s04-trust-210a5b4c-44e7-4ebe-bb78-94ef35d88341
+        runtime:
+          selected: true
+          status: completed
+          request_id: s04-runtime-c7f767bf-7ffc-4462-a933-bc752b4415df
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s04-runtime-c7f767bf-7ffc-4462-a933-bc752b4415df
+        evolution:
+          selected: true
+          status: completed
+          request_id: s04-evolution-ebda4459-328d-4cc2-b60f-605c38be76be
+          result_digest: sha256:0fa38eeaca8882e0d194fd5ba5d8378917d98e795204f8f7a9dfdb78f111f3cc
+          result:
+            findings: []
+          operation: null
+          result_request_id: s04-evolution-ebda4459-328d-4cc2-b60f-605c38be76be
+        efficiency:
+          selected: false
+          status: skipped
+          request_id: null
+          result_digest: null
+          result: null
+          operation: null
+      findings: []
+      findings_digest: sha256:4d59fd4aa8eefff6dbf7cd085cc100ee928217573658f8bbc301aa4a3f1adc0f
+      correction_budget:
+        limit_lines: 200
+        used_lines: 0
+        failed_attempts: 0
+        max_failed_attempts: 3
+      correction_history: []
+      validation_history: []
+      follow_ups: []
+      pending_operation: null
+      pending_correction: null
+      terminal_reason: no-unresolved-blocking-findings
+    router: null
+  quality-gates:
+    status: pass
+    evaluated_at: '2026-09-30T19:15:23.201Z'
+    gates:
+      tests:
+        status: pass
+        required: true
+        on_fail: halt
+verify_lineage:
+  schema_version: 1
+  lineage_id: sha256:97f355e647f19225370ad940df187f3bf237329afd3dff8178190c0bc23c759d
+  generation: 1
+  predecessor_id: null
+  status: closed
+  genesis_candidate_id: sha256:6914dcde1c890d315b9c72848b34f08ff2105f0f8fe280919f82cc18ebe183b2
+  current_candidate_id: sha256:505f241bdbc459f69bb70506377179ce8aa302cd8218c5a92939da24d606930a
+  verified_candidate_id: sha256:505f241bdbc459f69bb70506377179ce8aa302cd8218c5a92939da24d606930a
+  contract_digest: sha256:3c62f8a9a03e82349ff99822137de7a8b21e3a0e53654ea30eca22df95efd0ec
+  candidate_recovery:
+    schema_version: 1
+    genesis:
+      kind: candidate-recovery-ref/v1
+      schema_version: 1
+      candidate_id: sha256:6914dcde1c890d315b9c72848b34f08ff2105f0f8fe280919f82cc18ebe183b2
+      content_digest: sha256:b5ad310adfb109fdf40a0b0919e4b7771f75ec0c4ce99aa4058f15faef193a90
+      relative_path: .verify-lineage-candidate-b5ad310adfb109fdf40a0b0919e4b7771f75ec0c4ce99aa4058f15faef193a90.json
+    current:
+      candidate_id: sha256:505f241bdbc459f69bb70506377179ce8aa302cd8218c5a92939da24d606930a
+      content_digest: sha256:463479db4ea8d3874abbf32401e1b1704d6ec21fa19cc0d23f9a84db7249358d
+      kind: candidate-recovery-ref/v1
+      relative_path: .verify-lineage-candidate-463479db4ea8d3874abbf32401e1b1704d6ec21fa19cc0d23f9a84db7249358d.json
+      schema_version: 1
+  remediation_attempts: 1
+  max_remediation_attempts: 2
+  findings:
+  - id: S04-C001
+    severity: CRITICAL
+    summary: CI failure scenario is file text, not a failing pipeline
+    origin: design-gap
+    allowed_paths:
+    - .github/workflows/ci.yml
+    - openspec/changes/s04-vista-angular/design.md
+    - openspec/changes/s04-vista-angular/specs/vista-detalle-sesion/spec.md
+    - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+    validation:
+      commands:
+      - dotnet test Monitoring.slnx --filter FullyQualifiedName~CiWorkflowPinsNodeAndRunsAngularTests
+      expected_exit: 0
+      test_files:
+      - tests/Monitoring.Tests/VistaAngularDeliveryTests.cs
+    status: resolved
+  late_observations: []
+  terminal_reason: all-findings-verified
+  candidate_snapshot:
+    kind: candidate-snapshot-ref/v1
+    schema_version: 1
+    candidate_id: sha256:505f241bdbc459f69bb70506377179ce8aa302cd8218c5a92939da24d606930a
+    content_digest: sha256:be36c147227e8fc170ee40f8aae61b0744dfddba94d9d0ac62285b606fec65b8
+    relative_path: .verify-lineage-snapshot-be36c147227e8fc170ee40f8aae61b0744dfddba94d9d0ac62285b606fec65b8.json

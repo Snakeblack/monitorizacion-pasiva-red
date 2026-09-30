@@ -1,11 +1,12 @@
 # Monitorización pasiva de red
 
-Base ejecutable S01–S03 del sistema de monitorización: host ASP.NET Core, ingestión durable S02 y proyección idempotente de sesiones sintéticas S03 con detalle aislado por sede/sonda. Las pruebas usan PostgreSQL desechable. La interfaz Angular S04, captura real, inventario y acceso humano de producción pertenecen a slices posteriores.
+Base ejecutable S01–S04 del sistema de monitorización: host ASP.NET Core, ingestión durable S02, proyección idempotente de sesiones sintéticas S03 con detalle aislado por sede/sonda, y vista Angular interna del detalle. Las pruebas usan PostgreSQL desechable. Captura real, inventario y acceso humano de producción pertenecen a slices posteriores.
 
 ## Requisitos
 
 - .NET SDK 10.0.303, fijado en `global.json`.
-- Docker Desktop o Docker Engine en ejecución. Las pruebas de integración crean su propio contenedor PostgreSQL con Testcontainers.
+- Node 24.16.0 y npm para la SPA en `src/monitoring-web/` (CI usa esa versión de Node; el lockfile se versiona).
+- Docker Desktop o Docker Engine en ejecución. Las pruebas de integración .NET y la cadena fixture→vista crean su propio contenedor PostgreSQL con Testcontainers.
 
 ## Restaurar, compilar y probar
 
@@ -17,7 +18,13 @@ dotnet build Monitoring.slnx --no-restore
 dotnet test Monitoring.slnx
 ```
 
-La suite de migraciones necesita Docker accesible. GitHub Actions ejecuta esos mismos pasos sobre un checkout limpio; las pruebas aprovisionan y eliminan PostgreSQL automáticamente.
+La suite de migraciones necesita Docker accesible. GitHub Actions ejecuta esos mismos pasos sobre un checkout limpio; las pruebas aprovisionan y eliminan PostgreSQL automáticamente. El job también instala la SPA con `npm ci` y ejecuta `npm test` en `src/monitoring-web` (incluye la cadena hasta la vista; no añadir `-- --watch=false` con npm 12).
+
+Para la vista sola, desde la raíz:
+
+```sh
+npm --prefix src/monitoring-web test
+```
 
 ## Arranque y liveness
 
@@ -32,6 +39,33 @@ Comprueba el endpoint de liveness, que devuelve HTTP 200 sin consultar la base d
 ```sh
 curl.exe --fail http://localhost:5080/health/live
 ```
+
+## Vista Angular (solo desarrollo)
+
+La SPA vive en `src/monitoring-web/` y no entra en `Monitoring.slnx`. El host no llama a `UseStaticFiles`; `dotnet publish` del host no copia `wwwroot` ni artefactos de `monitoring-web`. La vista interna no se publica en producción.
+
+Con el host en el puerto 5080, el proxy de `ng serve` reenvía `/api` a `http://127.0.0.1:5080` sin añadir ámbito:
+
+```sh
+npm --prefix src/monitoring-web start
+```
+
+Abre `/sessions/{eventId}` en el origen del CLI. El navegador no envía sede ni sonda. En Development o Testing el servidor instala el ámbito solo si existen ambas claves, sin espacios:
+
+```
+TrustedSessionRead:SiteId
+TrustedSessionRead:SensorId
+```
+
+Equivalente en variables de entorno: `TrustedSessionRead__SiteId` y `TrustedSessionRead__SensorId`. En PowerShell:
+
+```powershell
+$env:TrustedSessionRead__SiteId = "site-a"
+$env:TrustedSessionRead__SensorId = "sensor-a"
+dotnet run --project src/Monitoring.Host -- --urls http://localhost:5080
+```
+
+Sin las dos claves, o fuera de Development/Testing, el detalle responde 401 y la vista muestra error.
 
 ## Aplicar las migraciones
 

@@ -1,0 +1,22 @@
+<div class="app-shell" [class.app-shell--nav-collapsed]="!navOpen()">
+  <header class="app-header">
+    <button
+      type="button"
+      class="app-nav-toggle"
+      [attr.aria-expanded]="navOpen()"
+      aria-controls="app-nav"
+      (click)="toggleNav()"
+    >
+      {{ navToggleLabel() }}
+    </button>
+    <p class="app-header-title">Monitorización</p>
+  </header>
+  <div class="app-body">
+    <nav id="app-nav" class="app-nav">
+      <button type="button" class="app-nav-item" aria-current="page">Detalle</button>
+    </nav>
+    <main class="app-main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

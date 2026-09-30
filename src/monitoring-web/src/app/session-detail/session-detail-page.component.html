@@ -1,0 +1,47 @@
+<section class="session-detail-page">
+  <h1 class="session-detail-title">Detalle de sesión</h1>
+  @if (view(); as current) {
+    @if (current.kind === 'loading') {
+      <p role="status">Consultando detalle</p>
+    }
+    @if (current.kind === 'empty') {
+      <p role="status">No hay sesión en este ámbito</p>
+    }
+    @if (current.kind === 'error') {
+      <p role="status">No se pudo consultar el detalle</p>
+      <button
+        type="button"
+        (click)="retry()"
+        (keydown.enter)="retryFromKeyboard($event)"
+        (keydown.space)="retryFromKeyboard($event)"
+      >
+        Reintentar consulta
+      </button>
+    }
+    @if (current.kind === 'success') {
+      <p role="status">Sesión en ámbito</p>
+      <dl class="session-detail-fields">
+        <div class="session-detail-row">
+          <dt>eventId</dt>
+          <dd>{{ current.session.eventId }}</dd>
+        </div>
+        <div class="session-detail-row">
+          <dt>siteId</dt>
+          <dd>{{ current.session.siteId }}</dd>
+        </div>
+        <div class="session-detail-row">
+          <dt>sensorId</dt>
+          <dd>{{ current.session.sensorId }}</dd>
+        </div>
+        <div class="session-detail-row">
+          <dt>occurredAt</dt>
+          <dd>{{ current.session.occurredAt }}</dd>
+        </div>
+        <div class="session-detail-row">
+          <dt>data</dt>
+          <dd>{{ dataText(current.session) }}</dd>
+        </div>
+      </dl>
+    }
+  }
+</section>

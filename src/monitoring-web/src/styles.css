@@ -1,0 +1,86 @@
+:root {
+  --ui-bg: oklch(0.97 0.004 260);
+  --ui-surface-1: oklch(0.995 0.002 260);
+  --ui-surface-2: oklch(0.945 0.005 260);
+  --ui-surface-elevated: oklch(1 0 0);
+
+  --ui-border-subtle: color-mix(in oklab, black 10%, transparent);
+  --ui-border-strong: color-mix(in oklab, black 18%, transparent);
+
+  --ui-text: oklch(0.24 0.012 260);
+  --ui-text-muted: oklch(0.46 0.01 260);
+  --ui-text-faint: oklch(0.6 0.008 260);
+  --ui-icon: oklch(0.4 0.01 260);
+  --ui-icon-muted: oklch(0.56 0.008 260);
+
+  --ui-accent: oklch(0.5 0.12 250);
+  --ui-accent-soft: color-mix(in oklab, var(--ui-accent) 12%, transparent);
+  --ui-focus: color-mix(in oklab, var(--ui-accent) 70%, white);
+
+  --ui-danger: oklch(0.52 0.18 25);
+  --ui-warning: oklch(0.68 0.14 75);
+  --ui-success: oklch(0.52 0.12 150);
+
+  --ui-radius-xs: 4px;
+  --ui-radius-sm: 6px;
+  --ui-radius-md: 8px;
+
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 20px;
+  --ui-space-6: 24px;
+  --ui-space-8: 32px;
+
+  --ui-control-compact: 30px;
+  --ui-control: 34px;
+  --ui-row: 36px;
+  --ui-nav-expanded: 240px;
+  --ui-nav-collapsed: 56px;
+
+  --ui-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  --ui-font-size-meta: 12px;
+  --ui-font-size-control: 13px;
+  --ui-font-size-body: 13px;
+  --ui-font-size-title: 18px;
+}
+
+[data-theme='dark'] {
+  --ui-bg: oklch(0.18 0.008 260);
+  --ui-surface-1: oklch(0.21 0.008 260);
+  --ui-surface-2: oklch(0.25 0.01 260);
+  --ui-surface-elevated: oklch(0.27 0.01 260);
+
+  --ui-border-subtle: color-mix(in oklab, white 10%, transparent);
+  --ui-border-strong: color-mix(in oklab, white 16%, transparent);
+
+  --ui-text: oklch(0.92 0.006 260);
+  --ui-text-muted: oklch(0.72 0.008 260);
+  --ui-text-faint: oklch(0.58 0.006 260);
+  --ui-icon: oklch(0.78 0.006 260);
+  --ui-icon-muted: oklch(0.6 0.006 260);
+
+  --ui-accent: oklch(0.68 0.1 250);
+  --ui-accent-soft: color-mix(in oklab, var(--ui-accent) 16%, transparent);
+  --ui-focus: color-mix(in oklab, var(--ui-accent) 70%, white);
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-font-size-body);
+  line-height: 1.4;
+}
+
+button {
+  font-family: inherit;
+}

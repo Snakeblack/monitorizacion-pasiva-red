@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "change": "s04-vista-angular",
+  "source_fingerprint": "sha256:c140b49b614238ca32599ef98d194baa2427d2c2a7090f88e31d96c3cb1b8f96",
+  "spec_writes": [
+    {
+      "domain": "vista-detalle-sesion",
+      "source_delta": "archive-prepared/specs/vista-detalle-sesion/spec.md",
+      "target": "openspec/specs/vista-detalle-sesion/spec.md",
+      "target_before_sha256": null,
+      "content_sha256": "sha256:5e0d93c29e22b644eabbdc38b0adc2776f435ba627a3c8bddea782a9c524ffba"
+    },
+    {
+      "domain": "detalle-sesion-ambito",
+      "source_delta": "archive-prepared/specs/detalle-sesion-ambito/spec.md",
+      "target": "openspec/specs/detalle-sesion-ambito/spec.md",
+      "target_before_sha256": "sha256:1d1d9f197c4a418472ed5bdb8919b2c464cd0147e6cde84600ea55872c57fc24",
+      "content_sha256": "sha256:64d93dd293066f517b5e6367027999362c50fbdce0f0071cc345cfd739bd183f"
+    }
+  ],
+  "adr_promotions": [
+    {
+      "source": "decisions/adr-001.md",
+      "target": "docs/adr/adr-20260930-004-spa-angular-fuera-del-host.md",
+      "content_sha256": "sha256:2c70d57967c72b8b258cbcf8b1b31cada119948f4fa0674812fd56348a0f0aef"
+    },
+    {
+      "source": "decisions/adr-002.md",
+      "target": "docs/adr/adr-20260930-005-ambito-lectura-solo-desde-configuracion-servidor.md",
+      "content_sha256": "sha256:10e37993488530f42f634b20ee908d627d94c85a3e9d4355f94a594d59e26ae0"
+    }
+  ],
+  "archive_inventory": [
+    ".verify-lineage-candidate-463479db4ea8d3874abbf32401e1b1704d6ec21fa19cc0d23f9a84db7249358d.json",
+    ".verify-lineage-candidate-b5ad310adfb109fdf40a0b0919e4b7771f75ec0c4ce99aa4058f15faef193a90.json",
+    ".verify-lineage-snapshot-6d24e28483e91353a2f71f2a749a01e8d945d5a54421c65ccf5b848739479750.json",
+    ".verify-lineage-snapshot-be36c147227e8fc170ee40f8aae61b0744dfddba94d9d0ac62285b606fec65b8.json",
+    "apply-progress.md",
+    "archive-prepared/specs/detalle-sesion-ambito/spec.md",
+    "archive-prepared/specs/vista-detalle-sesion/spec.md",
+    "archive-report.md",
+    "decisions/adr-001.md",
+    "decisions/adr-002.md",
+    "design.md",
+    "exploration.md",
+    "follow-up.md",
+    "proposal.md",
+    "specs/detalle-sesion-ambito/spec.md",
+    "specs/vista-detalle-sesion/spec.md",
+    "state.yaml",
+    "tasks.md",
+    "verify-report.md"
+  ],
+  "accepted_warnings": [
+    {
+      "id": "S04-W001",
+      "disposition": "converted-to-follow-up",
+      "artifact": "follow-up.md",
+      "status": "scheduled",
+      "accepted_at": "2026-09-30",
+      "source": "cursor/plain-chat"
+    },
+    {
+      "id": "S04-W002",
+      "disposition": "converted-to-follow-up",
+      "artifact": "follow-up.md",
+      "status": "scheduled",
+      "accepted_at": "2026-09-30",
+      "source": "cursor/plain-chat"
+    }
+  ],
+  "rollback": {
+    "strategy": "staging-rename"
+  },
+  "intended_archive_destination": "openspec/changes/archive/2026-09-30-s04-vista-angular",
+  "archive_date": "2026-09-30",
+  "archive_timezone": "Europe/Madrid"
+}
