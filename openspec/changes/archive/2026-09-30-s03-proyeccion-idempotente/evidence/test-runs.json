@@ -1,0 +1,268 @@
+[
+  {
+    "report": "s03-baseline.trx",
+    "passed": 54,
+    "failures": [],
+    "sha256": "d3015055677bdaf863778059f028b95b1f32ef3c095cbfbd42c38b3add7bd928",
+    "total": 54,
+    "start": "2026-09-30T00:11:11.5616954+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:11:30.9094033+02:00"
+  },
+  {
+    "report": "s03-final.trx",
+    "passed": 109,
+    "failures": [],
+    "sha256": "8fe397ba17ac4490cbeb33e7109612f36be61677e2efa657233b0b81e8d97962",
+    "total": 109,
+    "start": "2026-09-30T00:33:07.5121087+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:33:28.3528554+02:00"
+  },
+  {
+    "report": "s03-u1-green.trx",
+    "passed": 38,
+    "failures": [],
+    "sha256": "cb7563e4bf136d8efa66884085952b0f4a981f4fa633d7f363be4424a19b9beb",
+    "total": 38,
+    "start": "2026-09-30T00:13:15.9156080+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:13:16.7186301+02:00"
+  },
+  {
+    "report": "s03-u1-red.trx",
+    "passed": 34,
+    "failures": [
+      {
+        "message": "Assert.True() Failure\r\nExpected: True\r\nActual:   False",
+        "test": "Monitoring.Tests.SyntheticSessionContractTests.ValidSessionsPreserveOriginalValues(protocol: \"TCP\", fraction: \"\", source: \"192.0.2.1\", destination: \"2001:db8::2\", sourcePort: 0, destinationPort: 65535)"
+      },
+      {
+        "message": "Assert.True() Failure\r\nExpected: True\r\nActual:   False",
+        "test": "Monitoring.Tests.SyntheticSessionContractTests.ValidSessionsPreserveOriginalValues(protocol: \"UDP\", fraction: \".123\", source: \"2001:db8::1\", destination: \"2001:db8::2\", sourcePort: 53, destinationPort: 53)"
+      },
+      {
+        "message": "Assert.True() Failure\r\nExpected: True\r\nActual:   False",
+        "test": "Monitoring.Tests.SyntheticSessionContractTests.ValidSessionsPreserveOriginalValues(protocol: \"UDP\", fraction: \".1\", source: \"2001:db8::1\", destination: \"192.0.2.2\", sourcePort: 65535, destinationPort: 0)"
+      },
+      {
+        "message": "Assert.True() Failure\r\nExpected: True\r\nActual:   False",
+        "test": "Monitoring.Tests.SyntheticSessionContractTests.ValidSessionsPreserveOriginalValues(protocol: \"TCP\", fraction: \".12\", source: \"192.0.2.1\", destination: \"192.0.2.2\", sourcePort: 7, destinationPort: 8)"
+      }
+    ],
+    "sha256": "164394280f8ca6b314f349695e2e3a24a686df825bf03f9f641f7f59c3adaae6",
+    "total": 38,
+    "start": "2026-09-30T00:12:40.5081762+02:00",
+    "failed": 4,
+    "finish": "2026-09-30T00:12:41.2424266+02:00"
+  },
+  {
+    "report": "s03-u2-green.trx",
+    "passed": 3,
+    "failures": [],
+    "sha256": "76d7a5d365f6aaf7615c4afb49c0970c0677330d8b3f963afbf3e978439704d8",
+    "total": 3,
+    "start": "2026-09-30T00:18:46.9669436+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:18:54.6208414+02:00"
+  },
+  {
+    "report": "s03-u2-red.trx",
+    "passed": 0,
+    "failures": [
+      {
+        "message": "Npgsql.PostgresException : 42P07: relation \"ingestion_origin\" already exists",
+        "test": "Monitoring.Tests.SessionSchemaTests.UpgradeS02PreservesPendingDataAndAddsCompositeProjectionAndPartialIndex"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: 3\r\nActual:   2",
+        "test": "Monitoring.Tests.InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: 3\r\nActual:   2",
+        "test": "Monitoring.Tests.MigrationTests.MigrateCreatesInboxSchemaAndCanBeRepeated"
+      }
+    ],
+    "sha256": "c81fc9dc80aa6fe335de75cd5a7db1d9dc757475e1270634661f292729e6fff2",
+    "total": 3,
+    "start": "2026-09-30T00:16:19.7059919+02:00",
+    "failed": 3,
+    "finish": "2026-09-30T00:16:27.7512079+02:00"
+  },
+  {
+    "report": "s03-u2-schema-red.trx",
+    "passed": 0,
+    "failures": [
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: 3\r\nActual:   2",
+        "test": "Monitoring.Tests.SessionSchemaTests.UpgradeS02PreservesPendingDataAndAddsCompositeProjectionAndPartialIndex"
+      }
+    ],
+    "sha256": "b2fe7b639930dff527d9d75b5c0ad7beaac0677fa25984a5fd19351dac5040e7",
+    "total": 1,
+    "start": "2026-09-30T00:16:59.2131742+02:00",
+    "failed": 1,
+    "finish": "2026-09-30T00:17:05.7091986+02:00"
+  },
+  {
+    "report": "s03-u3-green.trx",
+    "passed": 3,
+    "failures": [],
+    "sha256": "3497c046c7e8cf35c75b54155625ebee4ab88fbb0119b687a979f3ec1fb9a29e",
+    "total": 3,
+    "start": "2026-09-30T00:21:16.3307225+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:21:25.7801178+02:00"
+  },
+  {
+    "report": "s03-u3-red.trx",
+    "passed": 0,
+    "failures": [
+      {
+        "message": "Assert.Throws() Failure: No exception was thrown\r\nExpected: typeof(Npgsql.PostgresException)",
+        "test": "Monitoring.Tests.SessionProjectionTests.MarkingFailureRollsBackInsertAndRestartRecoversPending"
+      },
+      {
+        "message": "Assert.Throws() Failure: No exception was thrown\r\nExpected: typeof(System.InvalidOperationException)",
+        "test": "Monitoring.Tests.SessionProjectionTests.ConflictingProjectionRaisesInvariantWithoutOverwritingOrMarking"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: 3\r\nActual:   0",
+        "test": "Monitoring.Tests.SessionProjectionTests.InitialProjectionAndEqualReplayPreserveOneSessionPerOrigin"
+      }
+    ],
+    "sha256": "b514f6371fd43d9a12dd625bdb9a3de80424d73d2d089b1dbf2859473274fcea",
+    "total": 3,
+    "start": "2026-09-30T00:20:00.3038365+02:00",
+    "failed": 3,
+    "finish": "2026-09-30T00:20:09.3687554+02:00"
+  },
+  {
+    "report": "s03-u4-green.trx",
+    "passed": 5,
+    "failures": [],
+    "sha256": "7516ee932aa855b1c3152183fa50b001ad3db50f912b8fd454ef3cefdbfcdbd8",
+    "total": 5,
+    "start": "2026-09-30T00:23:08.8537367+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:23:20.6031115+02:00"
+  },
+  {
+    "report": "s03-u4-red.trx",
+    "passed": 4,
+    "failures": [
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: 103\r\nActual:   0",
+        "test": "Monitoring.Tests.SessionProjectionTests.MoreThanOnePageOfInvalidUnknownAndValidEventsDoesNotStarveLaterValidEvents"
+      }
+    ],
+    "sha256": "751443f2013b6c5b5356391afaee22bf91a8635debb1dc77cae28b7561c9e087",
+    "total": 5,
+    "start": "2026-09-30T00:22:04.0725050+02:00",
+    "failed": 1,
+    "finish": "2026-09-30T00:22:15.5903486+02:00"
+  },
+  {
+    "report": "s03-u5-green.trx",
+    "passed": 6,
+    "failures": [],
+    "sha256": "6159e65708ed33e2e8cacefbe4f8a15008d8957198dfc23d3c19482fb9e9193d",
+    "total": 6,
+    "start": "2026-09-30T00:25:54.8951063+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:26:04.4561230+02:00"
+  },
+  {
+    "report": "s03-u5-red.trx",
+    "passed": 0,
+    "failures": [
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: OK\r\nActual:   NotFound",
+        "test": "Monitoring.Tests.SessionHostTests.DetailReturnsExactlyFiveFieldsAndSharedIdStaysInTrustedScope(environment: \"Development\")"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: TrustedSessionReadContext { SiteId = trusted-site, SensorId = trusted-sensor }\r\nActual:   null",
+        "test": "Monitoring.Tests.SessionHostTests.ProviderReadsOnlySeparateServerFeature"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: Unauthorized\r\nActual:   NotFound",
+        "test": "Monitoring.Tests.SessionHostTests.EnvironmentGuardRejectsEvenSubstitutedProviderBeforeReading(environment: \"Production\")"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: Unauthorized\r\nActual:   NotFound",
+        "test": "Monitoring.Tests.SessionHostTests.SensorIdentityHeadersAndQueryDoNotAuthorizeReading"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: OK\r\nActual:   NotFound",
+        "test": "Monitoring.Tests.SessionHostTests.DetailReturnsExactlyFiveFieldsAndSharedIdStaysInTrustedScope(environment: \"Testing\")"
+      },
+      {
+        "message": "Assert.Equal() Failure: Values differ\r\nExpected: Unauthorized\r\nActual:   NotFound",
+        "test": "Monitoring.Tests.SessionHostTests.EnvironmentGuardRejectsEvenSubstitutedProviderBeforeReading(environment: \"Unknown\")"
+      }
+    ],
+    "sha256": "c2b7e74a1140f86d44e779f731aee8dc8e05e4e9b02d67a7d7e2322b5b06e3fc",
+    "total": 6,
+    "start": "2026-09-30T00:24:59.7163752+02:00",
+    "failed": 6,
+    "finish": "2026-09-30T00:25:08.6010898+02:00"
+  },
+  {
+    "report": "s03-u6-green.trx",
+    "passed": 12,
+    "failures": [],
+    "sha256": "d5f40ec37bb4dcfbcfb1188333dbe39f157e8962df84f6828c04598e9947e441",
+    "total": 12,
+    "start": "2026-09-30T00:31:16.9501080+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:31:29.0596787+02:00"
+  },
+  {
+    "report": "s03-u6-wiring-red.trx",
+    "passed": 8,
+    "failures": [
+      {
+        "message": "Assert.Single() Failure: The collection was empty",
+        "test": "Monitoring.Tests.SessionHostTests.ConfiguredHostRunsProjectionWorkerAndMigrationDoesNotConsumePending"
+      }
+    ],
+    "sha256": "8ec145de0b4d589d69d34e97666da2550ce29b2e17fbe1f6aed30693e7cffb88",
+    "total": 9,
+    "start": "2026-09-30T00:30:28.1088110+02:00",
+    "failed": 1,
+    "finish": "2026-09-30T00:30:39.7972805+02:00"
+  },
+  {
+    "report": "s03-u6-worker-green.trx",
+    "passed": 3,
+    "failures": [],
+    "sha256": "f61f546ecb524d2b93f3fd5fd7700a91dcd58f3a9a7e274864d71e6751d29ac8",
+    "total": 3,
+    "start": "2026-09-30T00:28:56.8126024+02:00",
+    "failed": 0,
+    "finish": "2026-09-30T00:29:07.4744589+02:00"
+  },
+  {
+    "report": "s03-u6-worker-red.trx",
+    "passed": 0,
+    "failures": [
+      {
+        "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled.",
+        "test": "Monitoring.Tests.SessionWorkerTests.CancellationDuringMarkingReleasesTransactionAndRestartRecovers"
+      },
+      {
+        "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled.",
+        "test": "Monitoring.Tests.SessionWorkerTests.TransientFailureDisposesScopeAndRetryRecoversWithNewContextAndSafeLogs"
+      },
+      {
+        "message": "System.Threading.Tasks.TaskCanceledException : A task was canceled.",
+        "test": "Monitoring.Tests.SessionWorkerTests.NonTransientFailureStopsHostAndNeverLogsPostgresPayload"
+      }
+    ],
+    "sha256": "6873b7ec3d5f34ee37f4308b796cf7967335dcf1315dda1393b9f5e27af70f37",
+    "total": 3,
+    "start": "2026-09-30T00:27:33.2005044+02:00",
+    "failed": 3,
+    "finish": "2026-09-30T00:28:12.6060944+02:00"
+  }
+]

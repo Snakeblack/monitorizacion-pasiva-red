@@ -1,0 +1,257 @@
+{
+  "captured_at": "2026-09-29T22:35:24.670Z",
+  "candidate": {
+    "id": "sha256:b858d6aeb45c3e6317475d4339e834ae090ec87f7416d377c7c79a8561e70cd2",
+    "projection": "strict-tdd-functional-v1",
+    "genesis_paths": [
+      "README.md",
+      "docs/roadmap.md",
+      "src/Monitoring.Domain/Sessions/SessionDetail.cs",
+      "src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs",
+      "src/Monitoring.Host/Program.cs",
+      "src/Monitoring.Host/Sessions/SessionEndpoint.cs",
+      "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs",
+      "src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs",
+      "src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs",
+      "src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs",
+      "src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs",
+      "src/Monitoring.Persistence/MonitoringDbContext.cs",
+      "src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs",
+      "src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs",
+      "src/Monitoring.Persistence/Sessions/SessionProjector.cs",
+      "src/Monitoring.Persistence/Sessions/SessionReader.cs",
+      "tests/Monitoring.Tests/HostStartupTests.cs",
+      "tests/Monitoring.Tests/InboxSchemaTests.cs",
+      "tests/Monitoring.Tests/MigrationTests.cs",
+      "tests/Monitoring.Tests/SessionHostTests.cs",
+      "tests/Monitoring.Tests/SessionProjectionTests.cs",
+      "tests/Monitoring.Tests/SessionSchemaTests.cs",
+      "tests/Monitoring.Tests/SessionWorkerTests.cs",
+      "tests/Monitoring.Tests/SyntheticSessionContractTests.cs"
+    ],
+    "files": [
+      {
+        "path": "docs/roadmap.md",
+        "digest": "sha256:d8380ee5197a7d1e1b7a91565125652e839cdf9e37f58fe0407587d40db19919"
+      },
+      {
+        "path": "README.md",
+        "digest": "sha256:329fa348cc54fd85e0369c35409f1c1624ee0e4d807fa3757e6eab8c22de2147"
+      },
+      {
+        "path": "src/Monitoring.Domain/Sessions/SessionDetail.cs",
+        "digest": "sha256:22013bb713db40accbce6e9fd25c00e8ef9aeb8f1ddfbe070b35e74fe36a41c7"
+      },
+      {
+        "path": "src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs",
+        "digest": "sha256:1243f7a3cec1c081a35923f90afa6e8054f5b4c3e028ac2ac1d5d4aee784c537"
+      },
+      {
+        "path": "src/Monitoring.Host/Program.cs",
+        "digest": "sha256:5f30cc832f8c90352ac3d09be804c2ea727f14c3dac396742ecdad6c40677321"
+      },
+      {
+        "path": "src/Monitoring.Host/Sessions/SessionEndpoint.cs",
+        "digest": "sha256:307c8f46d081c2ea1fffdf5870efc15111d7175ca666d1b9231ffc70150d22bc"
+      },
+      {
+        "path": "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs",
+        "digest": "sha256:bed8ebdb612a7aaecb4e2d06048336e05a79278530f398d78889b3001f383233"
+      },
+      {
+        "path": "src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs",
+        "digest": "sha256:e58c7a4bd8ab68b7887c4f4c7487a078386e05ac0e2b43f0c88484638da89dd9"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs",
+        "digest": "sha256:2b9631d8558c09ea01606b818bd199027fe1d172f1d8d6c9e77ee273b3cb118d"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs",
+        "digest": "sha256:89f5725d0b0447040d07438ca60d31f5bd1215becd7336e3dea3e9c43ab5479a"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs",
+        "digest": "sha256:6391d0557156e8a4d2c746525b34ad0fab56db46ef84828972ca5061347e28de"
+      },
+      {
+        "path": "src/Monitoring.Persistence/MonitoringDbContext.cs",
+        "digest": "sha256:01899128a884cb2ec770050504440381101a60f4d357de7e922dc3dbbcbe2677"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs",
+        "digest": "sha256:5f914dd463bc3371c13ebda740c5d714ad3620f1edf3e20693a8885300cc4840"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs",
+        "digest": "sha256:d5ba52493e78dc08829d0304b65ee5e7da552e6ddc60d96383889b0565319607"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Sessions/SessionProjector.cs",
+        "digest": "sha256:30e4b77af4050da635aa3b8d673e0a61d62377093705460d242230eb623ab5a4"
+      },
+      {
+        "path": "src/Monitoring.Persistence/Sessions/SessionReader.cs",
+        "digest": "sha256:839eba9e4c817675bda5046ff9cdbb86dad1fc9654a21dc8ba4f8f0b511f08a1"
+      },
+      {
+        "path": "tests/Monitoring.Tests/HostStartupTests.cs",
+        "digest": "sha256:bde50686de17c681c4bba7462374fd37adad903db8f59911b78ddd443415c7fa"
+      },
+      {
+        "path": "tests/Monitoring.Tests/InboxSchemaTests.cs",
+        "digest": "sha256:a8c50d47b7e2ec0973cf9705e51833847a7414a04b628bc614c9aed6d42e1c81"
+      },
+      {
+        "path": "tests/Monitoring.Tests/MigrationTests.cs",
+        "digest": "sha256:702129ddbc3f5976f0db31110ef5775f8b887b35f137e1ab3f5e808d4c637f20"
+      },
+      {
+        "path": "tests/Monitoring.Tests/SessionHostTests.cs",
+        "digest": "sha256:00c8a4ea4314f0a8ab030e7e8f22bfade29ca3f12e7c618c028c71f28d74663c"
+      },
+      {
+        "path": "tests/Monitoring.Tests/SessionProjectionTests.cs",
+        "digest": "sha256:e77ec697599acbe0d5f36d2ec7e950b4eb190512036dfd4e2d6d8ee9c4e8edb4"
+      },
+      {
+        "path": "tests/Monitoring.Tests/SessionSchemaTests.cs",
+        "digest": "sha256:a81883a843578ab7e6decdd6fa54643da88ed3dbeeeae093cf412626ca66543c"
+      },
+      {
+        "path": "tests/Monitoring.Tests/SessionWorkerTests.cs",
+        "digest": "sha256:431331e21e9cfe7b522bf71f725a08336cbad9da8d9d76231993c8c4b325fe01"
+      },
+      {
+        "path": "tests/Monitoring.Tests/SyntheticSessionContractTests.cs",
+        "digest": "sha256:9c7430fd7dd56ffd09930fa49638da787e79728d36079b8ad4e1b97a6ea92f44"
+      }
+    ]
+  },
+  "projection": "strict-tdd-functional-v1",
+  "base_tree": "3740f9c91169c6d82527f011214a922489fc3895",
+  "genesis_paths": [
+    "README.md",
+    "docs/roadmap.md",
+    "src/Monitoring.Domain/Sessions/SessionDetail.cs",
+    "src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs",
+    "src/Monitoring.Host/Program.cs",
+    "src/Monitoring.Host/Sessions/SessionEndpoint.cs",
+    "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs",
+    "src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs",
+    "src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs",
+    "src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs",
+    "src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs",
+    "src/Monitoring.Persistence/MonitoringDbContext.cs",
+    "src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs",
+    "src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs",
+    "src/Monitoring.Persistence/Sessions/SessionProjector.cs",
+    "src/Monitoring.Persistence/Sessions/SessionReader.cs",
+    "tests/Monitoring.Tests/HostStartupTests.cs",
+    "tests/Monitoring.Tests/InboxSchemaTests.cs",
+    "tests/Monitoring.Tests/MigrationTests.cs",
+    "tests/Monitoring.Tests/SessionHostTests.cs",
+    "tests/Monitoring.Tests/SessionProjectionTests.cs",
+    "tests/Monitoring.Tests/SessionSchemaTests.cs",
+    "tests/Monitoring.Tests/SessionWorkerTests.cs",
+    "tests/Monitoring.Tests/SyntheticSessionContractTests.cs"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "digest": "sha256:329fa348cc54fd85e0369c35409f1c1624ee0e4d807fa3757e6eab8c22de2147"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "digest": "sha256:d8380ee5197a7d1e1b7a91565125652e839cdf9e37f58fe0407587d40db19919"
+    },
+    {
+      "path": "src/Monitoring.Domain/Sessions/SessionDetail.cs",
+      "digest": "sha256:22013bb713db40accbce6e9fd25c00e8ef9aeb8f1ddfbe070b35e74fe36a41c7"
+    },
+    {
+      "path": "src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs",
+      "digest": "sha256:1243f7a3cec1c081a35923f90afa6e8054f5b4c3e028ac2ac1d5d4aee784c537"
+    },
+    {
+      "path": "src/Monitoring.Host/Program.cs",
+      "digest": "sha256:5f30cc832f8c90352ac3d09be804c2ea727f14c3dac396742ecdad6c40677321"
+    },
+    {
+      "path": "src/Monitoring.Host/Sessions/SessionEndpoint.cs",
+      "digest": "sha256:307c8f46d081c2ea1fffdf5870efc15111d7175ca666d1b9231ffc70150d22bc"
+    },
+    {
+      "path": "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs",
+      "digest": "sha256:bed8ebdb612a7aaecb4e2d06048336e05a79278530f398d78889b3001f383233"
+    },
+    {
+      "path": "src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs",
+      "digest": "sha256:e58c7a4bd8ab68b7887c4f4c7487a078386e05ac0e2b43f0c88484638da89dd9"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs",
+      "digest": "sha256:2b9631d8558c09ea01606b818bd199027fe1d172f1d8d6c9e77ee273b3cb118d"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs",
+      "digest": "sha256:89f5725d0b0447040d07438ca60d31f5bd1215becd7336e3dea3e9c43ab5479a"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs",
+      "digest": "sha256:6391d0557156e8a4d2c746525b34ad0fab56db46ef84828972ca5061347e28de"
+    },
+    {
+      "path": "src/Monitoring.Persistence/MonitoringDbContext.cs",
+      "digest": "sha256:01899128a884cb2ec770050504440381101a60f4d357de7e922dc3dbbcbe2677"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs",
+      "digest": "sha256:5f914dd463bc3371c13ebda740c5d714ad3620f1edf3e20693a8885300cc4840"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs",
+      "digest": "sha256:d5ba52493e78dc08829d0304b65ee5e7da552e6ddc60d96383889b0565319607"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjector.cs",
+      "digest": "sha256:30e4b77af4050da635aa3b8d673e0a61d62377093705460d242230eb623ab5a4"
+    },
+    {
+      "path": "src/Monitoring.Persistence/Sessions/SessionReader.cs",
+      "digest": "sha256:839eba9e4c817675bda5046ff9cdbb86dad1fc9654a21dc8ba4f8f0b511f08a1"
+    },
+    {
+      "path": "tests/Monitoring.Tests/HostStartupTests.cs",
+      "digest": "sha256:bde50686de17c681c4bba7462374fd37adad903db8f59911b78ddd443415c7fa"
+    },
+    {
+      "path": "tests/Monitoring.Tests/InboxSchemaTests.cs",
+      "digest": "sha256:a8c50d47b7e2ec0973cf9705e51833847a7414a04b628bc614c9aed6d42e1c81"
+    },
+    {
+      "path": "tests/Monitoring.Tests/MigrationTests.cs",
+      "digest": "sha256:702129ddbc3f5976f0db31110ef5775f8b887b35f137e1ab3f5e808d4c637f20"
+    },
+    {
+      "path": "tests/Monitoring.Tests/SessionHostTests.cs",
+      "digest": "sha256:00c8a4ea4314f0a8ab030e7e8f22bfade29ca3f12e7c618c028c71f28d74663c"
+    },
+    {
+      "path": "tests/Monitoring.Tests/SessionProjectionTests.cs",
+      "digest": "sha256:e77ec697599acbe0d5f36d2ec7e950b4eb190512036dfd4e2d6d8ee9c4e8edb4"
+    },
+    {
+      "path": "tests/Monitoring.Tests/SessionSchemaTests.cs",
+      "digest": "sha256:a81883a843578ab7e6decdd6fa54643da88ed3dbeeeae093cf412626ca66543c"
+    },
+    {
+      "path": "tests/Monitoring.Tests/SessionWorkerTests.cs",
+      "digest": "sha256:431331e21e9cfe7b522bf71f725a08336cbad9da8d9d76231993c8c4b325fe01"
+    },
+    {
+      "path": "tests/Monitoring.Tests/SyntheticSessionContractTests.cs",
+      "digest": "sha256:9c7430fd7dd56ffd09930fa49638da787e79728d36079b8ad4e1b97a6ea92f44"
+    }
+  ]
+}

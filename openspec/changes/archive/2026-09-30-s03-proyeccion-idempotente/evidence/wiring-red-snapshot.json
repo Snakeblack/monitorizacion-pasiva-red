@@ -1,0 +1,22 @@
+{
+  "captured_at": "2026-09-29T22:30:57.1808495Z",
+  "files": [
+    {
+      "digest": "sha256:3ea7abfd3e718c113f0d025738f3dc9d8765e24bea4840a591da2d6b61db85b1",
+      "path": "src/Monitoring.Host/Program.cs"
+    },
+    {
+      "digest": "sha256:bed8ebdb612a7aaecb4e2d06048336e05a79278530f398d78889b3001f383233",
+      "path": "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs"
+    },
+    {
+      "digest": "sha256:00c8a4ea4314f0a8ab030e7e8f22bfade29ca3f12e7c618c028c71f28d74663c",
+      "path": "tests/Monitoring.Tests/SessionHostTests.cs"
+    },
+    {
+      "digest": "sha256:431331e21e9cfe7b522bf71f725a08336cbad9da8d9d76231993c8c4b325fe01",
+      "path": "tests/Monitoring.Tests/SessionWorkerTests.cs"
+    }
+  ],
+  "phase": "pre-wiring-GREEN"
+}

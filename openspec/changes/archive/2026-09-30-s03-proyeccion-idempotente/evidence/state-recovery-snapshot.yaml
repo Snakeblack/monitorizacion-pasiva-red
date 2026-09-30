@@ -1,0 +1,155 @@
+change: s03-proyeccion-idempotente
+status: verified
+revision: 6
+last_updated: '2026-09-29T23:01:46.8332088Z'
+classification: normal
+blocking_questions: []
+owner:
+  author: Manuel Retamozo
+  branch: main
+execution_mode: auto
+delivery_strategy: single-pr
+approvals:
+  - id: intent-briefing-001
+    gate: intent-briefing
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T21:17:20.6100285Z'
+    applies_to: [change-classification]
+    synthesis: 'Worker que proyecta eventos sintéticos y marca procesado en una transacción PostgreSQL; API de detalle por ID aislada por sede/sonda; pruebas de idempotencia y recuperación.'
+    scope: 'S03 según roadmap; depende de S02 y S00. Excluye UI, captura real, correlación y consultas de listado de slices posteriores.'
+  - id: execution-mode-001
+    gate: execution-mode
+    decision: auto
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T21:17:20.6100285Z'
+    applies_to: [sdd-workflow]
+  - id: delivery-strategy-001
+    gate: delivery-strategy
+    decision: single-pr
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T21:17:20.6100285Z'
+    applies_to: [sdd-tasks, sdd-apply]
+  - id: routing-config-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T21:19:33.9085651Z'
+    applies_to: [route-dispatch, sdd-workflow]
+    details: 'Usuario autorizó completar routing con ruta estándar y puertas de calidad para continuar S03.'
+  - id: s03-contract-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T21:26:10.6543222Z'
+    applies_to: [sdd-propose, sdd-spec, sdd-clarify, sdd-design, sdd-tasks, sdd-apply, sdd-verify]
+    details: 'Contrato recomendado confirmado: kind synthetic-session, version1, IP/puertos válidos0–65535, TCP/UDP, startedAt/endedAt UTC Z hasta milisegundos y fin>=inicio; obligatorios sin adicionales. Inválidos/desconocidos pendientes sin bloquear válidos. eventId por sede/sonda; respuesta eventId/siteId/sensorId/occurredAt/data. Lectura confiable solo desarrollo/pruebas separada de sonda;401 sin contexto,404 ausente/fuera ámbito,200 encontrado.'
+  - id: s03-size-exception-001
+    gate: review-workload
+    decision: size:exception
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T22:04:46.4179751Z'
+    applies_to: [sdd-apply, delivery]
+    details: 'Usuario aprobó explícitamente size:exception para una sola PR pese a 1200–1700 líneas estimadas más artefactos SDD.'
+  - id: s03-assumptions-001
+    gate: architecture
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: '2026-09-29T22:51:44.2718839Z'
+    applies_to: [sdd-verify, assumption-reconciliation]
+    details: 'Respuesta explícita «si lo exige, resuelvelo» autoriza resolver checklist con opciones recomendadas: JSONB y páginas100/pausa1s/reintentos30s.'
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/exploration.md
+    summary: 'S02 admite data arbitrario; S03 requiere payload sintético y lectura con ámbito separado.'
+  proposal:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/proposal.md
+    summary: 'Contrato synthetic-session v1 confirmado; transacción por evento; detalle con ámbito confiable solo desarrollo/pruebas.'
+  spec:
+    status: done
+    artifacts:
+      - openspec/changes/s03-proyeccion-idempotente/specs/contrato-sesion-sintetica/spec.md
+      - openspec/changes/s03-proyeccion-idempotente/specs/proyeccion-sesiones-idempotente/spec.md
+      - openspec/changes/s03-proyeccion-idempotente/specs/detalle-sesion-ambito/spec.md
+      - openspec/changes/s03-proyeccion-idempotente/specs/bandeja-ingestion-durable/spec.md
+    summary: 'Tres capacidades nuevas y delta de bandeja; sin ambigüedades residuales.'
+  clarify:
+    status: skipped
+    summary: 'Envelope validado: residual_ambiguity false y tres arrays vacíos.'
+  design:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/design.md
+    summary: 'JSONB y PK/FK compuesta; processed_at; transacción por evento; cursor/cota superior; lectura Development/Testing.'
+    key_decisions: [transaccion-por-evento, cursor-con-cota-superior, contexto-lectura-separado]
+  tasks:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/tasks.md
+    summary: '14 tareas en seis unidades; single-pr con size:exception aprobado.'
+  apply:
+    status: done
+    artifact: openspec/changes/s03-proyeccion-idempotente/apply-progress.md
+    summary: '14 tareas verificadas;109/109;build0warnings/errors;evidencia legacy-unverifiable con TRX reales.'
+    key_decisions: [transaccion-proyeccion-marcado, cursor-sin-starvation, logs-saneados, evidencia-historica-explicita]
+  verify:
+    status: done
+    verdict: PASS WITH WARNINGS
+    artifact: openspec/changes/s03-proyeccion-idempotente/verify-report.md
+    summary: '19 escenarios MUST,14 tareas y109/109 pruebas;sin CRITICAL;S03-W001 convertido en seguimiento.'
+    key_decisions: [evidencia-historica-valida-con-warning, sin-lineage-remediacion, quality-gates-pass-readback]
+route:
+  intended_route: standard
+  actual_route: standard
+  route_rationale: 'S03 añade worker, persistencia transaccional y API; cambio normal con ruta estándar autorizada.'
+  validated: true
+  validation_errors: []
+baseline_fingerprints:
+  bandeja-ingestion-durable: 712c842cb725ae790b99e92956e50f7cc6dc0646aa31f60c88213644836f1b30
+assumptions:
+  - id: sdd-design-001
+    phase: sdd-design
+    statement: 'La proyección S03 almacenará el data validado como JSONB sin columnas separadas para IP, puertos o tiempos de sesión.'
+    reversibility: low
+    basis: 'S03 solo consulta por identidad;JSONB existente;cambios posteriores requieren migración.'
+    recorded_at: '2026-09-29T21:36:41.8426655Z'
+    status: confirmed
+    resolution:
+      action: confirm
+      note: 'Opción recomendada resuelta con autorización explícita s03-assumptions-001; verificación confirma resolución.'
+      resolved_at: '2026-09-29T22:57:58.096Z'
+  - id: sdd-design-002
+    phase: sdd-design
+    statement: 'Páginas internas de100 claves,espera normal1s y reintentos transitorios exponenciales acotados30s.'
+    reversibility: high
+    basis: 'Acota memoria y consultas durante indisponibilidad;ajustable sin alterar datos/contratos/SLA.'
+    recorded_at: '2026-09-29T21:36:41.8426655Z'
+    status: confirmed
+    resolution:
+      action: confirm
+      note: 'Opción recomendada resuelta con autorización explícita s03-assumptions-001; verificación confirma resolución.'
+      resolved_at: '2026-09-29T22:57:58.096Z'
+review_workload:
+  status: accepted
+  strategy: single-pr
+  exception: size:exception
+  approval_ref: s03-size-exception-001
+gates:
+  quality-gates:
+    status: pass
+    evaluated_at: '2026-09-29T22:53:56.202Z'
+    gates:
+      tests:
+        status: pass
+        required: true
+        on_fail: halt
+follow_up_work:
+  - id: S03-W001
+    artifact: openspec/changes/s03-proyeccion-idempotente/follow-up.md
+    status: scheduled
+runtime_hints:
+  state_recovery:
+    reason: 'Restaurado tras truncado observado antes de quality-review; sin pérdida funcional.'
+    sources: [previous-tool-readbacks, phase-envelopes, phase-artifacts]
+    previous_revision: 5
+

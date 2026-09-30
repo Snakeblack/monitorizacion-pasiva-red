@@ -19,4 +19,6 @@ internal sealed class IngestionInboxEntity
     public string Data { get; set; } = "{}";
 
     public DateTimeOffset AcceptedAt { get; set; }
+
+    public DateTimeOffset? ProcessedAt { get; set; }
 }
