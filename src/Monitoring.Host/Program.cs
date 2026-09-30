@@ -59,6 +59,11 @@ else
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
+{
+    app.UseMiddleware<TrustedSessionReadScopeMiddleware>();
+}
+
 app.MapGet("/health/live", () => Results.Ok());
 app.MapBatchEndpoint();
 app.MapSessionEndpoint();

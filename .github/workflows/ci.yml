@@ -21,6 +21,13 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.16.0"
+          cache: npm
+          cache-dependency-path: src/monitoring-web/package-lock.json
+
       - name: Restore
         run: dotnet restore Monitoring.slnx
 
@@ -29,3 +36,28 @@ jobs:
 
       - name: Test with Docker-backed PostgreSQL
         run: dotnet test Monitoring.slnx --no-build
+
+      - name: Install SPA dependencies
+        run: npm ci
+        working-directory: src/monitoring-web
+
+      - name: Test Angular suite
+        run: npm test
+        working-directory: src/monitoring-web
+
+      - name: Publish host
+        run: dotnet publish src/Monitoring.Host --no-restore -o publish-host
+
+      - name: Assert published host excludes SPA
+        run: |
+          set -euo pipefail
+          if [ -d publish-host/wwwroot ]; then
+            echo "published host must not contain wwwroot"
+            find publish-host/wwwroot -print
+            exit 1
+          fi
+          if find publish-host -iname '*monitoring-web*' | grep -q .; then
+            echo "published host must not contain monitoring-web artifacts"
+            find publish-host -iname '*monitoring-web*' -print
+            exit 1
+          fi

@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <StartupObject>Monitoring.Tests.SessionViewChainHost</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

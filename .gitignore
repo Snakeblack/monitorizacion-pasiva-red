@@ -6,3 +6,8 @@
 TestResults/
 # Local Pi runtime state
 .atl/
+
+# Angular SPA (lockfile is versioned)
+src/monitoring-web/node_modules/
+src/monitoring-web/dist/
+src/monitoring-web/.angular/

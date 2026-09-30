@@ -10,7 +10,7 @@ project:
     frameworks: [ASP.NET Core, Angular]
     components: [tshark, PostgreSQL provisional per ADR-014, OIDC identity provider]
     architecture: modular-api-and-ingestion-worker
-    package_managers: [dotnet]
+    package_managers: [dotnet, npm]
   commands:
     install: dotnet restore Monitoring.slnx
     build: dotnet build Monitoring.slnx --no-restore
@@ -51,6 +51,9 @@ capabilities:
     source: declared
   - name: github-actions
     source: declared
+  - name: angular
+    version: "22.2.0"
+    source: declared
   - name: postgres
     version: "18-alpine"
     source: declared
@@ -64,6 +67,11 @@ quality_gates:
     on_fail: halt
     command: dotnet test Monitoring.slnx
     timeout_ms: 180000
+  ui:
+    required: true
+    on_fail: halt
+    command: npm --prefix src/monitoring-web test
+    timeout_ms: 300000
 rules:
   foundation:
     - No inventar stack, capacidades, requisitos ni decisiones que no estén respaldados por los documentos o por respuestas del usuario.
