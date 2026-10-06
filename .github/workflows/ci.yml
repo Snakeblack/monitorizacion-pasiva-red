@@ -28,6 +28,11 @@ jobs:
           cache: npm
           cache-dependency-path: src/monitoring-web/package-lock.json
 
+      - name: Install tshark for the real-extractor tests
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tshark
+
       - name: Restore
         run: dotnet restore Monitoring.slnx
 

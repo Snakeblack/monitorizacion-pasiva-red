@@ -3,8 +3,10 @@
     <Project Path="src/Monitoring.Domain/Monitoring.Domain.csproj" />
     <Project Path="src/Monitoring.Host/Monitoring.Host.csproj" />
     <Project Path="src/Monitoring.Persistence/Monitoring.Persistence.csproj" />
+    <Project Path="src/Monitoring.Probe/Monitoring.Probe.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Monitoring.Probe.Tests/Monitoring.Probe.Tests.csproj" />
     <Project Path="tests/Monitoring.Tests/Monitoring.Tests.csproj" />
   </Folder>
 </Solution>
