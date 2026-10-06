@@ -234,7 +234,8 @@ public sealed class QuarantineMetricsTests(PostgresFixture postgres) : IClassFix
         using var listener = new System.Diagnostics.Metrics.MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) =>
         {
-            if (instrument.Meter.Name == QuarantineMetrics.MeterName) meterListener.EnableMeasurementEvents(instrument);
+            // Match the exact meter instance: other hosts in the same process publish meters with the same name.
+            if (ReferenceEquals(instrument.Meter, metrics.Meter)) meterListener.EnableMeasurementEvents(instrument);
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) =>
             values[instrument.Name + string.Concat(tags.ToArray().Select(tag => $"[{tag.Key}={tag.Value}]"))] = value);

@@ -10,6 +10,8 @@ public sealed class QuarantineMetrics(IServiceScopeFactory scopeFactory, ILogger
 {
     public const string MeterName = "Monitoring.Ingestion";
     private readonly Meter meter = new(MeterName, "1.0.0");
+    // The instance, so a listener can tell this service's instruments from those of another host running in the same process.
+    public Meter Meter => meter;
     private volatile QuarantineSummary? latest;
     private bool registered;
 
