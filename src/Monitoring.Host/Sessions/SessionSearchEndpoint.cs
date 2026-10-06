@@ -31,10 +31,10 @@ public static class SessionSearchEndpoint
     public static void MapSessionSearchEndpoint(this WebApplication app)
     {
         app.MapGet("/api/v1/sessions", async (
-            HttpContext httpContext, IAccessProvider accessProvider,
-            ISessionSearch search, SessionSearchGate gate, SessionSearchOptions options, SessionCursor cursors, TimeProvider time) =>
+            HttpContext httpContext, AccessGate gate,
+            ISessionSearch search, SessionSearchGate slots, SessionSearchOptions options, SessionCursor cursors, TimeProvider time) =>
         {
-            var access = await accessProvider.AuthorizeAsync(httpContext, Operation.ReadSessions, httpContext.RequestAborted);
+            var access = await gate.AuthorizeAsync(httpContext, Operation.ReadSessions);
             if (access.Outcome == AccessOutcome.Unauthenticated) return Results.Unauthorized();
             if (access.Outcome == AccessOutcome.Forbidden) return Results.StatusCode(StatusCodes.Status403Forbidden);
             var now = time.GetUtcNow();
@@ -46,7 +46,11 @@ public static class SessionSearchEndpoint
             var scope = authorized
                 .Where(pair => (query!.SiteId is null || pair.SiteId == query.SiteId) && (query.SensorId is null || pair.SensorId == query.SensorId))
                 .ToList();
-            if (scope.Count == 0) return Results.StatusCode(StatusCodes.Status403Forbidden);
+            if (scope.Count == 0)
+            {
+                await gate.DenyAsync(httpContext, access, Operation.ReadSessions, "scope-not-authorized");
+                return Results.StatusCode(StatusCodes.Status403Forbidden);
+            }
             // The cursor binds the full authorized set (current permissions), not just the narrowed one.
             SessionSearchPosition? after = null;
             var expires = now + SessionCursor.Lifetime;
@@ -59,7 +63,7 @@ public static class SessionSearchEndpoint
                     _ => StatusCodes.Status400BadRequest
                 });
 
-            if (!gate.TryEnter()) return Results.StatusCode(StatusCodes.Status429TooManyRequests);
+            if (!slots.TryEnter()) return Results.StatusCode(StatusCodes.Status429TooManyRequests);
             try
             {
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(httpContext.RequestAborted);
@@ -92,7 +96,7 @@ public static class SessionSearchEndpoint
                     return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
                 }
             }
-            finally { gate.Exit(); }
+            finally { slots.Exit(); }
         });
     }
 

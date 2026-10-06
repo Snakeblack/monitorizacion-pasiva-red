@@ -11,9 +11,9 @@ public static class SessionEndpoint
     public static void MapSessionEndpoint(this WebApplication app)
     {
         app.MapGet("/api/v1/sessions/{eventId}", async (
-            string eventId, HttpContext httpContext, IAccessProvider accessProvider, ISessionReader reader, CancellationToken cancellationToken) =>
+            string eventId, HttpContext httpContext, AccessGate gate, ISessionReader reader, CancellationToken cancellationToken) =>
         {
-            var access = await accessProvider.AuthorizeAsync(httpContext, Operation.ReadSessions, cancellationToken);
+            var access = await gate.AuthorizeAsync(httpContext, Operation.ReadSessions);
             if (access.Outcome == AccessOutcome.Unauthenticated) return Results.Unauthorized();
             if (access.Outcome == AccessOutcome.Forbidden) return Results.StatusCode(StatusCodes.Status403Forbidden);
             var scopes = access.Scopes!;
@@ -30,7 +30,11 @@ public static class SessionEndpoint
                 var sensor = httpContext.Request.Query["sensorId"].ToString();
                 if (site.Length == 0 && sensor.Length == 0 && scopes.Count == 1) selected = scopes.Single();
                 else if (site.Length == 0 || sensor.Length == 0) return Results.StatusCode(StatusCodes.Status400BadRequest);
-                else if (!scopes.Contains(new AuthorizedPair(site, sensor))) return Results.StatusCode(StatusCodes.Status403Forbidden);
+                else if (!scopes.Contains(new AuthorizedPair(site, sensor)))
+                {
+                    await gate.DenyAsync(httpContext, access, Operation.ReadSessions, "scope-not-authorized");
+                    return Results.StatusCode(StatusCodes.Status403Forbidden);
+                }
                 else selected = new AuthorizedPair(site, sensor);
             }
             var detail = await reader.FindAsync(selected.SiteId, selected.SensorId, eventId, cancellationToken);

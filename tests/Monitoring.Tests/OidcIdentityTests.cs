@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -208,6 +209,43 @@ public sealed class OidcIdentityTests : IDisposable
             using var client = factory.CreateClient();
             Assert.NotNull(client);
         }
+    }
+
+    [Fact]
+    public async Task AHumanTokenNeverSubstitutesTheProbeIdentityOnIngestion()
+    {
+        var search = new RecordingSearch();
+        using var factory = Host(_idp, search);
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+            _idp.Issue(roles: ["administrador-inventario"], scopes: [("site", "sensor")]));
+        // Even the most privileged person, with the batch addressed to their own scope, is not a probe.
+        const string batch = "{\"schemaVersion\":1,\"batchId\":\"b\",\"siteId\":\"site\",\"sensorId\":\"sensor\",\"events\":[{\"eventId\":\"e\",\"occurredAt\":\"2026-10-06T10:00:00Z\",\"data\":{}}]}";
+        using var response = await client.PostAsync("/api/v1/ingestion/batches", new StringContent(batch, System.Text.Encoding.UTF8, "application/json"));
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AProbeIdentityNeverAuthorizesReadingSessionsOrInventory()
+    {
+        var search = new RecordingSearch();
+        using var factory = Host(_idp, search).WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<Monitoring.Host.Ingestion.ITrustedSensorIdentityProvider>();
+            services.AddSingleton<Monitoring.Host.Ingestion.ITrustedSensorIdentityProvider>(new ProbeIdentity());
+        }));
+        using var client = factory.CreateClient();
+        foreach (var path in new[] { "/api/v1/sessions?" + Day, "/api/v1/sessions/event?siteId=site&sensorId=sensor", "/api/v1/inventory/devices", "/api/v1/inventory/candidates" })
+        {
+            using var response = await client.GetAsync(path);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        Assert.Empty(search.Requests);
+    }
+
+    private sealed class ProbeIdentity : Monitoring.Host.Ingestion.ITrustedSensorIdentityProvider
+    {
+        public Monitoring.Host.Ingestion.TrustedSensorIdentity? Resolve(HttpContext context) => new("site", "sensor");
     }
 
     public void Dispose() => _idp.Dispose();

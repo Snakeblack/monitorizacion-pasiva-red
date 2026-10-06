@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Monitoring.Domain.Sessions.Search;
 using Monitoring.Host.Security;
 using Monitoring.Host.Sessions;
+using Monitoring.Host.Inventory;
+using Monitoring.Persistence.Inventory;
 using Monitoring.Persistence.Search;
 using Monitoring.Persistence.Sessions;
 using Npgsql;
@@ -66,6 +68,9 @@ builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContext
 // Human identity: the explicit development read mode only in Development/Testing, otherwise validated OIDC; an insecure or
 // incomplete configuration throws here and the host does not start.
 builder.Services.AddMonitoringIdentity(builder.Configuration, builder.Environment);
+builder.Services.TryAddSingleton<IAccessAudit, LoggingAccessAudit>();
+builder.Services.AddScoped<AccessGate>();
+builder.Services.TryAddSingleton<InventoryCursor>();
 builder.Services.TryAddSingleton(TimeProvider.System);
 builder.Services.TryAddSingleton(new SessionSearchOptions());
 builder.Services.TryAddSingleton<SessionSearchGate>();
@@ -94,6 +99,8 @@ else
     builder.Services.TryAddScoped<SessionProjector>();
     builder.Services.AddHostedService<SessionProjectionWorker>();
     builder.Services.AddHostedService<QuarantineMetrics>();
+    builder.Services.AddScoped<IAccessAudit, PostgresAccessAudit>();
+    builder.Services.AddScoped<InventoryService>();
     builder.Services.TryAddScoped<ISessionVisibility, PostgresSessionVisibility>();
     builder.Services.TryAddSingleton(builder.Configuration.GetSection("Search:Leases").Get<SnapshotLeaseOptions>() ?? new SnapshotLeaseOptions());
     builder.Services.TryAddScoped<ISnapshotLeases, PostgresSnapshotLeases>();
@@ -141,6 +148,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 app.MapGet("/health/live", () => Results.Ok());
 app.MapBatchEndpoint();
 app.MapSessionSearchEndpoint();
+app.MapInventoryEndpoints();
 app.MapSessionEndpoint();
 
 app.Run();

@@ -52,7 +52,7 @@ public sealed class OidcAccessProvider(IdentityOptions options, ILogger<OidcAcce
             logger.LogWarning("Token validation could not complete ({FailureType}); access closed.", exception.GetType().Name);
             return new AccessDecision(AccessOutcome.Unauthenticated, Cause: "identity-provider-unavailable");
         }
-        if (!result.Succeeded || result.Principal is null) return new AccessDecision(AccessOutcome.Unauthenticated, Cause: "token-invalid");
+        if (!result.Succeeded || result.Principal is null) return new AccessDecision(AccessOutcome.Unauthenticated, Cause: result.None ? "no-credentials" : "token-invalid");
         var subject = result.Principal.FindFirst("sub")?.Value;
         if (string.IsNullOrWhiteSpace(subject)) return new AccessDecision(AccessOutcome.Unauthenticated, Cause: "no-subject");
 
