@@ -52,9 +52,10 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/stack/session-contract.test.mjs | tee contract-guard.txt
-          # A skipped or empty run must fail the build, never pass silently.
-          grep -q '^# pass 1$' contract-guard.txt
-          grep -q '^# skipped 0$' contract-guard.txt
+          # A skipped or empty run must fail the build, never pass silently. Node prints TAP (`# pass 1`) or the spec
+          # reporter (`ℹ pass 1`) depending on the version and the terminal, so both spellings are accepted.
+          grep -Eq '^(#|ℹ) pass 1$' contract-guard.txt
+          grep -Eq '^(#|ℹ) skipped 0$' contract-guard.txt
 
       - name: Check the stack tests parse
         run: |
@@ -121,8 +122,8 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/stack/search-pipeline.test.mjs tests/stack/search-api.test.mjs | tee stack-tests.txt
-          grep -q '^# fail 0$' stack-tests.txt
-          grep -q '^# skipped 0$' stack-tests.txt
+          grep -Eq '^(#|ℹ) fail 0$' stack-tests.txt
+          grep -Eq '^(#|ℹ) skipped 0$' stack-tests.txt
 
       - name: Collect service logs on failure
         if: failure()
