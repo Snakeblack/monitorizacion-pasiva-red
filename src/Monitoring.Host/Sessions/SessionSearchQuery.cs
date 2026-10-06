@@ -9,6 +9,9 @@ namespace Monitoring.Host.Sessions;
 internal sealed record SessionSearchQuery(DateTimeOffset From, DateTimeOffset To, string? SiteId, string? SensorId,
     string? SourceIp, string? DestinationIp, string? Protocol, int? SourcePort, int? DestinationPort, int PageSize, string? Cursor)
 {
+    // Canonical text of every filter that shapes the result; a cursor is only valid for the exact same text.
+    internal string Fingerprint() => string.Join('|', From.UtcTicks, To.UtcTicks, SiteId, SensorId, SourceIp, DestinationIp, Protocol, SourcePort, DestinationPort);
+
     internal const int DefaultPageSize = 50;
     internal const int MaximumPageSize = 100;
     private const int MaximumIdentifierLength = 128;

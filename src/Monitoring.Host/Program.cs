@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Host.Ingestion;
 using Monitoring.Persistence;
@@ -51,6 +52,13 @@ builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContext
 builder.Services.TryAddSingleton(TimeProvider.System);
 builder.Services.TryAddSingleton(new SessionSearchOptions());
 builder.Services.TryAddSingleton<SessionSearchGate>();
+// Cursors are sealed with Data Protection; every instance must share a persisted key ring or its cursors are rejected as malformed.
+var dataProtection = builder.Services.AddDataProtection().SetApplicationName("Monitoring");
+if (builder.Configuration["DataProtection:KeysPath"] is { Length: > 0 } keysPath)
+{
+    dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+}
+builder.Services.TryAddSingleton<SessionCursor>();
 builder.Services.TryAddSingleton<ISessionSearch, UnconfiguredSessionSearch>();
 var monitoringConnection = builder.Configuration.GetConnectionString("Monitoring");
 if (string.IsNullOrWhiteSpace(monitoringConnection))

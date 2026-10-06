@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -26,24 +27,31 @@ public sealed class SessionSearchEndpointTests
         }
     }
 
-    private sealed class FixedTime : TimeProvider { public override DateTimeOffset GetUtcNow() => Now; }
+    private sealed class MutableTime : TimeProvider
+    {
+        public DateTimeOffset Current { get; set; } = Now;
+        public override DateTimeOffset GetUtcNow() => Current;
+    }
 
-    private static SessionSearchPage Page(string? next = null, SearchFreshness? freshness = null, params SessionSearchItem[] items) =>
+    private static readonly SessionSearchPosition Next = new("snapshot-1", "2026-10-06T10:00:00.100Z", "c2l0ZS1h.c2Vuc29yLWE.ZXZlbnQ");
+
+    private static SessionSearchPage Page(SessionSearchPosition? next = null, SearchFreshness? freshness = null, params SessionSearchItem[] items) =>
         new(items, next, freshness ?? new SearchFreshness(FreshnessState.Current, Now, 2));
 
     private static WebApplicationFactory<Program> Host(FakeSearch search, TrustedSessionReadContext? context = null, string environment = "Testing",
-        Action<SessionSearchOptions>? options = null) =>
+        Action<SessionSearchOptions>? options = null, MutableTime? time = null, DirectoryInfo? keyRing = null) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
             builder.ConfigureTestServices(services =>
             {
+                if (keyRing is not null) services.AddDataProtection().PersistKeysToFileSystem(keyRing).SetApplicationName("cursor-test");
                 services.RemoveAll<ITrustedSessionReadContextProvider>();
                 services.AddSingleton<ITrustedSessionReadContextProvider>(new SessionHostTests.ReadProvider(context ?? new("site-a", "sensor-a")));
                 services.RemoveAll<ISessionSearch>();
                 services.AddSingleton<ISessionSearch>(search);
                 services.RemoveAll<TimeProvider>();
-                services.AddSingleton<TimeProvider>(new FixedTime());
+                services.AddSingleton<TimeProvider>(time ?? new MutableTime());
                 var configured = new SessionSearchOptions();
                 options?.Invoke(configured);
                 services.RemoveAll<SessionSearchOptions>();
@@ -105,7 +113,7 @@ public sealed class SessionSearchEndpointTests
     {
         var search = new FakeSearch();
         var query = "from=2026-09-07T12:00:00Z&to=2026-10-06T12:00:00Z&siteId=site-a&sensorId=sensor-a&sourceIp=2001:0DB8:0:0:0:0:0:1" +
-            "&destinationIp=192.0.2.2&protocol=UDP&sourcePort=0&destinationPort=65535&pageSize=100&cursor=opaque";
+            "&destinationIp=192.0.2.2&protocol=UDP&sourcePort=0&destinationPort=65535&pageSize=100";
         Assert.Equal(HttpStatusCode.OK, await StatusAsync(search, query));
         var request = Assert.Single(search.Requests);
         Assert.Equal(DateTimeOffset.Parse("2026-09-07T12:00:00Z"), request.From);
@@ -117,7 +125,7 @@ public sealed class SessionSearchEndpointTests
         Assert.Equal(0, request.SourcePort);
         Assert.Equal(65535, request.DestinationPort);
         Assert.Equal(100, request.PageSize);
-        Assert.Equal("opaque", request.Cursor);
+        Assert.Null(request.After);
     }
 
     [Fact]
@@ -129,7 +137,7 @@ public sealed class SessionSearchEndpointTests
         Assert.Equal([new AuthorizedPair("site-a", "sensor-a")], request.Scope);
         Assert.Equal(50, request.PageSize);
         Assert.Null(request.SourceIp);
-        Assert.Null(request.Cursor);
+        Assert.Null(request.After);
     }
 
     [Theory]
@@ -186,7 +194,7 @@ public sealed class SessionSearchEndpointTests
         var item = new SessionSearchItem("event-1", "site-a", "sensor-a", "192.0.2.1", "2001:db8::2", 1234, 443, "TCP",
             "2026-10-06T10:00:00.100Z", "2026-10-06T10:00:01.000Z", "capture", true, false);
         var synthetic = item with { EventId = "event-2", Provenance = "synthetic", Inferred = null, Partial = null };
-        var search = new FakeSearch((_, _) => Task.FromResult(new SessionSearchPage([item, synthetic], "next",
+        var search = new FakeSearch((_, _) => Task.FromResult(new SessionSearchPage([item, synthetic], Next,
             new SearchFreshness(FreshnessState.Lagging, Now, 125))));
         using var factory = Host(search);
         using var response = await factory.CreateClient().GetAsync("/api/v1/sessions?" + Day);
@@ -194,7 +202,8 @@ public sealed class SessionSearchEndpointTests
         using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         var root = document.RootElement;
         Assert.Equal(new[] { "freshness", "items", "nextCursor" }, root.EnumerateObject().Select(p => p.Name).Order().ToArray());
-        Assert.Equal("next", root.GetProperty("nextCursor").GetString());
+        var cursor = root.GetProperty("nextCursor").GetString();
+        Assert.False(string.IsNullOrEmpty(cursor));
         var freshness = root.GetProperty("freshness");
         Assert.Equal("lagging", freshness.GetProperty("state").GetString());
         Assert.Equal("2026-10-06T12:00:00.000Z", freshness.GetProperty("measuredAt").GetString());
@@ -285,6 +294,129 @@ public sealed class SessionSearchEndpointTests
         Assert.Equal(HttpStatusCode.OK, after.StatusCode);
     }
 
+    private static string CursorQuery(string cursor) => Day + "&cursor=" + Uri.EscapeDataString(cursor);
+
+    private static async Task<string> FirstCursorAsync(HttpClient client, string query = Day)
+    {
+        using var response = await client.GetAsync("/api/v1/sessions?" + query);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        return document.RootElement.GetProperty("nextCursor").GetString()!;
+    }
+
+    [Fact]
+    public async Task ACursorIsOpaqueAndResumesTheSameSnapshotPosition()
+    {
+        var search = new FakeSearch((request, _) => Task.FromResult(Page(request.After is null ? Next : null)));
+        using var factory = Host(search);
+        using var client = factory.CreateClient();
+        var cursor = await FirstCursorAsync(client);
+        Assert.DoesNotContain("snapshot-1", cursor);
+        Assert.DoesNotContain("site-a", cursor);
+        using var second = await client.GetAsync("/api/v1/sessions?" + CursorQuery(cursor));
+        Assert.Equal(HttpStatusCode.OK, second.StatusCode);
+        Assert.Equal(Next, search.Requests[1].After);
+        using var document = JsonDocument.Parse(await second.Content.ReadAsStringAsync());
+        Assert.Equal(JsonValueKind.Null, document.RootElement.GetProperty("nextCursor").ValueKind);
+    }
+
+    [Theory]
+    [InlineData("garbage")]
+    [InlineData("CfDJ8Invalid_Cursor_Value")]
+    public async Task AMalformedCursorIs400WithoutSearching(string cursor)
+    {
+        var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+        using var factory = Host(search);
+        using var client = factory.CreateClient();
+        using var response = await client.GetAsync("/api/v1/sessions?" + CursorQuery(cursor));
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Empty(search.Requests);
+    }
+
+    [Fact]
+    public async Task AnAlteredCursorIs400()
+    {
+        var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+        using var factory = Host(search);
+        using var client = factory.CreateClient();
+        var cursor = await FirstCursorAsync(client);
+        var altered = cursor[..^3] + (cursor[^3] == 'A' ? "BBB" : "AAA");
+        using var response = await client.GetAsync("/api/v1/sessions?" + CursorQuery(altered));
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Single(search.Requests);
+    }
+
+    [Theory]
+    [InlineData("&sourceIp=192.0.2.1")]
+    [InlineData("&protocol=TCP")]
+    [InlineData("&pageSize=10")]
+    [InlineData("&siteId=site-a")]
+    public async Task ACursorReusedWithDifferentFiltersOrPageSizeIs400(string change)
+    {
+        var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+        using var factory = Host(search);
+        using var client = factory.CreateClient();
+        var cursor = await FirstCursorAsync(client);
+        using var response = await client.GetAsync("/api/v1/sessions?" + CursorQuery(cursor) + change);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Single(search.Requests);
+    }
+
+    [Fact]
+    public async Task ACursorReusedWithADifferentIntervalIs400()
+    {
+        var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+        using var factory = Host(search);
+        using var client = factory.CreateClient();
+        var cursor = await FirstCursorAsync(client);
+        using var response = await client.GetAsync("/api/v1/sessions?from=2026-10-05T13:00:00Z&to=2026-10-06T11:00:00Z&cursor=" + Uri.EscapeDataString(cursor));
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Single(search.Requests);
+    }
+
+    [Fact]
+    public async Task ACursorIsForbiddenForAnotherSubjectOrAChangedAuthorizedScope()
+    {
+        // A key ring shared by both hosts: only the binding, not the cryptography, rejects the cursor.
+        var keys = Directory.CreateTempSubdirectory();
+        try
+        {
+            string cursor;
+            var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+            using (var issuer = Host(search, keyRing: keys))
+                cursor = await FirstCursorAsync(issuer.CreateClient());
+            foreach (var context in new TrustedSessionReadContext[] { new("site-a", "sensor-a", "someone-else"), new("site-a", "sensor-z") })
+            {
+                var other = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+                using var factory = Host(other, context, keyRing: keys);
+                using var response = await factory.CreateClient().GetAsync("/api/v1/sessions?" + CursorQuery(cursor));
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+                Assert.Empty(other.Requests);
+            }
+        }
+        finally { keys.Delete(recursive: true); }
+    }
+
+    [Fact]
+    public async Task ACursorExpiresTenMinutesAfterTheFirstPageAndLaterPagesDoNotExtendIt()
+    {
+        var time = new MutableTime();
+        var search = new FakeSearch((_, _) => Task.FromResult(Page(Next)));
+        using var factory = Host(search, time: time);
+        using var client = factory.CreateClient();
+        var first = await FirstCursorAsync(client);
+        time.Current = Now.AddMinutes(9);
+        var second = await FirstCursorAsync(client, CursorQuery(first));
+        time.Current = Now.AddMinutes(10).AddSeconds(-1);
+        using (var stillValid = await client.GetAsync("/api/v1/sessions?" + CursorQuery(second)))
+            Assert.Equal(HttpStatusCode.OK, stillValid.StatusCode);
+        time.Current = Now.AddMinutes(10);
+        var before = search.Requests.Count;
+        using var expired = await client.GetAsync("/api/v1/sessions?" + CursorQuery(second));
+        Assert.Equal(HttpStatusCode.Gone, expired.StatusCode);
+        Assert.Equal(before, search.Requests.Count);
+    }
+
     [Fact]
     public async Task WithoutASearchBackendTheEndpointAnswers503()
     {
@@ -296,7 +428,7 @@ public sealed class SessionSearchEndpointTests
                 services.RemoveAll<ITrustedSessionReadContextProvider>();
                 services.AddSingleton<ITrustedSessionReadContextProvider>(new SessionHostTests.ReadProvider(new("site-a", "sensor-a")));
                 services.RemoveAll<TimeProvider>();
-                services.AddSingleton<TimeProvider>(new FixedTime());
+                services.AddSingleton<TimeProvider>(new MutableTime());
             });
         });
         using var response = await factory.CreateClient().GetAsync("/api/v1/sessions?" + Day);
