@@ -1,0 +1,147 @@
+<section class="inventory">
+  <h1 class="inventory-title">Inventario</h1>
+
+  <div class="inventory-tabs" role="group" aria-label="Listado">
+    <button type="button" [attr.aria-pressed]="tab() === 'devices'" (click)="select('devices')">Dispositivos</button>
+    <button type="button" [attr.aria-pressed]="tab() === 'candidates'" (click)="select('candidates')">Candidatos</button>
+    <button type="button" [attr.aria-pressed]="tab() === 'observations'" (click)="select('observations')">Observaciones</button>
+  </div>
+
+  @if (notice(); as message) {
+    <p class="inventory-notice" role="status">{{ message }}</p>
+  }
+  @if (error(); as message) {
+    <p class="inventory-error" role="alert">{{ message }}</p>
+  }
+  @if (loading()) {
+    <p role="status">Cargando…</p>
+  }
+
+  @if (action(); as current) {
+    <form class="inventory-form" (submit)="$event.preventDefault(); submit()">
+      @switch (current.kind) {
+        @case ('confirm') {
+          <h2>Confirmar candidato {{ current.candidate.mac }}</h2>
+          <label>Nombre del dispositivo
+            <input name="deviceName" type="text" [maxLength]="maximumName" [value]="name()" (input)="name.set($any($event.target).value)" />
+          </label>
+          <label>Descripción
+            <input name="deviceDescription" type="text" [maxLength]="maximumText" [value]="description()" (input)="description.set($any($event.target).value)" />
+          </label>
+          <button type="submit" [disabled]="!canSubmit()">Confirmar candidato</button>
+        }
+        @case ('reject') {
+          <h2>Rechazar candidato {{ current.candidate.mac }}</h2>
+          <label>Motivo
+            <input name="reason" type="text" [maxLength]="maximumText" [value]="reason()" (input)="reason.set($any($event.target).value)" />
+          </label>
+          <button type="submit" [disabled]="!canSubmit()">Rechazar candidato</button>
+        }
+        @case ('merge') {
+          <h2>Fusionar candidato {{ current.candidate.mac }} con un dispositivo</h2>
+          <label>Dispositivo
+            <select name="deviceId" [value]="mergeDeviceId()" (change)="mergeDeviceId.set($any($event.target).value)">
+              <option value="">Selecciona un dispositivo</option>
+              @for (device of devices(); track device.deviceId) {
+                <option [value]="device.deviceId">{{ device.name }}</option>
+              }
+            </select>
+          </label>
+          <button type="submit" [disabled]="!canSubmit()">Fusionar candidato</button>
+        }
+        @case ('edit') {
+          <h2>Editar dispositivo</h2>
+          <label>Nombre
+            <input name="name" type="text" [maxLength]="maximumName" [value]="name()" (input)="name.set($any($event.target).value)" />
+          </label>
+          <label>Descripción
+            <input name="description" type="text" [maxLength]="maximumText" [value]="description()" (input)="description.set($any($event.target).value)" />
+          </label>
+          <button type="submit" [disabled]="!canSubmit()">Guardar dispositivo</button>
+        }
+      }
+      <button type="button" (click)="cancel()">Cancelar</button>
+    </form>
+  }
+
+  @switch (tab()) {
+    @case ('devices') {
+      @if (devices().length > 0) {
+        <table class="inventory-table">
+          <caption>Dispositivos confirmados</caption>
+          <thead><tr><th scope="col">Nombre</th><th scope="col">Descripción</th><th scope="col">Ámbitos</th><th scope="col">Revisión</th><th scope="col">Actualizado</th>@if (canManage()) { <th scope="col">Acciones</th> }</tr></thead>
+          <tbody>
+            @for (device of devices(); track device.deviceId) {
+              <tr>
+                <td>{{ device.name }}</td>
+                <td>{{ device.description }}</td>
+                <td>@for (scope of device.scopes; track scope.siteId + '/' + scope.sensorId) { <span class="inventory-scope">{{ scope.siteId }} / {{ scope.sensorId }}</span> }</td>
+                <td>{{ device.revision }}</td>
+                <td><time [attr.datetime]="device.updatedAt">{{ device.updatedAt }}</time></td>
+                @if (canManage()) { <td><button type="button" (click)="open({ kind: 'edit', device })">Editar</button></td> }
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else if (!loading() && !error()) {
+        <p>No hay dispositivos confirmados en tus ámbitos.</p>
+      }
+    }
+    @case ('candidates') {
+      @if (candidates().length > 0) {
+        <table class="inventory-table">
+          <caption>Candidatos a dispositivo</caption>
+          <thead><tr><th scope="col">MAC</th><th scope="col">VLAN</th><th scope="col">Origen</th><th scope="col">Direcciones IP</th><th scope="col">Visto</th><th scope="col">Estado</th>@if (canManage()) { <th scope="col">Acciones</th> }</tr></thead>
+          <tbody>
+            @for (candidate of candidates(); track candidate.candidateId) {
+              <tr>
+                <td>{{ candidate.mac }}</td>
+                <td>{{ candidate.vlanId ?? 'Sin VLAN' }}</td>
+                <td>{{ candidate.siteId }} / {{ candidate.sensorId }}</td>
+                <td>@for (association of candidate.associations; track association.ip) { <span class="inventory-ip">{{ association.ip }}</span> }</td>
+                <td><time [attr.datetime]="candidate.firstSeen">{{ candidate.firstSeen }}</time> – <time [attr.datetime]="candidate.lastSeen">{{ candidate.lastSeen }}</time></td>
+                <td>{{ candidate.state }}</td>
+                @if (canManage()) {
+                  <td>
+                    @if (candidate.state === 'candidate') {
+                      <button type="button" (click)="open({ kind: 'confirm', candidate })">Confirmar</button>
+                      <button type="button" (click)="open({ kind: 'reject', candidate })">Rechazar</button>
+                      <button type="button" (click)="open({ kind: 'merge', candidate })">Fusionar</button>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else if (!loading() && !error()) {
+        <p>No hay candidatos en tus ámbitos.</p>
+      }
+    }
+    @case ('observations') {
+      @if (observations().length > 0) {
+        <table class="inventory-table">
+          <caption>Observaciones recientes</caption>
+          <thead><tr><th scope="col">Instante</th><th scope="col">Origen</th><th scope="col">IP</th><th scope="col">MAC</th><th scope="col">VLAN</th></tr></thead>
+          <tbody>
+            @for (observation of observations(); track observation.eventId + observation.siteId + observation.sensorId) {
+              <tr>
+                <td><time [attr.datetime]="observation.observedAt">{{ observation.observedAt }}</time></td>
+                <td>{{ observation.siteId }} / {{ observation.sensorId }}</td>
+                <td>{{ observation.ip }}</td>
+                <td>{{ observation.mac ?? '—' }}</td>
+                <td>{{ observation.vlanId ?? 'Sin VLAN' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else if (!loading() && !error()) {
+        <p>No hay observaciones en tus ámbitos.</p>
+      }
+    }
+  }
+
+  @if (cursor() !== null) {
+    <button type="button" class="inventory-more" [disabled]="loading()" (click)="more()">Cargar más</button>
+  }
+</section>

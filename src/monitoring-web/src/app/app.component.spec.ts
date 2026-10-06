@@ -91,3 +91,15 @@ describe('App session handling', () => {
     expect(navigate).toHaveBeenCalledWith(['/signed-out'], { queryParams: { reason: 'expired' } });
   });
 });
+
+describe('App navigation', () => {
+  it('links to the inventory work surface with a native named link', async () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ imports: [App], providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const link = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('a')).find((candidate) => candidate.textContent?.trim() === 'Inventario');
+    expect(link?.getAttribute('href')).toBe('/inventory');
+  });
+});
