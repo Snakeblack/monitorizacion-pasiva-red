@@ -1,0 +1,298 @@
+{
+  "groups": [
+    {
+      "name": "monitoring-pipeline",
+      "interval": "30s",
+      "rules": [
+        {
+          "alert": "ProbeSpoolOldest",
+          "expr": "monitoring_probe_spool_oldest_seconds > 900",
+          "for": "5m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "operaciones-red",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "La sonda conserva eventos sin entregar desde hace más de 15 min.",
+            "cause": "La API no es alcanzable, rechaza la identidad de la sonda o la red entre sonda y API está degradada.",
+            "action": "Comprobar conectividad y causas de rechazo de identidad (ProbeAuthRejected); la sonda reintenta sola y conserva el spool.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probespoololdest"
+          }
+        },
+        {
+          "alert": "ProbeSpoolLoss",
+          "expr": "increase(monitoring_probe_spool_loss_total[15m]) > 0",
+          "for": "0m",
+          "labels": {
+            "severity": "page",
+            "owner": "operaciones-red",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "La sonda ha perdido eventos del spool.",
+            "cause": "El spool alcanzó su límite o se aisló por corrupción.",
+            "action": "Restaurar espacio o conectividad y reconciliar la ventana afectada; registrar la pérdida en el expediente.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probespoolloss"
+          }
+        },
+        {
+          "alert": "ProbeCaptureDrops",
+          "expr": "increase(monitoring_probe_capture_drops_total[5m]) > 0",
+          "for": "5m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "operaciones-red",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "El kernel descarta paquetes antes de que la sonda los lea.",
+            "cause": "La interfaz recibe más tráfico del que la captura procesa.",
+            "action": "Revisar carga de CPU y tamaño del búfer de captura; la cobertura de ese intervalo es incompleta.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probecapturedrops"
+          }
+        },
+        {
+          "alert": "ProbeSpoolIsolated",
+          "expr": "monitoring_probe_spool_isolated > 0",
+          "for": "15m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "operaciones-red",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "La sonda aisló eventos del spool que no puede enviar.",
+            "cause": "Eventos que la API rechaza de forma permanente (contrato inválido) o registros corruptos del spool.",
+            "action": "Inspeccionar los eventos aislados sin exponer su contenido y corregir el productor; no se reenvían solos.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probespoolisolated"
+          }
+        },
+        {
+          "alert": "ProbeCaptureDegraded",
+          "expr": "monitoring_probe_capture_degraded > 0",
+          "for": "5m",
+          "labels": {
+            "severity": "page",
+            "owner": "operaciones-red",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "La captura está degradada o detenida.",
+            "cause": "tshark terminó, la interfaz desapareció o faltan permisos de captura.",
+            "action": "Revisar el servicio de la sonda y los permisos; hasta restablecerla no hay observación de esa sede.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probecapturedegraded"
+          }
+        },
+        {
+          "alert": "ProbeIdentitySuspended",
+          "expr": "monitoring_probe_identity_suspended > 0",
+          "for": "5m",
+          "labels": {
+            "severity": "page",
+            "owner": "seguridad",
+            "stage": "probe"
+          },
+          "annotations": {
+            "summary": "La identidad de la sonda está suspendida.",
+            "cause": "El certificado fue revocado, desactivado o caducó.",
+            "action": "Emitir y registrar un certificado nuevo (--probes register) y desactivar el anterior.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probeidentitysuspended"
+          }
+        },
+        {
+          "alert": "ProbeAuthRejected",
+          "expr": "sum(rate(monitoring_probe_auth_rejections_total[5m])) by (cause) > 0.1",
+          "for": "10m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "seguridad",
+            "stage": "ingestion"
+          },
+          "annotations": {
+            "summary": "La API rechaza autenticaciones de sonda de forma sostenida.",
+            "cause": "Certificado caducado, revocado o no registrado; CRL no fresca (revocation-unknown) o intento ajeno.",
+            "action": "Distinguir por la etiqueta cause; con revocation-unknown comprobar la publicación de la CRL.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#probeauthrejected"
+          }
+        },
+        {
+          "alert": "IngestionRejectionsSustained",
+          "expr": "sum(rate(monitoring_ingestion_rejections_total[5m])) > 1",
+          "for": "10m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "operaciones-red",
+            "stage": "ingestion"
+          },
+          "annotations": {
+            "summary": "La ingestión rechaza lotes de forma sostenida.",
+            "cause": "Cuota por origen superada, lotes inválidos o conflictos de reenvío.",
+            "action": "Identificar el origen por sus etiquetas y revisar su configuración; la cuota es 6000 eventos/min por origen.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#ingestionrejectionssustained"
+          }
+        },
+        {
+          "alert": "ProjectionStalled",
+          "expr": "monitoring_pipeline_projection_oldest_pending_seconds > 300",
+          "for": "5m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "projection"
+          },
+          "annotations": {
+            "summary": "Hay eventos aceptados sin proyectar desde hace más de 5 min.",
+            "cause": "El worker de proyección está detenido, bloqueado por un bloqueo de la base de datos o la base de datos no responde.",
+            "action": "Revisar el servicio y el estado de PostgreSQL; el worker retoma por sí solo los pendientes.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#projectionstalled"
+          }
+        },
+        {
+          "alert": "QuarantineUnresolved",
+          "expr": "monitoring_ingestion_quarantine_unresolved > 0",
+          "for": "15m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "projection"
+          },
+          "annotations": {
+            "summary": "Hay eventos en cuarentena sin resolver.",
+            "cause": "Contrato inválido, identidad suprimida o conflicto de proyección (etiqueta cause).",
+            "action": "Resolver con --quarantine (descartar o reemplazar con actor y motivo).",
+            "runbook": "docs/runbooks/pipeline-alerts.md#quarantineunresolved"
+          }
+        },
+        {
+          "alert": "QuarantineAging",
+          "expr": "monitoring_ingestion_quarantine_oldest_unresolved_seconds > 86400",
+          "for": "0m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "projection"
+          },
+          "annotations": {
+            "summary": "Un evento lleva más de 24 h en cuarentena.",
+            "cause": "Nadie ha resuelto la cuarentena.",
+            "action": "Resolver o descartar con motivo; no dejar envejecer el balance contable.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#quarantineaging"
+          }
+        },
+        {
+          "alert": "CdcSlotInactive",
+          "expr": "monitoring_pipeline_wal_slot_active == 0",
+          "for": "10m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "cdc"
+          },
+          "annotations": {
+            "summary": "Un slot de replicación lleva 10 min sin consumidor.",
+            "cause": "Kafka Connect/Debezium está detenido o no conecta; el WAL se acumula.",
+            "action": "Restablecer el conector; si no se recupera, el slot retiene WAL hasta llenar el disco.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#cdcslotinactive"
+          }
+        },
+        {
+          "alert": "CdcConfirmLag",
+          "expr": "monitoring_pipeline_wal_slot_confirm_lag_bytes > 1073741824",
+          "for": "10m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "cdc"
+          },
+          "annotations": {
+            "summary": "Debezium va más de 1 GiB por detrás del WAL.",
+            "cause": "El conector no da abasto o Kafka no acepta escrituras.",
+            "action": "Revisar el conector y Kafka; escalar o corregir antes de que se agote el disco.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#cdcconfirmlag"
+          }
+        },
+        {
+          "alert": "WalRetentionPressure",
+          "expr": "monitoring_pipeline_wal_slot_retained_bytes > 5368709120",
+          "for": "10m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "cdc"
+          },
+          "annotations": {
+            "summary": "Un slot retiene más de 5 GiB de WAL.",
+            "cause": "Un consumidor lento o detenido impide reciclar el WAL.",
+            "action": "Recuperar el consumidor; como último recurso eliminar el slot y reconstruir la proyección (--rebuild-search).",
+            "runbook": "docs/runbooks/pipeline-alerts.md#walretentionpressure"
+          }
+        },
+        {
+          "alert": "SearchFreshnessLag",
+          "expr": "monitoring_search_freshness_lag_seconds > 300",
+          "for": "10m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "El índice de búsqueda va más de 5 min por detrás de la autoridad.",
+            "cause": "El sink de Elasticsearch está lento, detenido o rechaza documentos.",
+            "action": "Revisar el conector sink y su DLQ; la API marca las respuestas como retrasadas.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#searchfreshnesslag"
+          }
+        },
+        {
+          "alert": "SearchNotCurrent",
+          "expr": "monitoring_search_freshness_state > 0",
+          "for": "15m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "La búsqueda no está al día (Lagging o Recovering).",
+            "cause": "Reconciliación pendiente, reconstrucción en curso o índice inalcanzable.",
+            "action": "Comprobar el estado de la reconstrucción y de Elasticsearch.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#searchnotcurrent"
+          }
+        },
+        {
+          "alert": "PipelineMetricsMissing",
+          "expr": "absent(monitoring_pipeline_wal_slot_active) and on() absent(monitoring_pipeline_projection_oldest_pending_seconds)",
+          "for": "10m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "projection"
+          },
+          "annotations": {
+            "summary": "La API dejó de publicar las métricas de la tubería.",
+            "cause": "La API está caída o la base de datos no es alcanzable: sin métricas no se detectaría ningún otro fallo.",
+            "action": "Restablecer la API y la base de datos antes de interpretar las demás alertas.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#pipelinemetricsmissing"
+          }
+        },
+        {
+          "alert": "IngestionMetricsMissing",
+          "expr": "absent(monitoring_ingestion_pending_events)",
+          "for": "10m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "projection"
+          },
+          "annotations": {
+            "summary": "La API dejó de publicar las métricas de la tubería.",
+            "cause": "La API está caída o la base de datos no es alcanzable: sin métricas no se detectaría ningún otro fallo.",
+            "action": "Restablecer la API y la base de datos antes de interpretar las demás alertas.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#ingestionmetricsmissing"
+          }
+        }
+      ]
+    }
+  ]
+}

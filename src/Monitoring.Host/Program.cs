@@ -5,6 +5,7 @@ using Monitoring.Persistence;
 using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Monitoring.Domain.Sessions.Search;
+using Monitoring.Host.Operations;
 using Monitoring.Host.Security;
 using Monitoring.Host.Sessions;
 using Monitoring.Host.Inventory;
@@ -105,6 +106,7 @@ else
     builder.Services.TryAddScoped<SessionProjector>();
     builder.Services.AddHostedService<SessionProjectionWorker>();
     builder.Services.AddHostedService<QuarantineMetrics>();
+    builder.Services.AddHostedService<PipelineMetrics>();
     builder.Services.AddScoped<IAccessAudit, PostgresAccessAudit>();
     builder.Services.AddScoped<InventoryService>();
     builder.Services.AddScoped<IProbeRegistry, ProbeRegistry>();

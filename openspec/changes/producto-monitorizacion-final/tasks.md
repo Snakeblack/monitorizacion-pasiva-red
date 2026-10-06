@@ -72,7 +72,7 @@ Cada unidad es un límite sugerido de commit/trabajo; workers solo se despachan 
 
 ### Fase 4 — Operación y gates de aptitud/liberación
 
-- [ ] 4.1 S14: RED cada etapa detenida/WAL/lag/reconciliación; GREEN métricas y alertas accionables con causa/responsable sin secretos. [REQ-operacion-y-ciclo-datos-001]
+- [~] 4.1 S14 (métricas de tubería y 18 alertas accionables con causa, acción, responsable y runbook, verificadas contra el código; faltan exportadores de Kafka/Connect/Elasticsearch para DLQ y lag del sink, ejecutar las reglas en un Prometheus real y ensayar cada fallo en el stack): RED cada etapa detenida/WAL/lag/reconciliación; GREEN métricas y alertas accionables con causa/responsable sin secretos. [REQ-operacion-y-ciclo-datos-001]
 - [ ] 4.2 S15: RED caducidad con pendientes y replay anterior; GREEN retención y tombstones autoritativos en PostgreSQL/proyección sin resurrección. [REQ-operacion-y-ciclo-datos-002, REQ-pipeline-busqueda-004]
 - [ ] 4.3 S16: RED fallo de nodo/restauración con histórico vencido; GREEN dependencias de continuidad, backup/PITR y reconciliación ensayados sin reintroducir expirados. [REQ-operacion-y-ciclo-datos-003–004]
 - [ ] 4.4 S17: RED gate rechaza suite parcial, dataset corto o métricas no ejecutadas; GREEN ensayo finito ADR-013 con 30 días/72 h, carga, consultas, frescura, pérdida, continuidad y coste, guardando resultado/entorno. No extrapolar capacidad desde smoke. [REQ-aptitud-y-liberacion-002–003]
