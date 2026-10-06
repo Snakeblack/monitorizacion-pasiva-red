@@ -186,7 +186,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     {
         public TrustedSensorIdentity Identity => new("site", "sensor");
     }
-    private sealed class ReadProvider(TrustedSessionReadContext? context) : ITrustedSessionReadContextProvider
+    internal sealed class ReadProvider(TrustedSessionReadContext? context) : ITrustedSessionReadContextProvider
     {
         public TrustedSessionReadContext? Resolve(HttpContext httpContext) => context;
     }

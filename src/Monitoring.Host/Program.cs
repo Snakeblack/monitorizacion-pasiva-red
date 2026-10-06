@@ -3,6 +3,7 @@ using Monitoring.Host.Ingestion;
 using Monitoring.Persistence;
 using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Monitoring.Domain.Sessions.Search;
 using Monitoring.Host.Sessions;
 using Monitoring.Persistence.Sessions;
 using Npgsql;
@@ -47,6 +48,10 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
 builder.Services.TryAddSingleton<IngestionRejectionMetrics>();
 builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContextTrustedSessionReadContextProvider>();
+builder.Services.TryAddSingleton(TimeProvider.System);
+builder.Services.TryAddSingleton(new SessionSearchOptions());
+builder.Services.TryAddSingleton<SessionSearchGate>();
+builder.Services.TryAddSingleton<ISessionSearch, UnconfiguredSessionSearch>();
 var monitoringConnection = builder.Configuration.GetConnectionString("Monitoring");
 if (string.IsNullOrWhiteSpace(monitoringConnection))
 {
@@ -73,6 +78,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 
 app.MapGet("/health/live", () => Results.Ok());
 app.MapBatchEndpoint();
+app.MapSessionSearchEndpoint();
 app.MapSessionEndpoint();
 
 app.Run();
