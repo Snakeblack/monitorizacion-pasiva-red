@@ -26,7 +26,7 @@ public static class OutboxStore
             """, connection, transaction, identity))
             await command.ExecuteNonQueryAsync(cancellationToken);
         var (revision, state, searchDocumentId) = await LockIdentityAsync(connection, transaction, identity, cancellationToken);
-        if (state != "active") throw new InvalidOperationException("A suppressed session identity cannot be republished.");
+        if (state != "active") throw new PermanentProjectionException("identity-suppressed");
         await using (var command = Command("""
             INSERT INTO monitoring.session_metadata(site_id,sensor_id,event_id,started_at,ended_at,source_ip,destination_ip,
               source_port,destination_port,protocol,vlan_id,provenance,revision,inferred,partial,close_reason,packet_count,byte_count)

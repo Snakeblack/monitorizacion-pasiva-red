@@ -47,6 +47,12 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
     return;
 }
 
+if (args.Length > 0 && args[0] == "--quarantine")
+{
+    Environment.ExitCode = await QuarantineCommand.RunAsync(args[1..], builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
+    return;
+}
+
 if (args.Contains("--rebuild-search", StringComparer.Ordinal))
 {
     Environment.ExitCode = await SearchRebuildCommand.RunAsync(builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
@@ -76,12 +82,14 @@ if (string.IsNullOrWhiteSpace(monitoringConnection))
 else
 {
     builder.Services.AddDbContext<MonitoringDbContext>(options => options.UseNpgsql(monitoringConnection));
+    builder.Services.TryAddSingleton(builder.Configuration.GetSection("Ingestion").Get<IngestionOptions>() ?? new IngestionOptions());
     builder.Services.TryAddScoped<InboxWriter>();
     builder.Services.TryAddScoped<IIngestionBatchWriter, PersistentIngestionBatchWriter>();
     builder.Services.TryAddScoped<SessionReader>();
     builder.Services.TryAddScoped<ISessionReader, PersistentSessionReader>();
     builder.Services.TryAddScoped<SessionProjector>();
     builder.Services.AddHostedService<SessionProjectionWorker>();
+    builder.Services.AddHostedService<QuarantineMetrics>();
     builder.Services.TryAddScoped<ISessionVisibility, PostgresSessionVisibility>();
     builder.Services.TryAddSingleton(builder.Configuration.GetSection("Search:Leases").Get<SnapshotLeaseOptions>() ?? new SnapshotLeaseOptions());
     builder.Services.TryAddScoped<ISnapshotLeases, PostgresSnapshotLeases>();

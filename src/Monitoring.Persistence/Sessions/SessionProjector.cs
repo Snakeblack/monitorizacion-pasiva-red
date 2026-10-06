@@ -16,7 +16,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             EventKey? upper;
             await using (var command = new NpgsqlCommand("""
                 SELECT accepted_at, site_id, sensor_id, event_id FROM monitoring.ingestion_inbox
-                WHERE processed_at IS NULL ORDER BY accepted_at DESC,site_id DESC,sensor_id DESC,event_id DESC LIMIT 1
+                WHERE processed_at IS NULL AND quarantined_at IS NULL ORDER BY accepted_at DESC,site_id DESC,sensor_id DESC,event_id DESC LIMIT 1
                 """, Connection))
             await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
@@ -58,7 +58,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             : "AND (accepted_at,site_id,sensor_id,event_id) > (@cursor_at,@cursor_site,@cursor_sensor,@cursor_event)";
         await using var command = new NpgsqlCommand($"""
             SELECT accepted_at,site_id,sensor_id,event_id FROM monitoring.ingestion_inbox
-            WHERE processed_at IS NULL
+            WHERE processed_at IS NULL AND quarantined_at IS NULL
             AND (accepted_at,site_id,sensor_id,event_id) <= (@upper_at,@upper_site,@upper_sensor,@upper_event)
             {afterCursor}
             ORDER BY accepted_at,site_id,sensor_id,event_id LIMIT 100
@@ -88,22 +88,55 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         command.Parameters.AddWithValue(prefix + "_event", key.EventId);
     }
 
+    private enum Outcome { Projected, NotPending, InvalidContract }
+
     private async Task ProjectAsync(EventKey key, CancellationToken cancellationToken)
     {
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-        var postgresTransaction = (NpgsqlTransaction)transaction.GetDbTransaction();
+        string? permanentCause;
+        await using (var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken))
+        {
+            var postgresTransaction = (NpgsqlTransaction)transaction.GetDbTransaction();
+            try
+            {
+                switch (await TryProjectAsync(key, postgresTransaction, cancellationToken))
+                {
+                    case Outcome.NotPending:
+                        return;
+                    case Outcome.InvalidContract:
+                        await QuarantineAsync(key, "contract-invalid", postgresTransaction, cancellationToken);
+                        await transaction.CommitAsync(cancellationToken);
+                        return;
+                    default:
+                        await transaction.CommitAsync(cancellationToken);
+                        return;
+                }
+            }
+            catch (PermanentProjectionException exception)
+            {
+                // Nothing the attempt wrote survives; the event is quarantined in a transaction of its own.
+                permanentCause = exception.Cause;
+                await transaction.RollbackAsync(cancellationToken);
+            }
+        }
+        await using var quarantine = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        await QuarantineAsync(key, permanentCause, (NpgsqlTransaction)quarantine.GetDbTransaction(), cancellationToken);
+        await quarantine.CommitAsync(cancellationToken);
+    }
+
+    private async Task<Outcome> TryProjectAsync(EventKey key, NpgsqlTransaction postgresTransaction, CancellationToken cancellationToken)
+    {
         string occurredAt;
         string json;
         await using (var select = Command("""
             SELECT occurred_at_text, data::text FROM monitoring.ingestion_inbox
-            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL AND quarantined_at IS NULL
             FOR UPDATE SKIP LOCKED
             """, key, postgresTransaction))
         await using (var reader = await select.ExecuteReaderAsync(cancellationToken))
         {
             if (!await reader.ReadAsync(cancellationToken))
             {
-                return;
+                return Outcome.NotPending;
             }
             occurredAt = reader.GetString(0);
             json = reader.GetString(1);
@@ -112,7 +145,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         using var document = JsonDocument.Parse(json);
         if (!CanonicalSession.TryParse(document.RootElement, out var session))
         {
-            return;
+            return Outcome.InvalidContract;
         }
 
         await using (var insert = Command("""
@@ -133,7 +166,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             compare.Parameters.AddWithValue("data", json);
             if (await compare.ExecuteScalarAsync(cancellationToken) is not true)
             {
-                throw new InvalidOperationException("Session projection conflicts with its accepted event.");
+                throw new PermanentProjectionException("projection-conflict");
             }
         }
         await OutboxStore.WriteSessionAsync(Connection, postgresTransaction,
@@ -145,7 +178,46 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         {
             await mark.ExecuteNonQueryAsync(cancellationToken);
         }
-        await transaction.CommitAsync(cancellationToken);
+        return Outcome.Projected;
+    }
+
+    // Moves a pending event to quarantine and records that single state change; a no-op when another worker already handled it.
+    private async Task QuarantineAsync(EventKey key, string cause, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        await using (var pending = Command("""
+            SELECT 1 FROM monitoring.ingestion_inbox
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL AND quarantined_at IS NULL
+            FOR UPDATE SKIP LOCKED
+            """, key, transaction))
+        {
+            if (await pending.ExecuteScalarAsync(cancellationToken) is null)
+            {
+                return;
+            }
+        }
+        int inserted;
+        await using (var insert = Command("""
+            INSERT INTO monitoring.ingestion_quarantine(site_id,sensor_id,event_id,cause) VALUES (@site,@sensor,@event,@cause)
+            ON CONFLICT DO NOTHING
+            """, key, transaction))
+        {
+            insert.Parameters.AddWithValue("cause", cause);
+            inserted = await insert.ExecuteNonQueryAsync(cancellationToken);
+        }
+        if (inserted == 1)
+        {
+            await using var audit = Command("""
+                INSERT INTO monitoring.ingestion_quarantine_audit(site_id,sensor_id,event_id,action,cause,actor)
+                VALUES (@site,@sensor,@event,'quarantined',@cause,'system:projector')
+                """, key, transaction);
+            audit.Parameters.AddWithValue("cause", cause);
+            await audit.ExecuteNonQueryAsync(cancellationToken);
+        }
+        await using var mark = Command("""
+            UPDATE monitoring.ingestion_inbox SET quarantined_at=clock_timestamp()
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event
+            """, key, transaction);
+        await mark.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private NpgsqlCommand Command(string sql, EventKey key, NpgsqlTransaction? transaction = null)

@@ -26,7 +26,7 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
             new[] { "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_origin"));
         Assert.Equal(
-            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "processed_at", "schema_version", "sensor_id", "site_id" },
+            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "processed_at", "quarantined_at", "schema_version", "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_inbox"));
 
         Assert.Equal("jsonb", await ColumnTypeAsync(connection, "ingestion_inbox", "data"));

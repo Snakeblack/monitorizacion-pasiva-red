@@ -122,6 +122,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     {
         var connection = await SessionTestDatabase.CreateAsync(postgres);
         using var factory = CreateHost(connection, new("site", "sensor"), suppressWorker: true)
+            .WithWebHostBuilder(builder => builder.UseSetting("Ingestion:MaxNewEventsPerMinute", "500"))
             .WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<ITrustedSensorIdentityProvider>();
@@ -148,7 +149,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
             var events = Enumerable.Range(0, 498).Select(index => new Monitoring.Domain.Ingestion.IngestionEvent(
                 $"quota-{index}", "2026-09-29T12:00:00Z", document.RootElement.Clone())).ToArray();
             Assert.Equal(Monitoring.Persistence.Ingestion.InboxWriteResult.Accepted,
-                await new Monitoring.Persistence.Ingestion.InboxWriter(db).WriteAsync("site", "sensor",
+                await new Monitoring.Persistence.Ingestion.InboxWriter(db, new Monitoring.Persistence.Ingestion.IngestionOptions { MaxNewEventsPerMinute = 500 }).WriteAsync("site", "sensor",
                     new Monitoring.Domain.Ingestion.IngestionBatch(1, "quota", "site", "sensor", events), default));
         }
         using var resend = await client.PostAsync("/api/v1/ingestion/batches", new StringContent(batch, Encoding.UTF8, "application/json"));

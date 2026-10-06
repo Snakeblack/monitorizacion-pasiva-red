@@ -13,8 +13,24 @@ public enum InboxWriteResult
     RateLimited
 }
 
-public sealed class InboxWriter(MonitoringDbContext dbContext)
+public sealed class IngestionOptions
 {
+    // Laboratory starting point per trusted origin (probe) over any rolling 60 s; S17 must validate or adjust it.
+    public int MaxNewEventsPerMinute { get; set; } = 6000;
+}
+
+public sealed class InboxWriter
+{
+    private readonly MonitoringDbContext dbContext;
+    private readonly int quota;
+
+    public InboxWriter(MonitoringDbContext dbContext, IngestionOptions? options = null)
+    {
+        quota = (options ?? new IngestionOptions()).MaxNewEventsPerMinute;
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(quota, 0, nameof(options));
+        this.dbContext = dbContext;
+    }
+
     public async Task<InboxWriteResult> WriteAsync(
         string siteId,
         string sensorId,
@@ -73,7 +89,7 @@ public sealed class InboxWriter(MonitoringDbContext dbContext)
         }
 
         var acceptedInWindow = await CountAcceptedInWindowAsync(siteId, sensorId, acceptedAt, transaction, cancellationToken);
-        if (acceptedInWindow + newEvents.Count > 500)
+        if (acceptedInWindow + newEvents.Count > quota)
         {
             await transaction.RollbackAsync(cancellationToken);
             return InboxWriteResult.RateLimited;

@@ -62,7 +62,7 @@ Cada unidad es un límite sugerido de commit/trabajo; workers solo se despachan 
 
 - [ ] 2.1 S05–S06: RED fixtures de extracción aislada, contrato versionado inválido, correlación y límites; GREEN adaptador tshark y sesiones inferidas sin bloquear captura. [REQ-captura-y-entrega-sonda-001–002, REQ-sesiones-canonicas-001]
 - [ ] 2.2 S07: RED spool lleno/restart/red caída/reenvío duplicado; GREEN SQLite WAL transaccional, reintento con identidad estable, cuotas configurables y pérdida visible. [REQ-captura-y-entrega-sonda-003–004]
-- [ ] 2.3 S08: RED falta cuota, ingestión duplicada, evento inválido seguido de válido y fallo entre proyección/ACK; GREEN cuotas por origen, cuarentena conciliable y ACK solo tras commit durable, sin bloqueo de válidos. [REQ-bandeja-ingestion-durable-003–005, REQ-proyeccion-sesiones-idempotente-003]
+- [~] 2.3 S08 (cuota configurable, cuarentena auditada y conciliable, resolución por comando implementados y probados contra PostgreSQL real; falta la autorización por roles de S12 y validar la cuota a escala en S17): RED falta cuota, ingestión duplicada, evento inválido seguido de válido y fallo entre proyección/ACK; GREEN cuotas por origen, cuarentena conciliable y ACK solo tras commit durable, sin bloqueo de válidos. [REQ-bandeja-ingestion-durable-003–005, REQ-proyeccion-sesiones-idempotente-003]
 
 ### Fase 3 — Inventario, identidad y PKI
 

@@ -86,8 +86,10 @@ public sealed class SessionSuppressionTests(PostgresFixture postgres) : IClassFi
         var connection = await ProjectedAsync();
         Assert.Equal(SuppressionResult.Suppressed, await SuppressAsync(connection, Identity));
         await SessionTestDatabase.ExecuteAsync(connection, "UPDATE monitoring.ingestion_inbox SET processed_at=NULL");
-        await Assert.ThrowsAsync<InvalidOperationException>(() => SessionTestDatabase.ProjectAsync(connection));
+        // The replay is a permanent incompatibility: quarantined, never a crash, never a republication.
+        await SessionTestDatabase.ProjectAsync(connection);
         Assert.Equal(0L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.session_projection"));
         Assert.Equal(2L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.projection_outbox"));
+        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_quarantine WHERE cause='identity-suppressed' AND state='unresolved'"));
     }
 }
