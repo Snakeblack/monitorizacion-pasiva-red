@@ -110,7 +110,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         }
 
         using var document = JsonDocument.Parse(json);
-        if (!SyntheticSessionContract.TryParse(document.RootElement, out _))
+        if (!CanonicalSession.TryParse(document.RootElement, out var session))
         {
             return;
         }
@@ -136,6 +136,8 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
                 throw new InvalidOperationException("Session projection conflicts with its accepted event.");
             }
         }
+        await OutboxStore.WriteSessionAsync(Connection, postgresTransaction,
+            new SessionIdentity(key.SiteId, key.SensorId, key.EventId), session!, key.AcceptedAt, cancellationToken);
         await using (var mark = Command("""
             UPDATE monitoring.ingestion_inbox SET processed_at=clock_timestamp()
             WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event

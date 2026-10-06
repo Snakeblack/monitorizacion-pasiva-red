@@ -24,10 +24,10 @@ public sealed class MigrationTests(PostgresFixture postgres) : IClassFixture<Pos
         Assert.True(await ExistsAsync(
             connection,
             "SELECT EXISTS (SELECT 1 FROM information_schema.schemata WHERE schema_name = 'monitoring')"));
-        Assert.Equal(3L, await ScalarLongAsync(
+        Assert.Equal(4L, await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
-        Assert.Equal(3L, await ScalarLongAsync(
+        Assert.Equal(6L, await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'monitoring'"));
     }

@@ -1,0 +1,73 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { SessionDetailPage } from './session-detail-page.component';
+
+async function openDetail(url = '/sessions/shared?siteId=a&sensorId=one') {
+  TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(),
+    provideRouter([{ path: 'sessions/:eventId', component: SessionDetailPage },
+      { path: 'detail-without-identity', component: SessionDetailPage }])] });
+  const harness = await RouterTestingHarness.create(url);
+  return { harness, http: TestBed.inject(HttpTestingController),
+    text: () => harness.routeNativeElement?.textContent ?? '' };
+}
+
+describe('Session detail scoped identity', () => {
+  it('replaces same eventId scope, cancelling old selection before it can reveal fields', async () => {
+    const ctx = await openDetail();
+    const old = ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared');
+    expect(old.request.params.get('siteId')).toBe('a');
+    expect(old.request.params.get('sensorId')).toBe('one');
+    await ctx.harness.navigateByUrl('/sessions/shared?siteId=b&sensorId=two', SessionDetailPage);
+    expect(old.cancelled).toBe(true);
+    const current = ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared');
+    expect(current.request.params.get('siteId')).toBe('b');
+    expect(current.request.params.get('sensorId')).toBe('two');
+    current.flush({ eventId: 'shared', siteId: 'b', sensorId: 'two', occurredAt: '2026-10-05T10:00:00Z', data: { protocol: 'UDP' } });
+    await ctx.harness.fixture.whenStable();
+    expect(ctx.text()).toContain('two');
+    expect(ctx.text()).toContain('UDP');
+    expect([...ctx.harness.routeNativeElement!.querySelectorAll('dd')].map(element => element.textContent)).not.toContain('one');
+    ctx.http.verify();
+  });
+
+  it.each([
+    { status: 401, message: 'Inicia sesión' },
+    { status: 403, message: 'Acceso denegado' },
+    { status: 503, message: 'no disponible' },
+    { status: 504, message: 'tiempo de espera' },
+  ])('shows typed HTTP $status without stale fields', async ({ status, message }) => {
+    const ctx = await openDetail();
+    ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared').flush('', { status, statusText: 'Failure' });
+    await ctx.harness.fixture.whenStable();
+    expect(ctx.text()).toContain(message);
+    expect(ctx.harness.routeNativeElement?.querySelectorAll('dt')).toHaveLength(0);
+    ctx.http.verify();
+  });
+
+  it('reports missing identity and makes no unbounded request', async () => {
+    const ctx = await openDetail('/detail-without-identity');
+    expect(ctx.text()).toContain('Falta la identidad');
+    ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+    ctx.http.verify();
+  });
+
+  it('rejects partial scope without using the historical implicit scope', async () => {
+    const ctx = await openDetail('/sessions/shared?siteId=a');
+    expect(ctx.text()).toContain('sede y sonda');
+    ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+    ctx.http.verify();
+  });
+
+  it('cancels a pending scoped request even when the next identity is incomplete', async () => {
+    const ctx = await openDetail();
+    const old = ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared');
+    await ctx.harness.navigateByUrl('/sessions/shared?siteId=b', SessionDetailPage);
+    expect(old.cancelled).toBe(true);
+    expect(ctx.text()).toContain('sede y sonda');
+    ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+    ctx.http.verify();
+  });
+});

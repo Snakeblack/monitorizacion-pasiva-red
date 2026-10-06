@@ -1,0 +1,32 @@
+  Monitoring.Domain -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Domain\bin\Debug\net10.0\Monitoring.Domain.dll
+  Monitoring.Persistence -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Persistence\bin\Debug\net10.0\Monitoring.Persistence.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Host\bin\Debug\net10.0\Monitoring.Host.dll
+  Monitoring.Tests -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll
+Serie de pruebas para C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll (.NETCoreApp,Version=v10.0)
+1 archivos de prueba en total coincidieron con el patrón especificado.
+[xUnit.net 00:00:53.70]     Monitoring.Tests.InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex [FAIL]
+  Con error Monitoring.Tests.InboxSchemaTests.IncrementalMigrationAddsInboxSchemaWithCompositeUniquenessAndTemporalIndex [1 ms]
+  Mensaje de error:
+   Docker.DotNet.DockerContainerNotFoundException : Docker API responded with status code='NotFound', response='{"message":"No such container: abcb3aed25569bf7e49b27dff4d01d2eecd5114676e6bbe70c599369a2875160"}
+'.
+  Seguimiento de la pila:
+     at Docker.DotNet.DockerClient.HandleIfErrorResponseAsync(HttpStatusCode statusCode, HttpResponseMessage response, IEnumerable`1 handlers)
+   at Docker.DotNet.DockerClient.MakeRequestAsync[T](IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken) in /_/src/Docker.DotNet/DockerClient.cs:line 176
+   at Docker.DotNet.ContainerOperations.InspectContainerAsync(String id, CancellationToken cancellationToken) in /_/src/Docker.DotNet/Endpoints/ContainerOperations.cs:line 63
+   at DotNet.Testcontainers.Clients.DockerContainerOperations.ByIdAsync(String id, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerContainerOperations.cs:line 36
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 812
+   at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass29_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext() in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 197
+--- End of stack trace from previous location ---
+   at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct) in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 226
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 847
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 643
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 345
+   at DotNet.Testcontainers.Containers.ResourceReaper.GetAndStartNewAsync(Guid sessionId, IDockerEndpointAuthenticationConfiguration dockerEndpointAuthConfig, IImage resourceReaperImage, IMount dockerSocket, ILogger logger, Boolean requiresPrivilegedMode, TimeSpan initTimeout, CancellationToken ct) in /_/src/Testcontainers/Containers/ResourceReaper.cs:line 280
+   at DotNet.Testcontainers.Containers.ResourceReaper.GetAndStartNewAsync(Guid sessionId, IDockerEndpointAuthenticationConfiguration dockerEndpointAuthConfig, IImage resourceReaperImage, IMount dockerSocket, ILogger logger, Boolean requiresPrivilegedMode, TimeSpan initTimeout, CancellationToken ct) in /_/src/Testcontainers/Containers/ResourceReaper.cs:line 304
+   at DotNet.Testcontainers.Containers.ResourceReaper.GetAndStartDefaultAsync(IDockerEndpointAuthenticationConfiguration dockerEndpointAuthConfig, ILogger logger, Boolean isWindowsEngineEnabled, CancellationToken ct) in /_/src/Testcontainers/Containers/ResourceReaper.cs:line 147
+   at DotNet.Testcontainers.Clients.TestcontainersClient.RunAsync(IContainerConfiguration configuration, CancellationToken ct) in /_/src/Testcontainers/Clients/TestcontainersClient.cs:line 321
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeCreateAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 546
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 342
+Archivo de resultados: C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\openspec\changes\producto-monitorizacion-final\evidence\foundation-regression-verified.trx
+
+Con error! - Con error:     1, Superado:   140, Omitido:     0, Total:   141, Duración: 1 m 10 s - Monitoring.Tests.dll (net10.0)

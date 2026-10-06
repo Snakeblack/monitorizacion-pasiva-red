@@ -5,6 +5,7 @@ using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Monitoring.Host.Sessions;
 using Monitoring.Persistence.Sessions;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,13 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
                 postgres.MigrationsHistoryTable("__EFMigrationsHistory", "public"))
             .Options;
         await using var dbContext = new MonitoringDbContext(options);
+        await dbContext.Database.OpenConnectionAsync();
+        // Serialize the complete migration + resumable historical backfill, not just schema DDL.
+        await using var migrationLock = new NpgsqlCommand("SELECT pg_advisory_lock(7182041000)",
+            (NpgsqlConnection)dbContext.Database.GetDbConnection());
+        await migrationLock.ExecuteNonQueryAsync();
         await dbContext.Database.MigrateAsync();
+        await new CanonicalSessionInitializer(dbContext).RunAsync(CancellationToken.None);
     }
     catch (Exception exception)
     {

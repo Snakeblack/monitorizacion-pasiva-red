@@ -3,6 +3,12 @@
   min-width: 0;
 }
 
+a { color: var(--ui-accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 2px; }
+@media (max-width: 640px) {
+  a, button { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
 .session-detail-page {
   max-width: 720px;
   color: var(--ui-text);

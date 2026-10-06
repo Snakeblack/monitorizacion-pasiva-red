@@ -1,0 +1,140 @@
+> Building...
+√ Building...
+Application bundle generation complete. [0.891 seconds] - 2026-10-05T14:32:36.591Z
+
+
+ RUN  v5.0.3 C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web
+
+ ❯ |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts (7 tests | 7 failed) 119ms
+   ❯ Session detail scoped identity (7)
+     × replaces same eventId scope, cancelling old selection before it can reveal fields 55ms
+     × shows typed HTTP 401 without stale fields 15ms
+     × shows typed HTTP 403 without stale fields 13ms
+     × shows typed HTTP 503 without stale fields 16ms
+     × shows typed HTTP 504 without stale fields 11ms
+     × reports missing identity and makes no unbounded request 5ms
+     × rejects partial scope without using the historical implicit scope 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > replaces same eventId scope, cancelling old selection before it can reveal fields
+AssertionError: expected null to be 'a' // Object.is equality
+
+- Expected:
+"a"
+
++ Received:
+null
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:21:46
+     19|     const ctx = await openDetail();
+     20|     const old = ctx.http.expectOne(req => req.url === '/api/v1/session…
+     21|     expect(old.request.params.get('siteId')).toBe('a');
+       |                                              ^
+     22|     expect(old.request.params.get('sensorId')).toBe('one');
+     23|     await ctx.harness.navigateByUrl('/sessions/shared?siteId=b&sensorI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > shows typed HTTP 401 without stale fields
+AssertionError: expected 'Detalle de sesiónNo se pudo consultar…' to contain 'Inicia sesión'
+
+Expected: "Inicia sesión"
+Received: "Detalle de sesiónNo se pudo consultar el detalle Reintentar consulta "
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:45:24
+     43|     ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared').f…
+     44|     await ctx.harness.fixture.whenStable();
+     45|     expect(ctx.text()).toContain(message);
+       |                        ^
+     46|     expect(ctx.harness.routeNativeElement?.querySelectorAll('dt')).toH…
+     47|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > shows typed HTTP 403 without stale fields
+AssertionError: expected 'Detalle de sesiónNo se pudo consultar…' to contain 'Acceso denegado'
+
+Expected: "Acceso denegado"
+Received: "Detalle de sesiónNo se pudo consultar el detalle Reintentar consulta "
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:45:24
+     43|     ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared').f…
+     44|     await ctx.harness.fixture.whenStable();
+     45|     expect(ctx.text()).toContain(message);
+       |                        ^
+     46|     expect(ctx.harness.routeNativeElement?.querySelectorAll('dt')).toH…
+     47|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > shows typed HTTP 503 without stale fields
+AssertionError: expected 'Detalle de sesiónNo se pudo consultar…' to contain 'no disponible'
+
+Expected: "no disponible"
+Received: "Detalle de sesiónNo se pudo consultar el detalle Reintentar consulta "
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:45:24
+     43|     ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared').f…
+     44|     await ctx.harness.fixture.whenStable();
+     45|     expect(ctx.text()).toContain(message);
+       |                        ^
+     46|     expect(ctx.harness.routeNativeElement?.querySelectorAll('dt')).toH…
+     47|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > shows typed HTTP 504 without stale fields
+AssertionError: expected 'Detalle de sesiónNo se pudo consultar…' to contain 'tiempo de espera'
+
+Expected: "tiempo de espera"
+Received: "Detalle de sesiónNo se pudo consultar el detalle Reintentar consulta "
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:45:24
+     43|     ctx.http.expectOne(req => req.url === '/api/v1/sessions/shared').f…
+     44|     await ctx.harness.fixture.whenStable();
+     45|     expect(ctx.text()).toContain(message);
+       |                        ^
+     46|     expect(ctx.harness.routeNativeElement?.querySelectorAll('dt')).toH…
+     47|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > reports missing identity and makes no unbounded request
+AssertionError: expected 'Detalle de sesiónConsultando detalle' to contain 'Falta la identidad'
+
+Expected: "Falta la identidad"
+Received: "Detalle de sesiónConsultando detalle"
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:52:24
+     50|   it('reports missing identity and makes no unbounded request', async …
+     51|     const ctx = await openDetail('/detail-without-identity');
+     52|     expect(ctx.text()).toContain('Falta la identidad');
+       |                        ^
+     53|     ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+     54|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > rejects partial scope without using the historical implicit scope
+AssertionError: expected 'Detalle de sesiónConsultando detalle' to contain 'sede y sonda'
+
+Expected: "sede y sonda"
+Received: "Detalle de sesiónConsultando detalle"
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:59:24
+     57|   it('rejects partial scope without using the historical implicit scop…
+     58|     const ctx = await openDetail('/sessions/shared?siteId=a');
+     59|     expect(ctx.text()).toContain('sede y sonda');
+       |                        ^
+     60|     ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+     61|     ctx.http.verify();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  16:32:36
+   Duration  1.27s (environment 60%, setup 20%, tests 10%, import 5%, transform 4%, worker 1%)
+

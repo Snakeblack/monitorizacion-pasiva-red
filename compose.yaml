@@ -1,0 +1,114 @@
+name: monitoring-product-demo
+# Isolated synthetic core. Production TLS, identity and PKI profiles are completed in U07.
+# No database, broker, search, Connect or admin port is published to the host.
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:?Use --env-file deploy/versions.env}
+    environment:
+      POSTGRES_USER: monitoring
+      POSTGRES_DB: monitoring
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin
+    secrets: [postgres_admin, postgres_app, postgres_cdc]
+    command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=4", "-c", "max_wal_senders=4", "-c", "max_connections=100"]
+    volumes:
+      - postgres:/var/lib/postgresql
+      - ./deploy/postgres/init.sh:/docker-entrypoint-initdb.d/10-monitoring.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U monitoring -d monitoring"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    stop_grace_period: 30s
+  kafka:
+    image: ${KAFKA_IMAGE:?Use --env-file deploy/versions.env}
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+      CLUSTER_ID: yULvkKnURwOhlSIfrph7Mw
+    volumes: ["kafka:/var/lib/kafka/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+    stop_grace_period: 30s
+  elasticsearch:
+    image: ${ELASTICSEARCH_IMAGE:?Use --env-file deploy/versions.env}
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes: ["elasticsearch:/usr/share/elasticsearch/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=3s' >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    stop_grace_period: 30s
+  connect:
+    image: monitoring/connect:foundation-20261005
+    build:
+      context: ./deploy/connect
+      args:
+        KAFKA_IMAGE: ${KAFKA_IMAGE:?Use --env-file deploy/versions.env}
+    environment:
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+    secrets: [postgres_cdc]
+    depends_on:
+      kafka: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "bash", "/opt/monitoring/health.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    stop_grace_period: 30s
+  migrate:
+    image: monitoring/api:foundation-20261005
+    build:
+      context: ./.ospec/runtime/producto-monitorizacion-final/publish
+      dockerfile: ../../../../deploy/api/Dockerfile
+      args:
+        ASPNET_IMAGE: ${ASPNET_IMAGE:?Use --env-file deploy/versions.env}
+    secrets: [postgres_app]
+    command: ["--migrate"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  bootstrap:
+    image: ${POSTGRES_IMAGE:?Use --env-file deploy/versions.env}
+    entrypoint: ["bash", "/opt/monitoring/bootstrap.sh"]
+    secrets: [postgres_admin]
+    volumes: ["./deploy/postgres/bootstrap.sh:/opt/monitoring/bootstrap.sh:ro"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  api:
+    image: monitoring/api:foundation-20261005
+    secrets: [postgres_app]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "bash", "/app/health.sh"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    stop_grace_period: 30s
+secrets:
+  postgres_admin: {file: ./lab-secrets/postgres-admin.txt}
+  postgres_app: {file: ./lab-secrets/postgres-app.txt}
+  postgres_cdc: {file: ./lab-secrets/postgres-cdc.txt}
+volumes:
+  postgres:
+  kafka:
+  elasticsearch:

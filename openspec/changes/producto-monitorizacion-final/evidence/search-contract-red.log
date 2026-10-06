@@ -1,0 +1,28 @@
+✖ unsupported contract is durably isolated while a later valid identity continues (1857.435ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1915.9624
+
+✖ failing tests:
+
+test at tests\stack\search-pipeline.test.mjs:32:1
+✖ unsupported contract is durably isolated while a later valid identity continues (1857.435ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 404
+  
+      at TestContext.<anonymous> (file:///C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/tests/stack/search-pipeline.test.mjs:36:10)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 404,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

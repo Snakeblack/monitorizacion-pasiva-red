@@ -1,0 +1,30 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { http, sql, until } from '../../scripts/lab/compose.mjs';
+
+const key = (site, sensor, event) => [site,sensor,event].map(x=>Buffer.from(x).toString('base64url')).join('.');
+export function commitFixture(event) {
+  const documentKey = key('pipeline-site','pipeline-sensor',event);
+  const data = { schemaVersion:1, operation:'upsert', documentKey, revision:1, siteId:'pipeline-site', sensorId:'pipeline-sensor',eventId:event,
+    startedAt:'2026-10-05T10:00:00.100Z',endedAt:'2026-10-05T10:00:01.000Z',sourceIp:'2001:db8::1',destinationIp:'192.0.2.2',
+    sourcePort:1234,destinationPort:443,protocol:'TCP',vlanId:null,provenance:'synthetic',inferred:null,partial:null,closeReason:null,packetCount:null,byteCount:null,acceptedAt:'2026-10-05T10:00:02.000Z' };
+  sql(`BEGIN;
+    INSERT INTO monitoring.session_identity(site_id,sensor_id,event_id,document_key,revision,state) VALUES ('pipeline-site','pipeline-sensor','${event}','${documentKey}',1,'active');
+    INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
+    VALUES ('${randomUUID()}','${documentKey}','sessions','monitoring.sessions.v1',1,1,'${JSON.stringify(data)}');
+    COMMIT;`);
+  return { documentKey, data };
+}
+
+test('committed authority outbox reaches the real sink with complete identity and authority revision', async () => {
+  const event = `commit-${randomUUID()}`;
+  const {documentKey, data} = commitFixture(event);
+  const result = await until(()=>http('elasticsearch:9200',`/sessions-v1-000001/_doc/${documentKey}`), x=>x.status===200, 12);
+  assert.equal(result.body._version,1);
+  assert.deepEqual(result.body._source,data);
+  http('elasticsearch:9200','/sessions-v1-000001/_refresh','POST');
+  const search = http('elasticsearch:9200','/sessions-read/_search','POST',{query:{term:{documentKey}}});
+  assert.equal(search.status,200);
+  assert.equal(search.body.hits.total.value,1);
+});

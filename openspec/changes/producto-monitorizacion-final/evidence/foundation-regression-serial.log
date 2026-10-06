@@ -1,0 +1,9 @@
+  Monitoring.Domain -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Domain\bin\Debug\net10.0\Monitoring.Domain.dll
+  Monitoring.Persistence -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Persistence\bin\Debug\net10.0\Monitoring.Persistence.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Host\bin\Debug\net10.0\Monitoring.Host.dll
+  Monitoring.Tests -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll
+Serie de pruebas para C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll (.NETCoreApp,Version=v10.0)
+1 archivos de prueba en total coincidieron con el patrón especificado.
+Archivo de resultados: C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\openspec\changes\producto-monitorizacion-final\evidence\foundation-regression-serial.trx
+
+Correctas! - Con error:     0, Superado:   141, Omitido:     0, Total:   141, Duración: 1 m 13 s - Monitoring.Tests.dll (net10.0)

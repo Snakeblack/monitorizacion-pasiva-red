@@ -21,7 +21,7 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
             migration.ExitCode == 0,
             $"Migration process failed: {Redact(migration.StandardError, connectionString)} {Redact(migration.StandardOutput, connectionString)}");
 
-        Assert.Equal(3L, await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
+        Assert.Equal(4L, await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
         Assert.Equal(
             new[] { "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_origin"));

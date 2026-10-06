@@ -45,6 +45,20 @@
 .app-nav-item:hover {
   background: var(--ui-surface-2);
   color: var(--ui-text);
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+@media (max-width: 959px) {
+  .app-body { flex-direction: column; }
+  .app-nav { width: auto; border-right: 0; border-bottom: 1px solid var(--ui-border-subtle); }
+  .app-shell--nav-collapsed .app-nav { display: none; }
+}
+
+@media (max-width: 640px) {
+  .app-header { min-height: 44px; height: auto; flex-wrap: wrap; }
+  .app-nav-toggle, .app-nav-item { min-height: 44px; height: auto; }
+  .app-main { padding: var(--ui-space-3); }
 }
 
 .app-nav-toggle:focus-visible,

@@ -1,0 +1,27 @@
+  Monitoring.Domain -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Domain\bin\Debug\net10.0\Monitoring.Domain.dll
+  Monitoring.Persistence -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Persistence\bin\Debug\net10.0\Monitoring.Persistence.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Host\bin\Debug\net10.0\Monitoring.Host.dll
+  Monitoring.Tests -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll
+Serie de pruebas para C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll (.NETCoreApp,Version=v10.0)
+1 archivos de prueba en total coincidieron con el patrón especificado.
+[xUnit.net 00:00:05.39]     Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [FAIL]
+  Con error Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [816 ms]
+  Mensaje de error:
+   System.InvalidOperationException : The migration 'SessionProjection' was not found.
+  Seguimiento de la pila:
+     at Microsoft.EntityFrameworkCore.Migrations.MigrationsAssemblyExtensions.GetMigrationId(IMigrationsAssembly assembly, String nameOrId)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.PopulateMigrations(IEnumerable`1 appliedMigrationEntries, String targetMigration, MigratorData& parameters)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.<>c.<<MigrateAsync>b__22_1>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 49
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 49
+--- End of stack trace from previous location ---
+Archivo de resultados: C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\openspec\changes\producto-monitorizacion-final\evidence\foundation-backfill-red.trx
+
+Con error! - Con error:     1, Superado:     0, Omitido:     0, Total:     1, Duración: 816 ms - Monitoring.Tests.dll (net10.0)

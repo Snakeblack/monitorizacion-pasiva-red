@@ -1,18 +1,19 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
 import { SessionDetail, SessionDetailApi } from './session-detail-api';
+import { sessionErrorMessage, sessionHttpStatus } from '../sessions/session-http-error';
 
 type SessionDetailView =
   | { kind: 'empty' }
-  | { kind: 'error' }
+  | { kind: 'error'; message: string }
   | { kind: 'loading' }
   | { kind: 'success'; session: SessionDetail };
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink],
   selector: 'app-session-detail-page',
   styleUrl: './session-detail-page.component.css',
   templateUrl: './session-detail-page.component.html',
@@ -20,26 +21,57 @@ type SessionDetailView =
 export class SessionDetailPage {
   private readonly api = inject(SessionDetailApi);
   private readonly retryTick = signal(0);
-  private readonly eventId = toSignal(
-    inject(ActivatedRoute).paramMap.pipe(map((params) => params.get('eventId') ?? '')),
-    { initialValue: inject(ActivatedRoute).snapshot.paramMap.get('eventId') ?? '' },
+  private readonly cancelDetail = new Subject<void>();
+  private readonly route = inject(ActivatedRoute);
+  private readonly identity = toSignal(
+    combineLatest([this.route.paramMap, this.route.queryParamMap]).pipe(
+      map(([params, query]) => ({
+        eventId: params.get('eventId') ?? '',
+        siteId: query.get('siteId') ?? '',
+        sensorId: query.get('sensorId') ?? '',
+      })),
+      tap(() => this.cancelDetail.next()),
+    ),
+    {
+      initialValue: {
+        eventId: this.route.snapshot.paramMap.get('eventId') ?? '',
+        siteId: this.route.snapshot.queryParamMap.get('siteId') ?? '',
+        sensorId: this.route.snapshot.queryParamMap.get('sensorId') ?? '',
+      },
+    },
   );
+  private readonly identityError = computed(() => {
+    const identity = this.identity();
+    if (!identity.eventId) return 'Falta la identidad de la sesión.';
+    if (!!identity.siteId !== !!identity.sensorId)
+      return 'Indica sede y sonda para una identidad completa.';
+    return '';
+  });
 
   private readonly detail = rxResource({
     params: () => {
-      const eventId = this.eventId();
-      return eventId.length > 0 ? { eventId, retryTick: this.retryTick() } : undefined;
+      return this.identityError() ? undefined : { ...this.identity(), retryTick: this.retryTick() };
     },
-    stream: ({ params }) => this.api.get(params.eventId),
+    stream: ({ params }) =>
+      this.api
+        .get(
+          params.eventId,
+          params.siteId ? { siteId: params.siteId, sensorId: params.sensorId } : undefined,
+        )
+        .pipe(takeUntil(this.cancelDetail)),
   });
 
   protected readonly view = computed((): SessionDetailView => {
+    if (this.identityError()) return { kind: 'error', message: this.identityError() };
     const status = this.detail.status();
     if (status === 'loading' || status === 'reloading' || status === 'idle') {
       return { kind: 'loading' };
     }
     if (status === 'error') {
-      return httpStatus(this.detail.error()) === 404 ? { kind: 'empty' } : { kind: 'error' };
+      const status = sessionHttpStatus(this.detail.error());
+      return status === 404
+        ? { kind: 'empty' }
+        : { kind: 'error', message: sessionErrorMessage(status) };
     }
     const session = this.detail.value();
     if (session) {
@@ -60,14 +92,4 @@ export class SessionDetailPage {
     event.preventDefault();
     this.retry();
   }
-}
-
-function httpStatus(error: unknown): number {
-  if (error instanceof HttpErrorResponse) {
-    return error.status;
-  }
-  if (error instanceof Error && error.cause instanceof HttpErrorResponse) {
-    return error.cause.status;
-  }
-  return 0;
 }

@@ -1,0 +1,31 @@
+> Building...
+√ Building...
+Application bundle generation complete. [0.866 seconds] - 2026-10-05T14:37:53.716Z
+
+
+ RUN  v5.0.3 C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web
+
+ ❯ |monitoring-web| src/app/app.component.spec.ts (2 tests | 1 failed) 53ms
+   ❯ App (2)
+     × navigates to the sessions work surface using a native named link 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |monitoring-web| src/app/app.component.spec.ts > App > navigates to the sessions work surface using a native named link
+AssertionError: expected undefined to be an instance of HTMLAnchorElement
+ ❯ src/app/app.component.spec.ts:41:22
+     39|     );
+     40|
+     41|     expect(sessions).toBeInstanceOf(HTMLAnchorElement);
+       |                      ^
+     42|     expect(sessions?.getAttribute('href')).toBe('/sessions');
+     43|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  16:37:53
+   Duration  1.17s (environment 66%, setup 21%, tests 5%, import 4%, transform 3%, worker 1%)
+

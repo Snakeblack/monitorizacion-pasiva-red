@@ -1,0 +1,19 @@
+✖ committed authority outbox reaches the real sink with complete identity and authority revision (13098.303ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13158.5315
+
+✖ failing tests:
+
+test at tests\stack\search-pipeline.test.mjs:20:1
+✖ committed authority outbox reaches the real sink with complete identity and authority revision (13098.303ms)
+  Error: Condition not reached: {"status":404,"body":{"error":{"root_cause":[{"type":"index_not_found_exception","reason":"no such index [sessions-v1-000001]","resource.type":"index_or_alias","resource.id":"sessions-v1-000001","index_uuid":"_na_","index":"sessions-v1-000001"}],"type":"index_not_found_exception","reason":"no such index [sessions-v1-000001]","resource.type":"index_or_alias","resource.id":"sessions-v1-000001","index_uuid":"_na_","index":"sessions-v1-000001"},"status":404}}
+      at until (file:///C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/scripts/lab/compose.mjs:35:9)
+      at async TestContext.<anonymous> (file:///C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/tests/stack/search-pipeline.test.mjs:23:18)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)

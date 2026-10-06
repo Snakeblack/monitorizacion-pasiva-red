@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="ab274a2b-c7fe-4b48-bf63-adb854c2f9fe" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:46:21" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:46:21.7067216+02:00" queuing="2026-10-05T16:46:21.7067220+02:00" start="2026-10-05T16:46:20.7319372+02:00" finish="2026-10-05T16:46:21.7310403+02:00" />
+  <TestSettings name="default" id="cd3a6d92-53ba-4796-932c-7a224128bec2">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_46_21" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="44990bc6-77db-47f7-84c5-5c6b244b8bae" testId="35141b21-7c1c-6fa7-eff9-8baa90778a65" testName="Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: &quot;UDP&quot;, before: 59, boundary: 60)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0027325" startTime="2026-10-05T16:46:21.6618803+02:00" endTime="2026-10-05T16:46:21.6619055+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="44990bc6-77db-47f7-84c5-5c6b244b8bae">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Single() Failure: The collection was empty</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(String protocol, Int32 before, Int32 boundary) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 70&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c6c2828f-854d-44be-a9e5-44ae005a19a5" testId="e4de53bd-0cba-6716-9059-741f71ab870a" testName="Monitoring.Probe.Tests.CaptureTests.ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0003133" startTime="2026-10-05T16:46:21.6845812+02:00" endTime="2026-10-05T16:46:21.6847185+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c6c2828f-854d-44be-a9e5-44ae005a19a5">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 21&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5eac219a-0da7-4acb-bd0c-3318ef0d3f3f" testId="051397a5-95ca-031e-44f5-c13cc0c343fa" testName="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;-1&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;10.0.0.1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000285" startTime="2026-10-05T16:46:21.6602925+02:00" endTime="2026-10-05T16:46:21.6603186+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5eac219a-0da7-4acb-bd0c-3318ef0d3f3f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 39&#xD;
+   at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e16ebeb8-123b-4831-ba0b-03ecf5fedfc8" testId="61c934b3-d983-a32a-5816-68a7fd097071" testName="Monitoring.Probe.Tests.CaptureTests.MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0003517" startTime="2026-10-05T16:46:21.6628785+02:00" endTime="2026-10-05T16:46:21.6629029+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e16ebeb8-123b-4831-ba0b-03ecf5fedfc8">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Single() Failure: The collection was empty</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 87&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="054a9ac7-3b21-4030-b44c-6d44c80b8042" testId="c39e5b98-5412-0ab9-a4e0-3b7864f707a5" testName="Monitoring.Probe.Tests.CaptureTests.SaturationIsCountedAndOtherProtocolsAreObservations" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0037949" startTime="2026-10-05T16:46:21.6615609+02:00" endTime="2026-10-05T16:46:21.6615864+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="054a9ac7-3b21-4030-b44c-6d44c80b8042">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.SaturationIsCountedAndOtherProtocolsAreObservations() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 105&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9e1cec72-2f8c-4205-b082-bb782c5a5f39" testId="a5d6c40f-3c02-cd6d-f26d-881ab598c5ee" testName="Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: &quot;TCP&quot;, before: 299, boundary: 300)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0002841" startTime="2026-10-05T16:46:21.6621990+02:00" endTime="2026-10-05T16:46:21.6622270+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9e1cec72-2f8c-4205-b082-bb782c5a5f39">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Single() Failure: The collection was empty</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(String protocol, Int32 before, Int32 boundary) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 70&#xD;
+   at InvokeStub_CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="356846fc-5727-4342-ab4e-e9a7ce79e9e0" testId="d25ed07e-2ee5-50b9-1b1e-879d724e80c9" testName="Monitoring.Probe.Tests.CaptureTests.InversePacketsShareOnlySameScopeAndVlanAndFirstDirection" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0004507" startTime="2026-10-05T16:46:21.6625588+02:00" endTime="2026-10-05T16:46:21.6625825+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="356846fc-5727-4342-ab4e-e9a7ce79e9e0">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 2&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.InversePacketsShareOnlySameScopeAndVlanAndFirstDirection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 50&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="190583e4-c43d-49a2-92b2-822f5d9e1b8c" testId="f4253484-62b8-3971-46dd-c0ddac83f89d" testName="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;65536&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;10.0.0.1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0969912" startTime="2026-10-05T16:46:21.5409613+02:00" endTime="2026-10-05T16:46:21.6487241+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="190583e4-c43d-49a2-92b2-822f5d9e1b8c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 39&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7e48f078-8057-405a-ab17-2f88a5200ebe" testId="60600f78-8cc4-8555-8f19-a752771af259" testName="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;4095&quot;, source: &quot;10.0.0.1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0002390" startTime="2026-10-05T16:46:21.6593539+02:00" endTime="2026-10-05T16:46:21.6594198+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7e48f078-8057-405a-ab17-2f88a5200ebe">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 39&#xD;
+   at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ae5bc5df-ce04-4017-ab26-dace1fd8d0a4" testId="4846aa74-7d9d-7214-08c0-dcac8ea9d934" testName="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;bad-ip&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000178" startTime="2026-10-05T16:46:21.6606324+02:00" endTime="2026-10-05T16:46:21.6606607+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae5bc5df-ce04-4017-ab26-dace1fd8d0a4">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs:line 39&#xD;
+   at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;4095&quot;, source: &quot;10.0.0.1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="60600f78-8cc4-8555-8f19-a752771af259">
+      <Execution id="7e48f078-8057-405a-ab17-2f88a5200ebe" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ParserRejectsInvalidMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="e4de53bd-0cba-6716-9059-741f71ab870a">
+      <Execution id="c6c2828f-854d-44be-a9e5-44ae005a19a5" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;-1&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;10.0.0.1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="051397a5-95ca-031e-44f5-c13cc0c343fa">
+      <Execution id="5eac219a-0da7-4acb-bd0c-3318ef0d3f3f" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ParserRejectsInvalidMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;53&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;bad-ip&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="4846aa74-7d9d-7214-08c0-dcac8ea9d934">
+      <Execution id="ae5bc5df-ce04-4017-ab26-dace1fd8d0a4" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ParserRejectsInvalidMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.InversePacketsShareOnlySameScopeAndVlanAndFirstDirection" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="d25ed07e-2ee5-50b9-1b1e-879d724e80c9">
+      <Execution id="356846fc-5727-4342-ab4e-e9a7ce79e9e0" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="InversePacketsShareOnlySameScopeAndVlanAndFirstDirection" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.SaturationIsCountedAndOtherProtocolsAreObservations" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="c39e5b98-5412-0ab9-a4e0-3b7864f707a5">
+      <Execution id="054a9ac7-3b21-4030-b44c-6d44c80b8042" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="SaturationIsCountedAndOtherProtocolsAreObservations" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: &quot;64&quot;, proto: &quot;17&quot;, sourcePort: &quot;65536&quot;, destinationPort: &quot;123&quot;, vlan: &quot;&quot;, source: &quot;10.0.0.1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="f4253484-62b8-3971-46dd-c0ddac83f89d">
+      <Execution id="190583e4-c43d-49a2-92b2-822f5d9e1b8c" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ParserRejectsInvalidMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: &quot;UDP&quot;, before: 59, boundary: 60)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="35141b21-7c1c-6fa7-eff9-8baa90778a65">
+      <Execution id="44990bc6-77db-47f7-84c5-5c6b244b8bae" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: &quot;TCP&quot;, before: 299, boundary: 300)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="a5d6c40f-3c02-cd6d-f26d-881ab598c5ee">
+      <Execution id="9e1cec72-2f8c-4205-b082-bb782c5a5f39" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.CaptureTests.MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="61c934b3-d983-a32a-5816-68a7fd097071">
+      <Execution id="e16ebeb8-123b-4831-ba0b-03ecf5fedfc8" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.CaptureTests" name="MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="35141b21-7c1c-6fa7-eff9-8baa90778a65" executionId="44990bc6-77db-47f7-84c5-5c6b244b8bae" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e4de53bd-0cba-6716-9059-741f71ab870a" executionId="c6c2828f-854d-44be-a9e5-44ae005a19a5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="051397a5-95ca-031e-44f5-c13cc0c343fa" executionId="5eac219a-0da7-4acb-bd0c-3318ef0d3f3f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="61c934b3-d983-a32a-5816-68a7fd097071" executionId="e16ebeb8-123b-4831-ba0b-03ecf5fedfc8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c39e5b98-5412-0ab9-a4e0-3b7864f707a5" executionId="054a9ac7-3b21-4030-b44c-6d44c80b8042" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a5d6c40f-3c02-cd6d-f26d-881ab598c5ee" executionId="9e1cec72-2f8c-4205-b082-bb782c5a5f39" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d25ed07e-2ee5-50b9-1b1e-879d724e80c9" executionId="356846fc-5727-4342-ab4e-e9a7ce79e9e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4253484-62b8-3971-46dd-c0ddac83f89d" executionId="190583e4-c43d-49a2-92b2-822f5d9e1b8c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60600f78-8cc4-8555-8f19-a752771af259" executionId="7e48f078-8057-405a-ab17-2f88a5200ebe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4846aa74-7d9d-7214-08c0-dcac8ea9d934" executionId="ae5bc5df-ce04-4017-ab26-dace1fd8d0a4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="10" executed="10" passed="0" failed="10" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.21]   Discovering: Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.25]   Discovered:  Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.26]   Starting:    Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.39]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.39]       Expected: 1&#xD;
+[xUnit.net 00:00:00.39]       Actual:   0&#xD;
+[xUnit.net 00:00:00.39]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.39]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(39,0): at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source)&#xD;
+[xUnit.net 00:00:00.39]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.39]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.40]       Expected: 1&#xD;
+[xUnit.net 00:00:00.40]       Actual:   0&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(39,0): at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source)&#xD;
+[xUnit.net 00:00:00.40]            at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.40]       Expected: 1&#xD;
+[xUnit.net 00:00:00.40]       Actual:   0&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(39,0): at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source)&#xD;
+[xUnit.net 00:00:00.40]            at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.40]       Expected: 1&#xD;
+[xUnit.net 00:00:00.40]       Actual:   0&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(39,0): at Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(String length, String proto, String sourcePort, String destinationPort, String vlan, String source)&#xD;
+[xUnit.net 00:00:00.40]            at InvokeStub_CaptureTests.ParserRejectsInvalidMetadata(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.40]       Expected: 1&#xD;
+[xUnit.net 00:00:00.40]       Actual:   0&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(105,0): at Monitoring.Probe.Tests.CaptureTests.SaturationIsCountedAndOtherProtocolsAreObservations()&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Single() Failure: The collection was empty&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(70,0): at Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(String protocol, Int32 before, Int32 boundary)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Single() Failure: The collection was empty&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(70,0): at Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(String protocol, Int32 before, Int32 boundary)&#xD;
+[xUnit.net 00:00:00.40]            at InvokeStub_CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.40]       Expected: 2&#xD;
+[xUnit.net 00:00:00.40]       Actual:   0&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(50,0): at Monitoring.Probe.Tests.CaptureTests.InversePacketsShareOnlySameScopeAndVlanAndFirstDirection()&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.40]       Assert.Single() Failure: The collection was empty&#xD;
+[xUnit.net 00:00:00.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(87,0): at Monitoring.Probe.Tests.CaptureTests.MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity()&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.40]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.43]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.43]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.43]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\CaptureTests.cs(21,0): at Monitoring.Probe.Tests.CaptureTests.ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines()&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.43]   Finished:    Monitoring.Probe.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6509842+02:00">
+        <Text>[xUnit.net 00:00:00.39]     Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: "64", proto: "17", sourcePort: "65536", destinationPort: "123", vlan: "", source: "10.0.0.1") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6596013+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: "64", proto: "17", sourcePort: "53", destinationPort: "123", vlan: "4095", source: "10.0.0.1") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6604543+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: "-1", proto: "17", sourcePort: "53", destinationPort: "123", vlan: "", source: "10.0.0.1") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6607938+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.ParserRejectsInvalidMetadata(length: "64", proto: "17", sourcePort: "53", destinationPort: "123", vlan: "", source: "bad-ip") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6617158+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.SaturationIsCountedAndOtherProtocolsAreObservations [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6620113+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: "UDP", before: 59, boundary: 60) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6623507+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.ExactIdleBoundaryClosesAndNextFlowGetsNewIdentity(protocol: "TCP", before: 299, boundary: 300) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6626887+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.InversePacketsShareOnlySameScopeAndVlanAndFirstDirection [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.6630131+02:00">
+        <Text>[xUnit.net 00:00:00.40]     Monitoring.Probe.Tests.CaptureTests.MaximumDurationWinsEvenWithRecentPacketsAndRestartPreservesIdentity [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:46:21.7124869+02:00">
+        <Text>[xUnit.net 00:00:00.43]     Monitoring.Probe.Tests.CaptureTests.ParserExtractsIpv6VlanAndMillisecondsWithoutLosingValidLines [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

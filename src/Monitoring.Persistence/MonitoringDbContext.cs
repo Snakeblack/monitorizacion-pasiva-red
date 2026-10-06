@@ -15,5 +15,6 @@ public sealed class MonitoringDbContext(DbContextOptions<MonitoringDbContext> op
         modelBuilder.ApplyConfiguration(new IngestionOriginEntityConfiguration());
         modelBuilder.ApplyConfiguration(new IngestionInboxEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SessionProjectionEntityConfiguration());
+        CanonicalEntities.Configure(modelBuilder);
     }
 }

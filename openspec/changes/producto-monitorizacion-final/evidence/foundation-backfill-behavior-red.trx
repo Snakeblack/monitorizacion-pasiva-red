@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="d6594d18-c800-41a1-a6d6-acfda425ed7f" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:08:52" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:08:52.8752891+02:00" queuing="2026-10-05T16:08:52.8752893+02:00" start="2026-10-05T16:08:45.8796523+02:00" finish="2026-10-05T16:08:52.8803078+02:00" />
+  <TestSettings name="default" id="4c7627e7-6a80-42bf-bc10-a8a08838ad06">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_08_52" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="00a7422a-182a-433a-b83f-261541a33735" testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" testName="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" computerName="DESKTOP-OCQ1IM7" duration="00:00:02.3691129" startTime="2026-10-05T16:08:49.8192218+02:00" endTime="2026-10-05T16:08:52.1821770+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="00a7422a-182a-433a-b83f-261541a33735">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 42P01: relation "monitoring.session_metadata" does not exist&#xD;
+&#xD;
+POSITION: 22</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 69&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="df815045-32e7-73bd-1fdc-9519ad7d9ffc">
+      <Execution id="00a7422a-182a-433a-b83f-261541a33735" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" executionId="00a7422a-182a-433a-b83f-261541a33735" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.07]   Discovering: Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.12]   Discovered:  Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.14]   Starting:    Monitoring.Tests&#xD;
+[testcontainers.org 00:00:00.10] Connected to Docker:&#xD;
+  Host: tcp://127.0.0.1:2375/&#xD;
+  Server Version: 29.8.2&#xD;
+  Kernel Version: 5.15.167.4-microsoft-standard-WSL2&#xD;
+  API Version: 1.56&#xD;
+  Operating System: Ubuntu 24.04.4 LTS&#xD;
+  Total Memory: 3.83 GB&#xD;
+[testcontainers.org 00:00:00.26] Docker container d699740074bf created&#xD;
+[testcontainers.org 00:00:00.29] Start Docker container d699740074bf&#xD;
+[testcontainers.org 00:00:00.69] Wait for Docker container d699740074bf to complete readiness checks&#xD;
+[testcontainers.org 00:00:01.71] Docker container d699740074bf ready&#xD;
+[testcontainers.org 00:00:01.81] Docker container 5b9de1c76d7d created&#xD;
+[testcontainers.org 00:00:01.81] Start Docker container 5b9de1c76d7d&#xD;
+[testcontainers.org 00:00:02.17] Wait for Docker container 5b9de1c76d7d to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.18] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 5b9de1c76d7d&#xD;
+[testcontainers.org 00:00:03.23] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 5b9de1c76d7d&#xD;
+[testcontainers.org 00:00:03.27] Docker container 5b9de1c76d7d ready&#xD;
+[xUnit.net 00:00:05.90]       Npgsql.PostgresException : 42P01: relation "monitoring.session_metadata" does not exist&#xD;
+[xUnit.net 00:00:05.90]       &#xD;
+[xUnit.net 00:00:05.90]       POSITION: 22&#xD;
+[xUnit.net 00:00:05.90]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+[xUnit.net 00:00:05.90]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.90]            at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.90]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.90]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.90]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.90]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs(69,0): at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection()&#xD;
+[xUnit.net 00:00:05.90]         --- End of stack trace from previous location ---&#xD;
+[testcontainers.org 00:00:05.67] Delete Docker container 5b9de1c76d7d&#xD;
+[xUnit.net 00:00:06.53]   Finished:    Monitoring.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:08:52.1847290+02:00">
+        <Text>[xUnit.net 00:00:05.90]     Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

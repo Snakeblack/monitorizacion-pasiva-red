@@ -1,0 +1,7 @@
+api running healthy 0
+bootstrap exited  0
+connect running healthy 0
+elasticsearch running healthy 0
+kafka running healthy 0
+migrate exited  0
+postgres running healthy 0

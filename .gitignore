@@ -11,3 +11,6 @@ TestResults/
 src/monitoring-web/node_modules/
 src/monitoring-web/dist/
 src/monitoring-web/.angular/
+lab-secrets/
+deploy/connect/vendor/
+deploy/connect/transforms/build/

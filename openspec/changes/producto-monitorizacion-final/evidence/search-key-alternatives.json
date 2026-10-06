@@ -1,0 +1,6 @@
+{
+  "postgres18KeyLengths": "36|64",
+  "originalAscii128TripleBytes": 515,
+  "officialLimitSource": "https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/mapping-id-field",
+  "limitation": "Lengths and real engine rejection verified. Alternative migration/protocol/collision behavior remains design work; no implementation or compatibility pass is claimed."
+}

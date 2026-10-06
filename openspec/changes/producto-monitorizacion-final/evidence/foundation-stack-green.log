@@ -1,0 +1,45 @@
+✖ empty core stack becomes healthy and retains an initialized canonical database on restart (6172.3336ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6233.1709
+
+✖ failing tests:
+
+test at tests\stack\foundation.test.mjs:10:1
+✖ empty core stack becomes healthy and retains an initialized canonical database on restart (6172.3336ms)
+  AssertionError [ERR_ASSERTION]:  api Pulling 
+   api Error pull access denied for monitoring/api, repository does not exist or may require 'docker login'
+   monitoring/api:foundation-20261005  Built
+   monitoring/connect:foundation-20261005  Built
+   Volume monitoring-foundation-test_postgres  Creating
+   Volume monitoring-foundation-test_postgres  Created
+   Volume monitoring-foundation-test_kafka  Creating
+   Volume monitoring-foundation-test_kafka  Created
+   Volume monitoring-foundation-test_elasticsearch  Creating
+   Volume monitoring-foundation-test_elasticsearch  Created
+   Container monitoring-foundation-test-elasticsearch-1  Creating
+   Container monitoring-foundation-test-kafka-1  Creating
+   Container monitoring-foundation-test-postgres-1  Recreate
+   Container monitoring-foundation-test-postgres-1  Error response from daemon: invalid mount config for type "bind": invalid mount path: 'C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/lab-secrets/postgres-app.txt' mount path must be absolute
+  Error response from daemon: invalid mount config for type "bind": invalid mount path: 'C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/lab-secrets/postgres-app.txt' mount path must be absolute
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/tests/stack/foundation.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.start (node:internal/test_runner/test:1177:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

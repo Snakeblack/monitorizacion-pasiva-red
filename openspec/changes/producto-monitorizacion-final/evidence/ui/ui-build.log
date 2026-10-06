@@ -1,0 +1,14 @@
+npm notice run monitoring-web@0.1.0 build
+npm notice run ng build
+> Building...
+√ Building...
+Initial chunk files | Names         |  Raw size | Estimated transfer size
+main-QKPN2K22.js    | main          | 352.47 kB |                93.04 kB
+styles-N4XGY5NK.css | styles        |   2.04 kB |               553 bytes
+
+                    | Initial total | 354.51 kB |                93.59 kB
+
+Application bundle generation complete. [1.574 seconds] - 2026-10-05T14:43:36.603Z
+
+Output location: C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\monitoring-web\dist\monitoring-web
+

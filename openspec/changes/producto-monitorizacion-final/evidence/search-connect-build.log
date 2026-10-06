@@ -1,0 +1,61 @@
+ Image monitoring/connect:foundation-20261005 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 781B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 935B 0.0s done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${KAFKA_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B 0.0s done
+#4 DONE 0.0s
+
+#5 [1/5] FROM docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837
+#5 resolve docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 518B 0.0s done
+#6 DONE 0.0s
+
+#7 [3/5] COPY vendor/confluentinc-kafka-connect-elasticsearch-16.0.0.zip /tmp/elasticsearch.zip
+#7 CACHED
+
+#8 [2/5] COPY vendor/debezium-connector-postgres-3.6.3.Final-plugin.tar.gz /tmp/debezium.tar.gz
+#8 CACHED
+
+#9 [4/5] RUN echo "68dfbd3aa0e22cbc164017311449f69dfe6b96b70e72c72c7a3a24ef5c7810e0  /tmp/debezium.tar.gz" | sha256sum -c -  && echo "3e658470966e1b419c349850a9db9da124fd8764e4d93710bb49b202ab51ba1e  /tmp/elasticsearch.zip" | sha256sum -c -  && mkdir -p /opt/monitoring/plugins/debezium /opt/monitoring/plugins/elasticsearch  && tar -xzf /tmp/debezium.tar.gz --strip-components=1 -C /opt/monitoring/plugins/debezium  && unzip -q /tmp/elasticsearch.zip -d /opt/monitoring/plugins/elasticsearch  && rm /tmp/debezium.tar.gz /tmp/elasticsearch.zip
+#9 CACHED
+
+#10 [5/5] COPY connect.properties health.sh entrypoint.sh /opt/monitoring/
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers 0.0s done
+#11 exporting manifest sha256:01229f95961893aafe25106692d8b3f77967c28d1c002335f55bf5e5ec8d0145 done
+#11 exporting config sha256:3446e980aba765ec09c1726b280f57482a583967205cbeb4eaa5280234584ed3 0.0s done
+#11 exporting attestation manifest sha256:dca48ebec2e771db7176217c094d22dd46f227ef5dbbc82601a9418be8e25ff5 0.0s done
+#11 exporting manifest list sha256:8a6c9b50aae9bdf3796ba89f5c03d1a4e4207f555c607f3c2d150587b722e29d done
+#11 naming to docker.io/monitoring/connect:foundation-20261005 done
+#11 unpacking to docker.io/monitoring/connect:foundation-20261005 0.0s done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image monitoring/connect:foundation-20261005 Built 
+ Container monitoring-foundation-test-kafka-1 Running 
+ Container monitoring-foundation-test-connect-1 Recreate 
+ Container monitoring-foundation-test-connect-1 Recreated 
+ Container monitoring-foundation-test-kafka-1 Waiting 
+ Container monitoring-foundation-test-kafka-1 Healthy 
+ Container monitoring-foundation-test-connect-1 Starting 
+ Container monitoring-foundation-test-connect-1 Started 
+ Container monitoring-foundation-test-kafka-1 Waiting 
+ Container monitoring-foundation-test-connect-1 Waiting 
+ Container monitoring-foundation-test-kafka-1 Healthy 
+ Container monitoring-foundation-test-connect-1 Healthy 

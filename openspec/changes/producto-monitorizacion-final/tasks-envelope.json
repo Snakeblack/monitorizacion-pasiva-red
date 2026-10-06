@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "success",
+  "executive_summary": "Backlog trazable de nueve unidades; demo buscable K01/K04/K02/K03/S09 y gates S17/S18 preservados.",
+  "artifacts": [
+    "openspec/changes/producto-monitorizacion-final/tasks.md",
+    "openspec/changes/producto-monitorizacion-final/tasks-envelope.json"
+  ],
+  "next_recommended": "sdd-apply",
+  "risks": "Alcance completo supera 400 líneas; exception-ok/size:exception aceptado. Capacidad y liberación requieren evidencia real S17/S18.",
+  "skill_resolution": "injected",
+  "key_decisions": [
+    "Primer demo al cerrar K01→K04→K02→K03→S09, sin esperar capacidad de producción.",
+    "Lotes posteriores S05–S08, S10–S13, S14–S16; S17/S18 mantienen gate final explícito.",
+    "TDD focal RED/GREEN por bloque; progreso de apply lo fusiona runtime/orquestador."
+  ]
+}

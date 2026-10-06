@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "batch": "U05-Angular",
+  "change": "producto-monitorizacion-final",
+  "recorded_at": "2026-10-05T14:46:20.285Z",
+  "execution": {
+    "test_command": "node node_modules/@angular/cli/bin/ng.js test --watch=false --exclude='src/app/session-detail/session-detail-view-chain.spec.ts'",
+    "cwd": "src/monitoring-web",
+    "tests": {
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "files": 7
+    },
+    "build_command": "npm --prefix src/monitoring-web run build",
+    "build_exit_code": 0,
+    "node": "v24.16.0",
+    "clock": "Date.now=2026-10-05T12:00:00.123Z in component tests; fixed same epoch in query tests",
+    "seed": "none; explicit HTTP fixtures",
+    "red": [
+      {
+        "log": "sessions-red.log",
+        "failed": 33,
+        "passed": 1
+      },
+      {
+        "log": "detail-scope-red.log",
+        "failed": 7,
+        "passed": 0
+      },
+      {
+        "log": "app-red.log",
+        "failed": 1,
+        "passed": 1
+      },
+      {
+        "log": "detail-cancel-red.log",
+        "failed": 1,
+        "passed": 7
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "src/monitoring-web/src/app/app.component.css",
+      "digest": "sha256:1febcdf95cd97b43e7fc20741c540458918e01f5e8454130761da19698d04986"
+    },
+    {
+      "path": "src/monitoring-web/src/app/app.component.html",
+      "digest": "sha256:9b80d37b4985f605543966e8ec46783959ecb160d2f16f4d647f4452c8bfe019"
+    },
+    {
+      "path": "src/monitoring-web/src/app/app.component.spec.ts",
+      "digest": "sha256:a62afa63bba0f8e4485815d68e3ef2ef7eec422493492869ca0b7751aadfac9d"
+    },
+    {
+      "path": "src/monitoring-web/src/app/app.component.ts",
+      "digest": "sha256:99f29d4533a200c02de602295722c1b7d0634c4336ca664f999811fab704f6b5"
+    },
+    {
+      "path": "src/monitoring-web/src/app/app.routes.ts",
+      "digest": "sha256:9413360e6709920c7052969388a98317967fe6d81bf779a0154d550796eb85ae"
+    },
+    {
+      "path": "src/monitoring-web/src/app/session-detail/session-detail-api.ts",
+      "digest": "sha256:9b85c5b53de513e7a4113bfce737140940c9b4f87e9f20ec155ea04108643d15"
+    },
+    {
+      "path": "src/monitoring-web/src/app/session-detail/session-detail-page.component.css",
+      "digest": "sha256:915722fe0ff08a92a610ca23d48a9cbe7c2b4deffb9d9335e75f991d97d92b29"
+    },
+    {
+      "path": "src/monitoring-web/src/app/session-detail/session-detail-page.component.html",
+      "digest": "sha256:91494e7e59ab561ed1b241ce1ab26ad44c0db54f06af19721c06ebe2f3876dba"
+    },
+    {
+      "path": "src/monitoring-web/src/app/session-detail/session-detail-page.component.ts",
+      "digest": "sha256:45eef51c3fa970b36803069a5befcd3f494ef3ef1d3bba3ef19966408da75586"
+    },
+    {
+      "path": "src/monitoring-web/src/app/session-detail/session-detail-scope.spec.ts",
+      "digest": "sha256:f1fd17754964884a510fd7e594dd8c9cc077cd802f2a9cc99a7077d35e4f3067"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-http-error.ts",
+      "digest": "sha256:8157a8e3f240137665fd637ea824b92466f74b9d8355728080afb4c44f8028dc"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-query.spec.ts",
+      "digest": "sha256:cd2fdfacba1ad4e454990623e04de2438c66ebea8734f1d565b73847f24d7e3a"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-query.ts",
+      "digest": "sha256:023c8b71de6c9c724c395210b7ad68d0660fa666a76cbfa8876bfd03f323d79f"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-api.spec.ts",
+      "digest": "sha256:2de69ecf35e91544ddc667ab6b136c5e9afada7c30faee31f695ce1fe7eb894e"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-api.ts",
+      "digest": "sha256:26d2c52952075f446c33ab9c2b26264dfa5962bfadffaff6f55fccc32f661f43"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-page.component.css",
+      "digest": "sha256:cdcb724a19695800de7e5f2d4210e5f04f0da94b9f4327288e38ec8a4590ded7"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-page.component.html",
+      "digest": "sha256:e3adc56cf4b6188290170e52a50db9c70f249ffa85c4d4de4a2eb2ac6d657bee"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-page.component.spec.ts",
+      "digest": "sha256:7da47840eab6da5ca6deda6f651e897055cbd0ec6a497029a17d38927e916da3"
+    },
+    {
+      "path": "src/monitoring-web/src/app/sessions/session-search-page.component.ts",
+      "digest": "sha256:7006cd12e4218fe42c842f1ca33b1cc9f5276f6c4863742a382db5acfd42aaaa"
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/app-red.log",
+      "digest": "sha256:5cdaac7fb0da509bb5b4c7f398fbfef71f90a0471fe16e6404ab535186e5c5ac"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/app.red.spec.ts.txt",
+      "digest": "sha256:87d5db919ea29533429584d6767db032d69c9014ea126963464fbc543db0f00c"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/detail-cancel-red.log",
+      "digest": "sha256:6cd593bbcb0831c4952b1ecd2e7cccdc01f299ff67ce14373bc5a1d4fa9554fb"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/detail-scope-red.log",
+      "digest": "sha256:b8bdf800545ff258d2cbab5b2f4ab71b35fe10f2195f02f31b6fb445e0d1a95d"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/session-detail-cancel.red.spec.ts.txt",
+      "digest": "sha256:eb02cbdd8957be3c53c35e568202f3b58ed480da8d2fc1d5affd3cd4f8d3fb36"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/session-detail-scope.red.spec.ts.txt",
+      "digest": "sha256:60de5337e102d62e0a4157d90f1857af8e35e6810ffd21634cc75be58cd80929"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/session-query.red.spec.ts.txt",
+      "digest": "sha256:b5a088eb185ffc8a9a526dfbb8661b8102065d58c1555c0de6ab7503f9c93558"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/session-search-api.red.spec.ts.txt",
+      "digest": "sha256:99a0e3a495a762a90df230cb052497854badb122f51dbf21dc167b0f1919aa69"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/session-search-page.red.spec.ts.txt",
+      "digest": "sha256:cb045afc483c2003e729e094f1ad642dfe0cd968328556cdee4fe1cf4992e323"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/sessions-green-first.log",
+      "digest": "sha256:200103691b8089bcbfd362cbf32bdd5077220a517add9e4ca043450a32948982"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/sessions-green-second.log",
+      "digest": "sha256:36f9bc33c90ad6e8d26173c38d21ace3ea4faa04642b6d971f023dd13761c892"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/sessions-green.log",
+      "digest": "sha256:8dbae282d484d4d6cea4abe0a57d03db612beeef6e2bf5546b01c4d0e0cbed6c"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/sessions-red.log",
+      "digest": "sha256:43c71f10a205b7770523d27685398d2a54ebc4b6531ccc92c52fac6d2347d234"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/ui-build.log",
+      "digest": "sha256:abddca481a399a605df7ae08094e9cda9ffe893984e255aaca30d47b201a61fe"
+    },
+    {
+      "path": "openspec/changes/producto-monitorizacion-final/evidence/ui/ui-regression.log",
+      "digest": "sha256:899be63a4ee027f16d676c86e86d6035c765d831e1063d53877e4dc3de9a00cc"
+    }
+  ],
+  "evidence_authenticity": "content-addressed historical; no live runtime receipts",
+  "integration": "not executed against search API or browser; no backend tests in this batch"
+}

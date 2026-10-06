@@ -1,0 +1,185 @@
+> Building...
+√ Building...
+Application bundle generation complete. [1.202 seconds] - 2026-10-05T14:38:34.208Z
+
+
+ RUN  v5.0.3 C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web
+
+ ❯ |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts (7 tests | 1 failed) 153ms
+   ❯ Session detail scoped identity (7)
+     × replaces same eventId scope, cancelling old selection before it can reveal fields 72ms
+ ❯ |monitoring-web| src/app/sessions/session-search-page.component.spec.ts (13 tests | 8 failed) 5410ms
+   ❯ SessionSearchPage (13)
+     × keeps query bounds on next page and removes cursor/results when an exact filter changes 5008ms
+     × cancels a pending old search when filters change and cannot display its stale response 12ms
+     × distinguishes HTTP 400 from no matches and clears previous data 27ms
+     × distinguishes HTTP 401 from no matches and clears previous data 31ms
+     × distinguishes HTTP 403 from no matches and clears previous data 31ms
+     × distinguishes HTTP 429 from no matches and clears previous data 16ms
+     × distinguishes HTTP 503 from no matches and clears previous data 30ms
+     × distinguishes HTTP 504 from no matches and clears previous data 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > replaces same eventId scope, cancelling old selection before it can reveal fields
+AssertionError: expected 'Detalle de sesiónVolver a sesionesSes…' not to contain 'one'
+
+Expected: "one"
+Received: "Detalle de sesiónVolver a sesionesSesión en ámbitoeventIdsharedsiteIdbsensorIdtwooccurredAt2026-10-05T10:00:00Zdata{"protocol":"UDP"}"
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:32:28
+     30|     expect(ctx.text()).toContain('two');
+     31|     expect(ctx.text()).toContain('UDP');
+     32|     expect(ctx.text()).not.toContain('one');
+       |                            ^
+     33|     ctx.http.verify();
+     34|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > keeps query bounds on next page and removes cursor/results when an exact filter changes
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/sessions/session-search-page.component.spec.ts:90:3
+     88|   });
+     89|
+     90|   it('keeps query bounds on next page and removes cursor/results when …
+       |   ^
+     91|     const ctx = await openSearch();
+     92|     ctx.request().flush(page);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > cancels a pending old search when filters change and cannot display its stale response
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:116:27
+    114|     const old = ctx.request();
+    115|     ctx.field('sourceIp', '192.0.2.99');
+    116|     expect(old.cancelled).toBe(true);
+       |                           ^
+    117|     await ctx.submit();
+    118|     ctx.request().flush({ ...page, items: [{ ...row, eventId: 'new-sel…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 400 from no matches and clears previous data
+AssertionError: expected '' to contain 'Consulta inválida'
+
+- Expected
++ Received
+
+- Consulta inválida
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 401 from no matches and clears previous data
+AssertionError: expected '' to contain 'Inicia sesión'
+
+- Expected
++ Received
+
+- Inicia sesión
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 403 from no matches and clears previous data
+AssertionError: expected '' to contain 'Acceso denegado'
+
+- Expected
++ Received
+
+- Acceso denegado
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 429 from no matches and clears previous data
+AssertionError: expected '' to contain 'Demasiadas consultas'
+
+- Expected
++ Received
+
+- Demasiadas consultas
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 503 from no matches and clears previous data
+AssertionError: expected '' to contain 'Búsqueda no disponible'
+
+- Expected
++ Received
+
+- Búsqueda no disponible
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  |monitoring-web| src/app/sessions/session-search-page.component.spec.ts > SessionSearchPage > distinguishes HTTP 504 from no matches and clears previous data
+AssertionError: expected '' to contain 'tiempo de espera'
+
+- Expected
++ Received
+
+- tiempo de espera
+
+ ❯ src/app/sessions/session-search-page.component.spec.ts:156:69
+    154|     ctx.request().flush('', { status, statusText: 'Failure' });
+    155|     await ctx.harness.fixture.whenStable();
+    156|     expect(ctx.root().querySelector('[role="alert"]')?.textContent).to…
+       |                                                                     ^
+    157|     expect(ctx.text()).not.toContain('Sin coincidencias');
+    158|     expect(ctx.text()).not.toContain('evt/a');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  2 failed | 3 passed (5)
+      Tests  9 failed | 34 passed (43)
+   Start at  16:38:34
+   Duration  6.89s (tests 47%, environment 35%, setup 12%, import 3%, transform 2%, worker 1%)
+

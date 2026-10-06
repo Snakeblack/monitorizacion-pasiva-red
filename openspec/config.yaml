@@ -1,15 +1,15 @@
 schema: spec-driven
 scale: enterprise
 project:
-  status: foundation-defined
+  status: active
   name: monitorizacion-pasiva-red
   version: "0.1.0"
-  architecture: modular-ingestion-proposed
+  architecture: modular-postgresql-outbox-search
   stack:
-    status: proposed
+    status: adopted
     languages: [.NET/C#, TypeScript]
     frameworks: [ASP.NET Core, Angular]
-    components: [tshark, PostgreSQL provisional per ADR-014, OIDC identity provider]
+    components: [tshark, PostgreSQL, Kafka, Kafka Connect, Debezium, Elasticsearch, Keycloak, EJBCA]
     architecture: modular-api-and-ingestion-worker
     package_managers: [dotnet, npm]
   commands:
@@ -24,7 +24,7 @@ context: |
   El caso práctico se conserva en docs/references/raw/network-monitoring.pdf y se procesa en docs/references/processed/network-monitoring.md.
   El análisis inicial se conserva en docs/references/raw/arquitectura-monitorizacion-red.pdf y se procesa en docs/references/processed/arquitectura-monitorizacion-red.md.
   La documentación persistida del proyecto se escribirá en español y justificará decisiones, flujos y alternativas.
-  No existe aún código ni arquitectura implementada. ADR-010 propone las piezas; ADR-013 sustituye los límites de piloto de ADR-012 y fija objetivos de aceptación de producción (4 sedes, 8 sondas, 10 millones de sesiones/día, 30 días consultables). Son requisitos de ensayo, no capacidad medida ni política corporativa aprobada. S00 documenta un modelo de capacidad reproducible y ADR-014 adopta PostgreSQL provisionalmente para iniciar S01. Los ensayos de capacidad, recuperación y coste con la implementación confirman o revisan la decisión antes de liberar; Kafka, ClickHouse y otros servicios se deciden por cuello y coste demostrados. Producción exige validación de carga, datos, seguridad, continuidad, plataforma y guardia; no hay herramientas de prueba instaladas.
+  S01–S04 implementan .NET 10/Angular 22, ingestión durable, proyección y detalle sintético. ADR-015–019 adoptan PostgreSQL autoritativo, outbox transaccional, Debezium/Kafka/Connect, Elasticsearch reemplazable, Keycloak/OIDC y EJBCA/TLS. ADR-010/014 se conservan como historia y ADR-013 mantiene objetivos de ensayo (4 sedes, 8 sondas, 10 millones/día, 30 días); aún no son capacidad medida ni política corporativa. xUnit/Testcontainers y Vitest están instalados; el stack y los ensayos se incorporan por lotes. S17/S18 requieren evidencia representativa, continuidad, coste y aceptación antes de liberar.
 testing:
   tdd_mode: strict
   runner: xUnit
@@ -106,7 +106,7 @@ foundation:
     - docs/references/raw/network-monitoring.pdf
     - docs/references/raw/arquitectura-monitorizacion-red.pdf
   open_questions:
-    - Validar con la implementación el modelo S00, las cargas y consultas de ADR-013; confirmar o revisar PostgreSQL provisional y su coste antes de liberar.
+    - Validar con la implementación el modelo S00, las cargas, consultas y coste de ADR-013 antes de liberar la arquitectura adoptada.
     - Medir perfil real de red por sede/sonda, pérdidas, tamaño de evento y distribución de consultas.
     - Ratificar con producto, seguridad y cumplimiento plazos de datos, matriz de permisos y alcance contractual de disponibilidad/recuperación.
     - Inventariar servicios corporativos de identidad, certificados, HA, copias, observabilidad y guardia; ensayar integración, conmutación y restauración.
@@ -121,4 +121,3 @@ routing:
       classification: [normal, high-risk]
     phases: [sdd-explore, sdd-propose, sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify, sdd-archive]
     gates: [clarify, review-workload, quality-review-gate]
-

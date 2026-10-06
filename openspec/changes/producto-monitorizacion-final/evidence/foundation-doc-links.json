@@ -1,0 +1,14 @@
+{
+  "missing": [],
+  "checked": [
+    "docs/architecture/technical-baseline.md",
+    "docs/architecture/flujo-completo.md",
+    "docs/development/slices.md",
+    "docs/development/stack.md",
+    "docs/product/brief.md",
+    "docs/product/functional-scope.md",
+    "docs/roadmap.md",
+    "docs/roadmap-gaps.md",
+    "docs/architecture/decisions/README.md"
+  ]
+}

@@ -32,7 +32,7 @@ public sealed class SessionSchemaTests(PostgresFixture postgres) : IClassFixture
             """);
         await db.Database.MigrateAsync();
         await db.Database.MigrateAsync();
-        Assert.Equal(3L, await ScalarAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
+        Assert.Equal(4L, await ScalarAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
         Assert.Equal(1L, await ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_inbox WHERE data = '{\"arbitrary\":true}'::jsonb AND processed_at IS NULL"));
         Assert.Equal(0L, await ScalarAsync(connection, "SELECT count(*) FROM monitoring.session_projection"));
         await ExecuteAsync(connection, "INSERT INTO monitoring.session_projection VALUES ('site','sensor','event','2026-09-29T12:00:00Z','{}')");

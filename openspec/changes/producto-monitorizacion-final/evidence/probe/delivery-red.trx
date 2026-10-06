@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a0313f9f-5f45-4c32-b568-8fed0b85031d" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:54:21" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:54:21.0153045+02:00" queuing="2026-10-05T16:54:21.0153046+02:00" start="2026-10-05T16:54:19.1670359+02:00" finish="2026-10-05T16:54:25.0411859+02:00" />
+  <TestSettings name="default" id="57754315-7ed9-4ea4-bec5-77e64c5e7f17">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_54_21" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="3afa89ae-0013-4202-8460-57734d68391b" testId="735fa075-7eeb-ec0d-2961-9ec87f6c1c9a" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 400, isolated: True, suspended: False)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0135023" startTime="2026-10-05T16:54:19.9296044+02:00" endTime="2026-10-05T16:54:19.9429720+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3afa89ae-0013-4202-8460-57734d68391b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="aad92b7a-4727-4d65-a9f7-24cd3b578c17" testId="23f4e45b-50e8-3875-87ab-e5399d7d58ed" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 429, isolated: False, suspended: False)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0127632" startTime="2026-10-05T16:54:19.8890311+02:00" endTime="2026-10-05T16:54:19.9017584+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aad92b7a-4727-4d65-a9f7-24cd3b578c17">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8c569257-a3e5-4621-aebe-ab7b98c75afa" testId="3a359abc-81d9-6005-f690-d81e4555dcf0" testName="Monitoring.Probe.Tests.DeliveryTests.NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0120766" startTime="2026-10-05T16:54:24.9784250+02:00" endTime="2026-10-05T16:54:24.9901459+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8c569257-a3e5-4621-aebe-ab7b98c75afa">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 72&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ed2af0bb-81ec-449a-8896-58cf1d160bd3" testId="40a2de54-573f-eb8f-cb53-7c11fc69c0cb" testName="Monitoring.Probe.Tests.DeliveryTests.ExponentialJitterRetryAfterAndRetryCapAreFinite" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0035777" startTime="2026-10-05T16:54:24.9906850+02:00" endTime="2026-10-05T16:54:24.9938540+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed2af0bb-81ec-449a-8896-58cf1d160bd3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 00:00:01&#xD;
+Actual:   00:00:00</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.ExponentialJitterRetryAfterAndRetryCapAreFinite() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 94&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="70f02ac1-8005-4f85-bccd-6b2d99e66d20" testId="4861c463-7fc4-c5e5-9073-c2955a5316e4" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 202, isolated: False, suspended: False)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0144394" startTime="2026-10-05T16:54:19.9020731+02:00" endTime="2026-10-05T16:54:19.9163204+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="70f02ac1-8005-4f85-bccd-6b2d99e66d20">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ffb70995-7970-4b84-b1b6-82e0daade8ca" testId="9bb47e04-5977-e796-09b4-cde5342bd05f" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 500, isolated: False, suspended: False)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0121296" startTime="2026-10-05T16:54:19.8773367+02:00" endTime="2026-10-05T16:54:19.8887279+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ffb70995-7970-4b84-b1b6-82e0daade8ca">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c9d53573-4ed5-45ea-a8c1-74d538340ac6" testId="e8881eac-0a20-b704-16c2-e46838857745" testName="Monitoring.Probe.Tests.DeliveryTests.ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody" computerName="DESKTOP-OCQ1IM7" duration="00:00:05.0168190" startTime="2026-10-05T16:54:19.9439169+02:00" endTime="2026-10-05T16:54:24.9624195+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c9d53573-4ed5-45ea-a8c1-74d538340ac6">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TimeoutException : The operation has timed out.</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 86&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="52f0f3d6-321e-4a72-a950-7dc371a6c98d" testId="ca242c63-77b6-ad6c-6f8b-dd45acbcf040" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 401, isolated: False, suspended: True)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.1496963" startTime="2026-10-05T16:54:19.7009242+02:00" endTime="2026-10-05T16:54:19.8616295+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="52f0f3d6-321e-4a72-a950-7dc371a6c98d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a79b0bf1-324e-4239-bcc5-5b5ccfcdd38c" testId="0aafc8c7-4c5d-def6-3214-73ae029aa240" testName="Monitoring.Probe.Tests.DeliveryTests.LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0143008" startTime="2026-10-05T16:54:24.9646207+02:00" endTime="2026-10-05T16:54:24.9779155+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a79b0bf1-324e-4239-bcc5-5b5ccfcdd38c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 33&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f915163e-59a7-433e-89eb-22254b2fb935" testId="b86c46b8-c7c2-184e-22b5-d276c11c4bb2" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 409, isolated: True, suspended: False)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0148265" startTime="2026-10-05T16:54:19.8719022+02:00" endTime="2026-10-05T16:54:19.8764618+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f915163e-59a7-433e-89eb-22254b2fb935">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="004c80af-b6bd-4df5-8d2d-687960786c29" testId="2d3910a5-9c42-4980-c59b-042532af52f5" testName="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 403, isolated: False, suspended: True)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0128228" startTime="2026-10-05T16:54:19.9165744+02:00" endTime="2026-10-05T16:54:19.9293005+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="004c80af-b6bd-4df5-8d2d-687960786c29">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs:line 54&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="e8881eac-0a20-b704-16c2-e46838857745">
+      <Execution id="c9d53573-4ed5-45ea-a8c1-74d538340ac6" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 500, isolated: False, suspended: False)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="9bb47e04-5977-e796-09b4-cde5342bd05f">
+      <Execution id="ffb70995-7970-4b84-b1b6-82e0daade8ca" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="3a359abc-81d9-6005-f690-d81e4555dcf0">
+      <Execution id="8c569257-a3e5-4621-aebe-ab7b98c75afa" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 429, isolated: False, suspended: False)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="23f4e45b-50e8-3875-87ab-e5399d7d58ed">
+      <Execution id="aad92b7a-4727-4d65-a9f7-24cd3b578c17" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 400, isolated: True, suspended: False)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="735fa075-7eeb-ec0d-2961-9ec87f6c1c9a">
+      <Execution id="3afa89ae-0013-4202-8460-57734d68391b" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 403, isolated: False, suspended: True)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="2d3910a5-9c42-4980-c59b-042532af52f5">
+      <Execution id="004c80af-b6bd-4df5-8d2d-687960786c29" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 409, isolated: True, suspended: False)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="b86c46b8-c7c2-184e-22b5-d276c11c4bb2">
+      <Execution id="f915163e-59a7-433e-89eb-22254b2fb935" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="0aafc8c7-4c5d-def6-3214-73ae029aa240">
+      <Execution id="a79b0bf1-324e-4239-bcc5-5b5ccfcdd38c" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.ExponentialJitterRetryAfterAndRetryCapAreFinite" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="40a2de54-573f-eb8f-cb53-7c11fc69c0cb">
+      <Execution id="ed2af0bb-81ec-449a-8896-58cf1d160bd3" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="ExponentialJitterRetryAfterAndRetryCapAreFinite" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 401, isolated: False, suspended: True)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="ca242c63-77b6-ad6c-6f8b-dd45acbcf040">
+      <Execution id="52f0f3d6-321e-4a72-a950-7dc371a6c98d" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 202, isolated: False, suspended: False)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="4861c463-7fc4-c5e5-9073-c2955a5316e4">
+      <Execution id="70f02ac1-8005-4f85-bccd-6b2d99e66d20" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.DeliveryTests" name="FailureClassificationRetainsSpoolAndNeverCreditsDelivery" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="735fa075-7eeb-ec0d-2961-9ec87f6c1c9a" executionId="3afa89ae-0013-4202-8460-57734d68391b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="23f4e45b-50e8-3875-87ab-e5399d7d58ed" executionId="aad92b7a-4727-4d65-a9f7-24cd3b578c17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a359abc-81d9-6005-f690-d81e4555dcf0" executionId="8c569257-a3e5-4621-aebe-ab7b98c75afa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="40a2de54-573f-eb8f-cb53-7c11fc69c0cb" executionId="ed2af0bb-81ec-449a-8896-58cf1d160bd3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4861c463-7fc4-c5e5-9073-c2955a5316e4" executionId="70f02ac1-8005-4f85-bccd-6b2d99e66d20" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9bb47e04-5977-e796-09b4-cde5342bd05f" executionId="ffb70995-7970-4b84-b1b6-82e0daade8ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e8881eac-0a20-b704-16c2-e46838857745" executionId="c9d53573-4ed5-45ea-a8c1-74d538340ac6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca242c63-77b6-ad6c-6f8b-dd45acbcf040" executionId="52f0f3d6-321e-4a72-a950-7dc371a6c98d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0aafc8c7-4c5d-def6-3214-73ae029aa240" executionId="a79b0bf1-324e-4239-bcc5-5b5ccfcdd38c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b86c46b8-c7c2-184e-22b5-d276c11c4bb2" executionId="f915163e-59a7-433e-89eb-22254b2fb935" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2d3910a5-9c42-4980-c59b-042532af52f5" executionId="004c80af-b6bd-4df5-8d2d-687960786c29" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="11" executed="11" passed="0" failed="11" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.06]   Discovering: Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.10]   Discovered:  Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.12]   Starting:    Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.30]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.30]       Expected: True&#xD;
+[xUnit.net 00:00:00.30]       Actual:   False&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.30]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.31]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.31]       Expected: True&#xD;
+[xUnit.net 00:00:00.31]       Actual:   False&#xD;
+[xUnit.net 00:00:00.31]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.31]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.31]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.32]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.32]       Expected: True&#xD;
+[xUnit.net 00:00:00.32]       Actual:   False&#xD;
+[xUnit.net 00:00:00.32]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.32]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.32]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.34]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.34]       Expected: True&#xD;
+[xUnit.net 00:00:00.34]       Actual:   False&#xD;
+[xUnit.net 00:00:00.34]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.34]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.34]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.35]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.35]       Expected: True&#xD;
+[xUnit.net 00:00:00.35]       Actual:   False&#xD;
+[xUnit.net 00:00:00.35]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.35]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.35]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.36]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.36]       Expected: True&#xD;
+[xUnit.net 00:00:00.36]       Actual:   False&#xD;
+[xUnit.net 00:00:00.36]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.36]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.36]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.38]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.38]       Expected: True&#xD;
+[xUnit.net 00:00:00.38]       Actual:   False&#xD;
+[xUnit.net 00:00:00.38]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.38]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(54,0): at Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(Int32 status, Boolean isolated, Boolean suspended)&#xD;
+[xUnit.net 00:00:00.38]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:05.40]       System.TimeoutException : The operation has timed out.&#xD;
+[xUnit.net 00:00:05.40]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.40]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(86,0): at Monitoring.Probe.Tests.DeliveryTests.ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody()&#xD;
+[xUnit.net 00:00:05.40]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:05.41]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:05.41]       Expected: True&#xD;
+[xUnit.net 00:00:05.41]       Actual:   False&#xD;
+[xUnit.net 00:00:05.41]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.41]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(33,0): at Monitoring.Probe.Tests.DeliveryTests.LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200()&#xD;
+[xUnit.net 00:00:05.41]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:05.43]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:05.43]       Expected: True&#xD;
+[xUnit.net 00:00:05.43]       Actual:   False&#xD;
+[xUnit.net 00:00:05.43]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.43]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(72,0): at Monitoring.Probe.Tests.DeliveryTests.NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected()&#xD;
+[xUnit.net 00:00:05.43]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:05.43]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:05.43]       Expected: 00:00:01&#xD;
+[xUnit.net 00:00:05.43]       Actual:   00:00:00&#xD;
+[xUnit.net 00:00:05.43]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.43]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\DeliveryTests.cs(94,0): at Monitoring.Probe.Tests.DeliveryTests.ExponentialJitterRetryAfterAndRetryCapAreFinite()&#xD;
+[xUnit.net 00:00:05.43]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:05.43]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:05.43]   Finished:    Monitoring.Probe.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.8635101+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 401, isolated: False, suspended: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.8766916+02:00">
+        <Text>[xUnit.net 00:00:00.31]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 409, isolated: True, suspended: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.8889115+02:00">
+        <Text>[xUnit.net 00:00:00.32]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 500, isolated: False, suspended: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.9019066+02:00">
+        <Text>[xUnit.net 00:00:00.34]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 429, isolated: False, suspended: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.9164643+02:00">
+        <Text>[xUnit.net 00:00:00.35]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 202, isolated: False, suspended: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.9294726+02:00">
+        <Text>[xUnit.net 00:00:00.36]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 403, isolated: False, suspended: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:19.9431594+02:00">
+        <Text>[xUnit.net 00:00:00.38]     Monitoring.Probe.Tests.DeliveryTests.FailureClassificationRetainsSpoolAndNeverCreditsDelivery(status: 400, isolated: True, suspended: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:24.9630676+02:00">
+        <Text>[xUnit.net 00:00:05.40]     Monitoring.Probe.Tests.DeliveryTests.ConcurrentCallsIssueOnlyOneRequestAndTimeoutKeepsDurableBody [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:24.9780577+02:00">
+        <Text>[xUnit.net 00:00:05.41]     Monitoring.Probe.Tests.DeliveryTests.LostAckThenRestartReplaysExactBytesAndDeletesOnlyAfterEmpty200 [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:24.9902899+02:00">
+        <Text>[xUnit.net 00:00:05.43]     Monitoring.Probe.Tests.DeliveryTests.NonEmpty200IsNotAcknowledgedAndRetryAfterIsRespected [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:54:24.9939978+02:00">
+        <Text>[xUnit.net 00:00:05.43]     Monitoring.Probe.Tests.DeliveryTests.ExponentialJitterRetryAfterAndRetryCapAreFinite [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

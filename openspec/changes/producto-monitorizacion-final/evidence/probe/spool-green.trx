@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="536a64dc-86ea-4a69-9430-41f7479c9543" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:52:38" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:52:38.8283000+02:00" queuing="2026-10-05T16:52:38.8283001+02:00" start="2026-10-05T16:52:37.6797084+02:00" finish="2026-10-05T16:52:38.8324203+02:00" />
+  <TestSettings name="default" id="69d6c4ab-795a-43b5-949a-ea27717fd921">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_52_38" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a8281ff6-2bd2-4243-acd1-bdd3c3ad70d2" testId="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0" testName="Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0180606" startTime="2026-10-05T16:52:38.5101011+02:00" endTime="2026-10-05T16:52:38.5281404+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a8281ff6-2bd2-4243-acd1-bdd3c3ad70d2" />
+    <UnitTestResult executionId="5545024c-8137-4bba-9195-0b44b5fd009c" testId="e9a765e7-b323-9083-d258-73fa4e9f1ff1" testName="Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.1434928" startTime="2026-10-05T16:52:38.3652952+02:00" endTime="2026-10-05T16:52:38.5084320+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5545024c-8137-4bba-9195-0b44b5fd009c" />
+    <UnitTestResult executionId="7d5431a6-23bd-4a43-a90f-2934c5afae12" testId="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1" testName="Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0015177" startTime="2026-10-05T16:52:38.5085461+02:00" endTime="2026-10-05T16:52:38.5100260+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d5431a6-23bd-4a43-a90f-2934c5afae12" />
+    <UnitTestResult executionId="82a60005-44be-4835-b5bb-0858a3d349ed" testId="45bb19ce-b44a-bb7c-a990-883a45f59df4" testName="Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.1465594" startTime="2026-10-05T16:52:38.1906373+02:00" endTime="2026-10-05T16:52:38.3426197+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="82a60005-44be-4835-b5bb-0858a3d349ed" />
+    <UnitTestResult executionId="b8134784-4f83-4b58-8564-3b90ae027726" testId="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb" testName="Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0219918" startTime="2026-10-05T16:52:38.3503489+02:00" endTime="2026-10-05T16:52:38.3648871+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b8134784-4f83-4b58-8564-3b90ae027726" />
+    <UnitTestResult executionId="15cb53af-6cf0-4376-8a71-eea79f36398c" testId="b9aee996-ba03-96eb-209a-ed9d199a55c6" testName="Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.2204622" startTime="2026-10-05T16:52:38.5282133+02:00" endTime="2026-10-05T16:52:38.7486844+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="15cb53af-6cf0-4376-8a71-eea79f36398c" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="e9a765e7-b323-9083-d258-73fa4e9f1ff1">
+      <Execution id="5545024c-8137-4bba-9195-0b44b5fd009c" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0">
+      <Execution id="a8281ff6-2bd2-4243-acd1-bdd3c3ad70d2" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="FullSpoolEvictsOldestAndLossCounterSurvivesRestart" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="45bb19ce-b44a-bb7c-a990-883a45f59df4">
+      <Execution id="82a60005-44be-4835-b5bb-0858a3d349ed" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb">
+      <Execution id="b8134784-4f83-4b58-8564-3b90ae027726" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="b9aee996-ba03-96eb-209a-ed9d199a55c6">
+      <Execution id="15cb53af-6cf0-4376-8a71-eea79f36398c" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1">
+      <Execution id="7d5431a6-23bd-4a43-a90f-2934c5afae12" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="SizingIncludesBurstAndLaboratoryMargin" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0" executionId="a8281ff6-2bd2-4243-acd1-bdd3c3ad70d2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e9a765e7-b323-9083-d258-73fa4e9f1ff1" executionId="5545024c-8137-4bba-9195-0b44b5fd009c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1" executionId="7d5431a6-23bd-4a43-a90f-2934c5afae12" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="45bb19ce-b44a-bb7c-a990-883a45f59df4" executionId="82a60005-44be-4835-b5bb-0858a3d349ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb" executionId="b8134784-4f83-4b58-8564-3b90ae027726" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9aee996-ba03-96eb-209a-ed9d199a55c6" executionId="15cb53af-6cf0-4376-8a71-eea79f36398c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="6" executed="6" passed="6" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.07]   Discovering: Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.10]   Discovered:  Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.12]   Starting:    Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.70]   Finished:    Monitoring.Probe.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

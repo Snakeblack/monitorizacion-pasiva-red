@@ -1,0 +1,38 @@
+✖ empty core stack becomes healthy and retains an initialized canonical database on restart (1450.2524ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1509.3062
+
+✖ failing tests:
+
+test at tests\stack\foundation.test.mjs:10:1
+✖ empty core stack becomes healthy and retains an initialized canonical database on restart (1450.2524ms)
+  AssertionError [ERR_ASSERTION]:  Network monitoring-foundation-test_default  Creating
+   Network monitoring-foundation-test_default  Created
+   Container monitoring-foundation-test-postgres-1  Creating
+   Container monitoring-foundation-test-postgres-1  Created
+   Container monitoring-foundation-test-postgres-1  Starting
+   Container monitoring-foundation-test-postgres-1  Started
+   Container monitoring-foundation-test-postgres-1  Waiting
+  container monitoring-foundation-test-postgres-1 exited (1)
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/tests/stack/foundation.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.start (node:internal/test_runner/test:1177:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

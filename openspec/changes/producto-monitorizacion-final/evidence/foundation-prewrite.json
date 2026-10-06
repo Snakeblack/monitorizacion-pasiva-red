@@ -1,0 +1,98 @@
+{
+  "files": [
+    {
+      "digest": "sha256:5e78e41e3ddcd3e35c57408a46c60125def7723cb6a66568883b399968a77c25",
+      "path": "src/Monitoring.Domain/Ingestion/BatchContract.cs"
+    },
+    {
+      "digest": "sha256:c6b257369d26467a5439c186a95908edb6229edcce37bc9875908c4aace94837",
+      "path": "src/Monitoring.Domain/Sessions/SessionDetail.cs"
+    },
+    {
+      "digest": "sha256:b94b4bd7021ee7e998a7d9d5bd9e08fdde03092aa775b830ae0e86bedbd97c00",
+      "path": "src/Monitoring.Domain/Sessions/SyntheticSessionContract.cs"
+    },
+    {
+      "digest": "sha256:6f2fd753a05a13822dba3ee3a377a2f0b5d94146df7f834bb49caaeeda1721a1",
+      "path": "src/Monitoring.Persistence/MonitoringDbContext.cs"
+    },
+    {
+      "digest": "sha256:a0209e545632731ab1138661b26ef779c587160d48732f0119cb1a0ae7a109bd",
+      "path": "src/Monitoring.Persistence/Ingestion/InboxWriter.cs"
+    },
+    {
+      "digest": "sha256:cd0ea328a61ad9ecfa92ee331d5d096cf4464d567ecfeafc32eb90aa6aef7f46",
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntity.cs"
+    },
+    {
+      "digest": "sha256:006ce0b136f7c843f3e6a302c0e517671260ef53589f22744b8e437ea6e23e8b",
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionInboxEntityConfiguration.cs"
+    },
+    {
+      "digest": "sha256:7b11fbc17bdeb2c665bf0dabc97960b46cf9c87da0e67aa01dd8cccfa7511f59",
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionOriginEntity.cs"
+    },
+    {
+      "digest": "sha256:783dac1df7bd3ec3b5a650229f8efe953aabc18ce205ad117381d27af1c1bf25",
+      "path": "src/Monitoring.Persistence/Ingestion/IngestionOriginEntityConfiguration.cs"
+    },
+    {
+      "digest": "sha256:038a72133d0b6e0286648a118ea43ce0f07c581f96f80fb879596091ed6da8bf",
+      "path": "src/Monitoring.Persistence/Migrations/202609240001_InitialSchema.cs"
+    },
+    {
+      "digest": "sha256:f42c7fd65c911d3f92a8cbd5301d50a476eeafc526f071d85806fce0102f92a8",
+      "path": "src/Monitoring.Persistence/Migrations/202609240002_DurableInbox.cs"
+    },
+    {
+      "digest": "sha256:63f38298ccca4386710a556195a6454750b6c467cd55819d229878849a6f5fbf",
+      "path": "src/Monitoring.Persistence/Migrations/202609290003_SessionProjection.cs"
+    },
+    {
+      "digest": "sha256:be72646a0a47e598218745cef6cd069fc30fb0ad3b4ddfb2fbfac7a73a73b01d",
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntity.cs"
+    },
+    {
+      "digest": "sha256:eca1b6e46f908d9392ada3c94155e9300bb2c90b7fc64f34a94c6b681c3bd0a9",
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjectionEntityConfiguration.cs"
+    },
+    {
+      "digest": "sha256:ab2acd3185ace648d6a9f740726783ac8978645925b60c090ed0c8e3641a54db",
+      "path": "src/Monitoring.Persistence/Sessions/SessionProjector.cs"
+    },
+    {
+      "digest": "sha256:8d5945f0192cf3e328cfa7394ea091592ab4ffecfbdcc26ade148adbf033723f",
+      "path": "src/Monitoring.Persistence/Sessions/SessionReader.cs"
+    },
+    {
+      "digest": "sha256:8e76e5c464a021c124fc96077cf58db6d0201604863a2560ce9ab843d70da5f4",
+      "path": "src/Monitoring.Host/Program.cs"
+    },
+    {
+      "digest": "sha256:423ecad397f9f7d6bc8d557db6f5b11a9f0a7a28bedd4e3cb748bea068cb79f2",
+      "path": "src/Monitoring.Host/Ingestion/BatchEndpoint.cs"
+    },
+    {
+      "digest": "sha256:1275901c28ec7b813a9bac9bd7001d39a4501348afea6397c6dd2b56064bde59",
+      "path": "src/Monitoring.Host/Ingestion/TrustedSensorIdentity.cs"
+    },
+    {
+      "digest": "sha256:26bd3c128ba0a8b9c8698881df137dec0915120aa85b96585d165aa433859b42",
+      "path": "src/Monitoring.Host/Sessions/SessionEndpoint.cs"
+    },
+    {
+      "digest": "sha256:c3193173c8c23fc9dad6941cad5aef0cf6882b82e6358f0c53a691db6e69ce8d",
+      "path": "src/Monitoring.Host/Sessions/SessionProjectionWorker.cs"
+    },
+    {
+      "digest": "sha256:16a6cf686e5aa8f20f82d6d8965fae0647d44919dc18afbf8211990c3945f325",
+      "path": "src/Monitoring.Host/Sessions/TrustedSessionReadContext.cs"
+    },
+    {
+      "digest": "sha256:fa3d1bc5ffb1e97037e68d0999b39858defa485e9ff3aa792160e3da2099509d",
+      "path": "src/Monitoring.Host/Sessions/TrustedSessionReadScope.cs"
+    }
+  ],
+  "captured_at": "2026-10-05T14:04:26.8033167Z",
+  "base_commit": "72ffb503799585a11425a8195f712e665c5abe17"
+}

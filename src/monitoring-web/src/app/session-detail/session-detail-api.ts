@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -24,7 +24,8 @@ export class SessionDetailApi {
   private readonly http = inject(HttpClient);
   private readonly origin = inject(SESSION_DETAIL_API_ORIGIN);
 
-  get(eventId: string): Observable<SessionDetail> {
-    return this.http.get<SessionDetail>(sessionDetailUrl(this.origin, eventId));
+  get(eventId: string, scope?: { siteId: string; sensorId: string }): Observable<SessionDetail> {
+    const params = scope ? new HttpParams().set('siteId', scope.siteId).set('sensorId', scope.sensorId) : new HttpParams();
+    return this.http.get<SessionDetail>(sessionDetailUrl(this.origin, eventId), { params });
   }
 }

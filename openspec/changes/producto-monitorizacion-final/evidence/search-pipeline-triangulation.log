@@ -1,0 +1,12 @@
+✔ committed authority outbox reaches the real sink with complete identity and authority revision (4179.4751ms)
+✔ unsupported contract is durably isolated while a later valid identity continues (6653.5363ms)
+✔ minimal permanent delete document resists old upserts at new Kafka offsets and restart (23544.5893ms)
+✔ real search outage preserves confirmed outbox and retries valid publication after recovery (38409.5129ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72847.6298

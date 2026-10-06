@@ -1,0 +1,22 @@
+{
+  "connector.class":"io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max":"1",
+  "database.hostname":"postgres","database.port":"5432","database.user":"monitoring_cdc",
+  "database.password":"${file:/tmp/monitoring-cdc.properties:password}","database.dbname":"monitoring",
+  "topic.prefix":"monitoring-authority","plugin.name":"pgoutput","slot.name":"monitoring_outbox",
+  "publication.name":"monitoring_outbox","publication.autocreate.mode":"disabled",
+  "table.include.list":"monitoring.projection_outbox","snapshot.mode":"initial",
+  "tombstones.on.delete":"false",
+  "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+  "value.converter":"org.apache.kafka.connect.json.JsonConverter","value.converter.schemas.enable":"false",
+  "predicates":"outbox","predicates.outbox.type":"org.apache.kafka.connect.transforms.predicates.TopicNameMatches",
+  "predicates.outbox.pattern":"monitoring-authority\\.monitoring\\.projection_outbox",
+  "transforms":"outbox","transforms.outbox.type":"io.debezium.transforms.outbox.EventRouter",
+  "transforms.outbox.predicate":"outbox","transforms.outbox.route.by.field":"target_topic",
+  "transforms.outbox.route.topic.replacement":"${routedByValue}",
+  "transforms.outbox.table.field.event.key":"aggregateid","transforms.outbox.table.field.event.payload":"payload",
+  "transforms.outbox.table.expand.json.payload":"true",
+  "transforms.outbox.table.json.payload.null.behavior":"optional_bytes",
+  "transforms.outbox.table.fields.additional.placement":"revision:header:revision",
+  "errors.log.enable":"false"
+}

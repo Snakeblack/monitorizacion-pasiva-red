@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="adbd363c-30bf-4957-8ce2-551dab94a681" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:13:30" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:13:30.5081780+02:00" queuing="2026-10-05T16:13:30.5081782+02:00" start="2026-10-05T16:13:29.7194551+02:00" finish="2026-10-05T16:13:42.0382665+02:00" />
+  <TestSettings name="default" id="9cf07ea0-2375-4255-84d4-19ff3c5b375f">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_13_30" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="723f34e8-7675-4bd7-8eb0-35ac8a2ed093" testId="881caa0d-5b3f-05c8-a47a-3e9176970017" testName="Monitoring.Tests.SessionSchemaTests.UpgradeS02PreservesPendingDataAndAddsCompositeProjectionAndPartialIndex" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.7948557" startTime="2026-10-05T16:13:35.6448364+02:00" endTime="2026-10-05T16:13:36.4420956+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="723f34e8-7675-4bd7-8eb0-35ac8a2ed093" />
+    <UnitTestResult executionId="6b03d52d-7310-451b-bb8c-93f263eab56f" testId="c07b0354-ffcb-d61f-db61-a4640fca8814" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;packetCount&quot;, value: &quot;-1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000226" startTime="2026-10-05T16:13:30.4641716+02:00" endTime="2026-10-05T16:13:30.4641988+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6b03d52d-7310-451b-bb8c-93f263eab56f" />
+    <UnitTestResult executionId="801287e4-a0cd-4a47-94f7-212607282388" testId="013ad838-d955-7f53-0481-45470e42d584" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;closeReason&quot;, value: &quot;\&quot;unknown\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000239" startTime="2026-10-05T16:13:30.4639798+02:00" endTime="2026-10-05T16:13:30.4640048+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="801287e4-a0cd-4a47-94f7-212607282388" />
+    <UnitTestResult executionId="e1fda346-6bbb-475c-8541-6a784de04c6d" testId="60a2524e-9d97-2f0f-e3f8-4a2de55b8b20" testName="Monitoring.Tests.SessionProjectionTests.MoreThanOnePageOfInvalidUnknownAndValidEventsDoesNotStarveLaterValidEvents" computerName="DESKTOP-OCQ1IM7" duration="00:00:02.1021865" startTime="2026-10-05T16:13:39.2521203+02:00" endTime="2026-10-05T16:13:41.3546309+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e1fda346-6bbb-475c-8541-6a784de04c6d" />
+    <UnitTestResult executionId="a6f65182-3ff9-4ebe-8551-331bebf1a9d1" testId="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa" testName="Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0021792" startTime="2026-10-05T16:13:30.4866642+02:00" endTime="2026-10-05T16:13:30.4866888+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a6f65182-3ff9-4ebe-8551-331bebf1a9d1" />
+    <UnitTestResult executionId="a4992d6d-ad6e-4bf4-bf62-1378778a0521" testId="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;version&quot;, value: &quot;2&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000187" startTime="2026-10-05T16:13:30.4641079+02:00" endTime="2026-10-05T16:13:30.4641316+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a4992d6d-ad6e-4bf4-bf62-1378778a0521" />
+    <UnitTestResult executionId="d9a2eff9-52a2-4938-8459-2bacc54b386f" testId="c37fd6ae-0973-cb93-8edb-be47b23abc87" testName="Monitoring.Tests.SessionProjectionTests.ConcurrentWorkersAndSkippedLockedEventRecoverOnNextPass" computerName="DESKTOP-OCQ1IM7" duration="00:00:01.3262105" startTime="2026-10-05T16:13:35.2485572+02:00" endTime="2026-10-05T16:13:36.5749651+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d9a2eff9-52a2-4938-8459-2bacc54b386f" />
+    <UnitTestResult executionId="66a87891-207c-4a13-a382-eeeab928ec19" testId="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;startedAt&quot;, value: &quot;\&quot;2026-09-29T12:00:00.1001Z\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000219" startTime="2026-10-05T16:13:30.4638408+02:00" endTime="2026-10-05T16:13:30.4638689+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66a87891-207c-4a13-a382-eeeab928ec19" />
+    <UnitTestResult executionId="c82bebfc-bada-4387-a760-f6c0cbb1d591" testId="b70b65d9-1c0e-445f-c2cc-8582aad64928" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;byteCount&quot;, value: &quot;1.1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000307" startTime="2026-10-05T16:13:30.4637527+02:00" endTime="2026-10-05T16:13:30.4637881+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c82bebfc-bada-4387-a760-f6c0cbb1d591" />
+    <UnitTestResult executionId="ee2e0b43-a8c5-45a2-93bc-7ac3df2763f4" testId="0ed523fc-db9c-11b9-e663-6ff8cde1cedb" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;endedAt&quot;, value: &quot;\&quot;2026-09-29T11:00:00Z\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0146613" startTime="2026-10-05T16:13:30.4351444+02:00" endTime="2026-10-05T16:13:30.4555053+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ee2e0b43-a8c5-45a2-93bc-7ac3df2763f4" />
+    <UnitTestResult executionId="b4a0c066-57e3-4547-a375-f3196006da17" testId="d35ed068-1256-1844-751a-d1e7962ac77a" testName="Monitoring.Tests.SessionProjectionTests.MarkingFailureRollsBackInsertAndRestartRecoversPending" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.8744865" startTime="2026-10-05T16:13:38.3773038+02:00" endTime="2026-10-05T16:13:39.2519534+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b4a0c066-57e3-4547-a375-f3196006da17" />
+    <UnitTestResult executionId="e994ff54-99ab-4670-ad62-634e47a20855" testId="6280c412-ef23-0f88-df69-e4c19613e54d" testName="Monitoring.Tests.SessionProjectionTests.InitialProjectionAndEqualReplayPreserveOneSessionPerOrigin" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.9366557" startTime="2026-10-05T16:13:36.5751983+02:00" endTime="2026-10-05T16:13:37.5119505+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e994ff54-99ab-4670-ad62-634e47a20855" />
+    <UnitTestResult executionId="80c0d099-ae78-42ff-b934-bb9e682895fb" testId="d07fd2ba-66de-c7c6-73ae-1f2cf27d03f3" testName="Monitoring.Tests.SessionProjectionTests.ConflictingProjectionRaisesInvariantWithoutOverwritingOrMarking" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.8648131" startTime="2026-10-05T16:13:37.5128122+02:00" endTime="2026-10-05T16:13:38.3771271+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="80c0d099-ae78-42ff-b934-bb9e682895fb" />
+    <UnitTestResult executionId="321ef063-ccdd-4835-bba4-b32cb4245c42" testId="2c05a5db-dd17-c32b-1689-81b20bfc098a" testName="Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0022834" startTime="2026-10-05T16:13:30.4868930+02:00" endTime="2026-10-05T16:13:30.4869305+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="321ef063-ccdd-4835-bba4-b32cb4245c42" />
+    <UnitTestResult executionId="e1ac8c3f-6cd2-4d8d-9628-f225acdfbd53" testId="ccba536a-dbf0-af61-1891-a39c93d465eb" testName="Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0047297" startTime="2026-10-05T16:13:30.4865444+02:00" endTime="2026-10-05T16:13:30.4865725+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e1ac8c3f-6cd2-4d8d-9628-f225acdfbd53" />
+    <UnitTestResult executionId="60330963-af36-49b4-b86f-c185f941f699" testId="87a08418-62f5-43ba-9174-11a0d9ae848d" testName="Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.9248993" startTime="2026-10-05T16:13:36.5448173+02:00" endTime="2026-10-05T16:13:37.4698075+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60330963-af36-49b4-b86f-c185f941f699" />
+    <UnitTestResult executionId="fca0886a-8a49-4b23-9372-eb769098909b" testId="411506ff-0f2a-312f-ff9c-5addffbe5049" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;sourceIp&quot;, value: &quot;\&quot;invalid\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000199" startTime="2026-10-05T16:13:30.4856175+02:00" endTime="2026-10-05T16:13:30.4856757+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fca0886a-8a49-4b23-9372-eb769098909b" />
+    <UnitTestResult executionId="9408dd7e-3c5c-4c76-866f-1aa72c6617fe" testId="7aeffeb9-92c0-97a1-63f7-502ed527431f" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;vlanId&quot;, value: &quot;4095&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000224" startTime="2026-10-05T16:13:30.4640461+02:00" endTime="2026-10-05T16:13:30.4640692+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9408dd7e-3c5c-4c76-866f-1aa72c6617fe" />
+    <UnitTestResult executionId="be2e8117-028d-435d-a07d-d995c8309970" testId="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;partial&quot;, value: &quot;1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0001890" startTime="2026-10-05T16:13:30.4631669+02:00" endTime="2026-10-05T16:13:30.4632249+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="be2e8117-028d-435d-a07d-d995c8309970" />
+    <UnitTestResult executionId="e383132d-9545-4edf-a771-e7af2f079162" testId="e47298e9-a87d-c890-5aa5-cc49d6c958a2" testName="Monitoring.Tests.MigrationTests.MigrateCreatesInboxSchemaAndCanBeRepeated" computerName="DESKTOP-OCQ1IM7" duration="00:00:01.7768656" startTime="2026-10-05T16:13:35.4096951+02:00" endTime="2026-10-05T16:13:37.1867466+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e383132d-9545-4edf-a771-e7af2f079162" />
+    <UnitTestResult executionId="5d122819-db8c-4a26-b906-b0a3218ed440" testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" testName="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" computerName="DESKTOP-OCQ1IM7" duration="00:00:01.7120764" startTime="2026-10-05T16:13:37.4700031+02:00" endTime="2026-10-05T16:13:39.1822414+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d122819-db8c-4a26-b906-b0a3218ed440" />
+    <UnitTestResult executionId="82dcf84a-55d0-4165-80ff-8999f481ff49" testId="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386" testName="Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" computerName="DESKTOP-OCQ1IM7" duration="00:00:01.4162923" startTime="2026-10-05T16:13:35.1283014+02:00" endTime="2026-10-05T16:13:36.5445442+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="82dcf84a-55d0-4165-80ff-8999f481ff49" />
+    <UnitTestResult executionId="27b1c7bf-1f23-4efe-8161-ab0bd118ad58" testId="4804bbd3-4419-b902-4d2d-35bdf3509cff" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;inferred&quot;, value: &quot;false&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000218" startTime="2026-10-05T16:13:30.4639152+02:00" endTime="2026-10-05T16:13:30.4639395+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27b1c7bf-1f23-4efe-8161-ab0bd118ad58" />
+    <UnitTestResult executionId="ac63220c-c4fb-40bb-abb5-cb5afd1ba081" testId="0d1c103b-7763-14f4-9487-90db97deebea" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;extra&quot;, value: &quot;true&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000185" startTime="2026-10-05T16:13:30.4858772+02:00" endTime="2026-10-05T16:13:30.4859056+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac63220c-c4fb-40bb-abb5-cb5afd1ba081" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;extra&quot;, value: &quot;true&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0d1c103b-7763-14f4-9487-90db97deebea">
+      <Execution id="ac63220c-c4fb-40bb-abb5-cb5afd1ba081" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="2c05a5db-dd17-c32b-1689-81b20bfc098a">
+      <Execution id="321ef063-ccdd-4835-bba4-b32cb4245c42" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionProjectionTests.ConflictingProjectionRaisesInvariantWithoutOverwritingOrMarking" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="d07fd2ba-66de-c7c6-73ae-1f2cf27d03f3">
+      <Execution id="80c0d099-ae78-42ff-b934-bb9e682895fb" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionProjectionTests" name="ConflictingProjectionRaisesInvariantWithoutOverwritingOrMarking" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;partial&quot;, value: &quot;1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8">
+      <Execution id="be2e8117-028d-435d-a07d-d995c8309970" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;endedAt&quot;, value: &quot;\&quot;2026-09-29T11:00:00Z\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0ed523fc-db9c-11b9-e663-6ff8cde1cedb">
+      <Execution id="ee2e0b43-a8c5-45a2-93bc-7ac3df2763f4" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="ccba536a-dbf0-af61-1891-a39c93d465eb">
+      <Execution id="e1ac8c3f-6cd2-4d8d-9628-f225acdfbd53" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="CapturedContractNormalizesMetadataWithoutChangingAcceptedData" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386">
+      <Execution id="82dcf84a-55d0-4165-80ff-8999f481ff49" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;closeReason&quot;, value: &quot;\&quot;unknown\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="013ad838-d955-7f53-0481-45470e42d584">
+      <Execution id="801287e4-a0cd-4a47-94f7-212607282388" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;inferred&quot;, value: &quot;false&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="4804bbd3-4419-b902-4d2d-35bdf3509cff">
+      <Execution id="27b1c7bf-1f23-4efe-8161-ab0bd118ad58" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.MigrationTests.MigrateCreatesInboxSchemaAndCanBeRepeated" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="e47298e9-a87d-c890-5aa5-cc49d6c958a2">
+      <Execution id="e383132d-9545-4edf-a771-e7af2f079162" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.MigrationTests" name="MigrateCreatesInboxSchemaAndCanBeRepeated" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="87a08418-62f5-43ba-9174-11a0d9ae848d">
+      <Execution id="60330963-af36-49b4-b86f-c185f941f699" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;version&quot;, value: &quot;2&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586">
+      <Execution id="a4992d6d-ad6e-4bf4-bf62-1378778a0521" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;vlanId&quot;, value: &quot;4095&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="7aeffeb9-92c0-97a1-63f7-502ed527431f">
+      <Execution id="9408dd7e-3c5c-4c76-866f-1aa72c6617fe" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionProjectionTests.ConcurrentWorkersAndSkippedLockedEventRecoverOnNextPass" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="c37fd6ae-0973-cb93-8edb-be47b23abc87">
+      <Execution id="d9a2eff9-52a2-4938-8459-2bacc54b386f" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionProjectionTests" name="ConcurrentWorkersAndSkippedLockedEventRecoverOnNextPass" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;startedAt&quot;, value: &quot;\&quot;2026-09-29T12:00:00.1001Z\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911">
+      <Execution id="66a87891-207c-4a13-a382-eeeab928ec19" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;byteCount&quot;, value: &quot;1.1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="b70b65d9-1c0e-445f-c2cc-8582aad64928">
+      <Execution id="c82bebfc-bada-4387-a760-f6c0cbb1d591" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;packetCount&quot;, value: &quot;-1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="c07b0354-ffcb-d61f-db61-a4640fca8814">
+      <Execution id="6b03d52d-7310-451b-bb8c-93f263eab56f" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;sourceIp&quot;, value: &quot;\&quot;invalid\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="411506ff-0f2a-312f-ff9c-5addffbe5049">
+      <Execution id="fca0886a-8a49-4b23-9372-eb769098909b" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionProjectionTests.InitialProjectionAndEqualReplayPreserveOneSessionPerOrigin" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="6280c412-ef23-0f88-df69-e4c19613e54d">
+      <Execution id="e994ff54-99ab-4670-ad62-634e47a20855" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionProjectionTests" name="InitialProjectionAndEqualReplayPreserveOneSessionPerOrigin" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionSchemaTests.UpgradeS02PreservesPendingDataAndAddsCompositeProjectionAndPartialIndex" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="881caa0d-5b3f-05c8-a47a-3e9176970017">
+      <Execution id="723f34e8-7675-4bd7-8eb0-35ac8a2ed093" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionSchemaTests" name="UpgradeS02PreservesPendingDataAndAddsCompositeProjectionAndPartialIndex" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionProjectionTests.MarkingFailureRollsBackInsertAndRestartRecoversPending" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="d35ed068-1256-1844-751a-d1e7962ac77a">
+      <Execution id="b4a0c066-57e3-4547-a375-f3196006da17" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionProjectionTests" name="MarkingFailureRollsBackInsertAndRestartRecoversPending" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa">
+      <Execution id="a6f65182-3ff9-4ebe-8551-331bebf1a9d1" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="HistoricalSyntheticHasNoInventedCaptureMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="df815045-32e7-73bd-1fdc-9519ad7d9ffc">
+      <Execution id="5d122819-db8c-4a26-b906-b0a3218ed440" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.SessionProjectionTests.MoreThanOnePageOfInvalidUnknownAndValidEventsDoesNotStarveLaterValidEvents" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="60a2524e-9d97-2f0f-e3f8-4a2de55b8b20">
+      <Execution id="e1fda346-6bbb-475c-8541-6a784de04c6d" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.SessionProjectionTests" name="MoreThanOnePageOfInvalidUnknownAndValidEventsDoesNotStarveLaterValidEvents" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="881caa0d-5b3f-05c8-a47a-3e9176970017" executionId="723f34e8-7675-4bd7-8eb0-35ac8a2ed093" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c07b0354-ffcb-d61f-db61-a4640fca8814" executionId="6b03d52d-7310-451b-bb8c-93f263eab56f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="013ad838-d955-7f53-0481-45470e42d584" executionId="801287e4-a0cd-4a47-94f7-212607282388" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60a2524e-9d97-2f0f-e3f8-4a2de55b8b20" executionId="e1fda346-6bbb-475c-8541-6a784de04c6d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa" executionId="a6f65182-3ff9-4ebe-8551-331bebf1a9d1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586" executionId="a4992d6d-ad6e-4bf4-bf62-1378778a0521" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c37fd6ae-0973-cb93-8edb-be47b23abc87" executionId="d9a2eff9-52a2-4938-8459-2bacc54b386f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911" executionId="66a87891-207c-4a13-a382-eeeab928ec19" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b70b65d9-1c0e-445f-c2cc-8582aad64928" executionId="c82bebfc-bada-4387-a760-f6c0cbb1d591" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ed523fc-db9c-11b9-e663-6ff8cde1cedb" executionId="ee2e0b43-a8c5-45a2-93bc-7ac3df2763f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d35ed068-1256-1844-751a-d1e7962ac77a" executionId="b4a0c066-57e3-4547-a375-f3196006da17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6280c412-ef23-0f88-df69-e4c19613e54d" executionId="e994ff54-99ab-4670-ad62-634e47a20855" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d07fd2ba-66de-c7c6-73ae-1f2cf27d03f3" executionId="80c0d099-ae78-42ff-b934-bb9e682895fb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2c05a5db-dd17-c32b-1689-81b20bfc098a" executionId="321ef063-ccdd-4835-bba4-b32cb4245c42" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ccba536a-dbf0-af61-1891-a39c93d465eb" executionId="e1ac8c3f-6cd2-4d8d-9628-f225acdfbd53" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="87a08418-62f5-43ba-9174-11a0d9ae848d" executionId="60330963-af36-49b4-b86f-c185f941f699" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="411506ff-0f2a-312f-ff9c-5addffbe5049" executionId="fca0886a-8a49-4b23-9372-eb769098909b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7aeffeb9-92c0-97a1-63f7-502ed527431f" executionId="9408dd7e-3c5c-4c76-866f-1aa72c6617fe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8" executionId="be2e8117-028d-435d-a07d-d995c8309970" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e47298e9-a87d-c890-5aa5-cc49d6c958a2" executionId="e383132d-9545-4edf-a771-e7af2f079162" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" executionId="5d122819-db8c-4a26-b906-b0a3218ed440" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386" executionId="82dcf84a-55d0-4165-80ff-8999f481ff49" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4804bbd3-4419-b902-4d2d-35bdf3509cff" executionId="27b1c7bf-1f23-4efe-8161-ab0bd118ad58" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0d1c103b-7763-14f4-9487-90db97deebea" executionId="ac63220c-c4fb-40bb-abb5-cb5afd1ba081" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="24" executed="24" passed="24" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.21]   Discovering: Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.26]   Discovered:  Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.28]   Starting:    Monitoring.Tests&#xD;
+[testcontainers.org 00:00:00.10] Connected to Docker:&#xD;
+  Host: tcp://127.0.0.1:2375/&#xD;
+  Server Version: 29.8.2&#xD;
+  Kernel Version: 5.15.167.4-microsoft-standard-WSL2&#xD;
+  API Version: 1.56&#xD;
+  Operating System: Ubuntu 24.04.4 LTS&#xD;
+  Total Memory: 3.83 GB&#xD;
+[testcontainers.org 00:00:00.26] Docker container 48f982e53d19 created&#xD;
+[testcontainers.org 00:00:00.29] Start Docker container 48f982e53d19&#xD;
+[testcontainers.org 00:00:00.70] Wait for Docker container 48f982e53d19 to complete readiness checks&#xD;
+[testcontainers.org 00:00:01.73] Docker container 48f982e53d19 ready&#xD;
+[testcontainers.org 00:00:01.85] Docker container 5bf938da32f6 created&#xD;
+[testcontainers.org 00:00:01.85] Start Docker container 5bf938da32f6&#xD;
+[testcontainers.org 00:00:01.85] Docker container 6e6a6e979349 created&#xD;
+[testcontainers.org 00:00:01.86] Start Docker container 6e6a6e979349&#xD;
+[testcontainers.org 00:00:01.86] Docker container c55572464a73 created&#xD;
+[testcontainers.org 00:00:01.86] Start Docker container c55572464a73&#xD;
+[testcontainers.org 00:00:01.86] Docker container 4b43dbff2ec8 created&#xD;
+[testcontainers.org 00:00:01.86] Start Docker container 4b43dbff2ec8&#xD;
+[testcontainers.org 00:00:02.40] Wait for Docker container 6e6a6e979349 to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.41] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 6e6a6e979349&#xD;
+[testcontainers.org 00:00:02.59] Wait for Docker container c55572464a73 to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.59] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container c55572464a73&#xD;
+[testcontainers.org 00:00:02.77] Wait for Docker container 4b43dbff2ec8 to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.77] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 4b43dbff2ec8&#xD;
+[testcontainers.org 00:00:02.97] Wait for Docker container 5bf938da32f6 to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.98] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 5bf938da32f6&#xD;
+[testcontainers.org 00:00:03.46] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 6e6a6e979349&#xD;
+[testcontainers.org 00:00:03.64] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container c55572464a73&#xD;
+[testcontainers.org 00:00:03.81] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 4b43dbff2ec8&#xD;
+[testcontainers.org 00:00:04.03] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 5bf938da32f6&#xD;
+[testcontainers.org 00:00:04.57] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 6e6a6e979349&#xD;
+[testcontainers.org 00:00:04.61] Docker container 6e6a6e979349 ready&#xD;
+[testcontainers.org 00:00:04.69] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container c55572464a73&#xD;
+[testcontainers.org 00:00:04.73] Docker container c55572464a73 ready&#xD;
+[testcontainers.org 00:00:04.85] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 4b43dbff2ec8&#xD;
+[testcontainers.org 00:00:04.89] Docker container 4b43dbff2ec8 ready&#xD;
+[testcontainers.org 00:00:05.08] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 5bf938da32f6&#xD;
+[testcontainers.org 00:00:05.13] Docker container 5bf938da32f6 ready&#xD;
+[testcontainers.org 00:00:05.93] Delete Docker container 5bf938da32f6&#xD;
+[testcontainers.org 00:00:06.67] Delete Docker container 4b43dbff2ec8&#xD;
+[testcontainers.org 00:00:08.67] Delete Docker container 6e6a6e979349&#xD;
+[testcontainers.org 00:00:10.84] Delete Docker container c55572464a73&#xD;
+[xUnit.net 00:00:11.85]   Finished:    Monitoring.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

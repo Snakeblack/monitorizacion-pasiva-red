@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="543161b5-6007-4d86-a0a4-8f4907ba40a7" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:50:13" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:50:13.0554548+02:00" queuing="2026-10-05T16:50:13.0554549+02:00" start="2026-10-05T16:50:12.3163874+02:00" finish="2026-10-05T16:50:13.0601824+02:00" />
+  <TestSettings name="default" id="40673632-c750-4250-9fad-bbf1228efe7d">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_50_13" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a19c6e94-ad73-4676-ae62-7c455f08847f" testId="e9a765e7-b323-9083-d258-73fa4e9f1ff1" testName="Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0044943" startTime="2026-10-05T16:50:12.9778728+02:00" endTime="2026-10-05T16:50:12.9779160+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a19c6e94-ad73-4676-ae62-7c455f08847f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 90&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 89&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2e97b2bc-3688-4e79-853b-3ba1cf35151a" testId="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0" testName="Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0010232" startTime="2026-10-05T16:50:12.9785707+02:00" endTime="2026-10-05T16:50:12.9786200+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2e97b2bc-3688-4e79-853b-3ba1cf35151a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 2&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 46&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5e779b35-90e7-4cb7-b81d-97c496a9d8d6" testId="45bb19ce-b44a-bb7c-a990-883a45f59df4" testName="Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.1428401" startTime="2026-10-05T16:50:12.8138090+02:00" endTime="2026-10-05T16:50:12.9655967+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5e779b35-90e7-4cb7-b81d-97c496a9d8d6">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 24&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bf58d1b6-6a5f-47a9-ab1e-25d2328ac21c" testId="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb" testName="Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0010171" startTime="2026-10-05T16:50:12.9771238+02:00" endTime="2026-10-05T16:50:12.9771889+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bf58d1b6-6a5f-47a9-ab1e-25d2328ac21c">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 61&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a0e662c7-ec33-47ec-a888-e97f68128229" testId="b9aee996-ba03-96eb-209a-ed9d199a55c6" testName="Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0022632" startTime="2026-10-05T16:50:12.9789897+02:00" endTime="2026-10-05T16:50:12.9790290+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a0e662c7-ec33-47ec-a888-e97f68128229">
+      <Output>
+        <ErrorInfo>
+          <Message>System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 75&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="19219480-ff0c-4ada-9c79-e0e545e21c69" testId="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1" testName="Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0008340" startTime="2026-10-05T16:50:12.9782249+02:00" endTime="2026-10-05T16:50:12.9782654+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="19219480-ff0c-4ada-9c79-e0e545e21c69">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 2250000&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs:line 97&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="e9a765e7-b323-9083-d258-73fa4e9f1ff1">
+      <Execution id="a19c6e94-ad73-4676-ae62-7c455f08847f" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0">
+      <Execution id="2e97b2bc-3688-4e79-853b-3ba1cf35151a" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="FullSpoolEvictsOldestAndLossCounterSurvivesRestart" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="45bb19ce-b44a-bb7c-a990-883a45f59df4">
+      <Execution id="5e779b35-90e7-4cb7-b81d-97c496a9d8d6" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb">
+      <Execution id="bf58d1b6-6a5f-47a9-ab1e-25d2328ac21c" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="b9aee996-ba03-96eb-209a-ed9d199a55c6">
+      <Execution id="a0e662c7-ec33-47ec-a888-e97f68128229" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1">
+      <Execution id="19219480-ff0c-4ada-9c79-e0e545e21c69" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.SpoolTests" name="SizingIncludesBurstAndLaboratoryMargin" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="e9a765e7-b323-9083-d258-73fa4e9f1ff1" executionId="a19c6e94-ad73-4676-ae62-7c455f08847f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e0fc4e3-09ee-e149-0ac5-32a775dd01c0" executionId="2e97b2bc-3688-4e79-853b-3ba1cf35151a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="45bb19ce-b44a-bb7c-a990-883a45f59df4" executionId="5e779b35-90e7-4cb7-b81d-97c496a9d8d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1d8db646-2ad1-3ecb-5bdf-81ae5d1adfdb" executionId="bf58d1b6-6a5f-47a9-ab1e-25d2328ac21c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9aee996-ba03-96eb-209a-ed9d199a55c6" executionId="a0e662c7-ec33-47ec-a888-e97f68128229" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1cf5eba9-2973-ddd0-f0e3-82424e5fa3e1" executionId="19219480-ff0c-4ada-9c79-e0e545e21c69" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="6" executed="6" passed="0" failed="6" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.06]   Discovering: Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.10]   Discovered:  Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.12]   Starting:    Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.29]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.29]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.29]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(24,0): at Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds()&#xD;
+[xUnit.net 00:00:00.29]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.29]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(61,0): at Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch()&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.30]       Expected: 90&#xD;
+[xUnit.net 00:00:00.30]       Actual:   0&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(89,0): at Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded()&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.30]       Expected: 2250000&#xD;
+[xUnit.net 00:00:00.30]       Actual:   0&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(97,0): at Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin()&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.30]       Expected: 2&#xD;
+[xUnit.net 00:00:00.30]       Actual:   0&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(46,0): at Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart()&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]       System.NullReferenceException : Object reference not set to an instance of an object.&#xD;
+[xUnit.net 00:00:00.30]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.30]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\SpoolTests.cs(75,0): at Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint()&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.30]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.30]   Finished:    Monitoring.Probe.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9686897+02:00">
+        <Text>[xUnit.net 00:00:00.29]     Monitoring.Probe.Tests.SpoolTests.DurableBatchAndCheckpointSurviveRestartWithExactBytesAndIds [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9773344+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.SpoolTests.AckCannotDeleteBatchWithDifferentBytesAndOnlyDeletesSentBatch [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9780382+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.SpoolTests.PhysicalBudgetIncludesWalAndRepeatedEvictionRemainsBounded [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9784010+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.SpoolTests.SizingIncludesBurstAndLaboratoryMargin [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9787399+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.SpoolTests.FullSpoolEvictsOldestAndLossCounterSurvivesRestart [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:50:12.9791568+02:00">
+        <Text>[xUnit.net 00:00:00.30]     Monitoring.Probe.Tests.SpoolTests.BatchLimitAndInvalidContractDoNotCommitPartialCheckpoint [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

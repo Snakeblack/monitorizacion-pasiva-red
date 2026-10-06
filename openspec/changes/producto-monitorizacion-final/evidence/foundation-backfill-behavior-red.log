@@ -1,0 +1,28 @@
+  Monitoring.Domain -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Domain\bin\Debug\net10.0\Monitoring.Domain.dll
+  Monitoring.Persistence -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Persistence\bin\Debug\net10.0\Monitoring.Persistence.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Host\bin\Debug\net10.0\Monitoring.Host.dll
+  Monitoring.Tests -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll
+Serie de pruebas para C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll (.NETCoreApp,Version=v10.0)
+1 archivos de prueba en total coincidieron con el patrón especificado.
+[xUnit.net 00:00:05.90]     Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [FAIL]
+  Con error Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [2 s]
+  Mensaje de error:
+   Npgsql.PostgresException : 42P01: relation "monitoring.session_metadata" does not exist
+
+POSITION: 22
+  Seguimiento de la pila:
+     at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 69
+--- End of stack trace from previous location ---
+Archivo de resultados: C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\openspec\changes\producto-monitorizacion-final\evidence\foundation-backfill-behavior-red.trx
+
+Con error! - Con error:     1, Superado:     0, Omitido:     0, Total:     1, Duración: 2 s - Monitoring.Tests.dll (net10.0)

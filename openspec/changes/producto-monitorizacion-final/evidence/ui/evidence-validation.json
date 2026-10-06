@@ -1,0 +1,8 @@
+{
+  "valid": true,
+  "authenticity": "content-addressed",
+  "candidate": "sha256:1719250843f99948a5e8d65175bc0902d7db7e22a1ebeda93a9e058895d6a81a",
+  "cycles": 8,
+  "snapshot_files": 65,
+  "limits": "Historical content and provenance binding authenticated; no live runtime execution receipt or real API/E2E claim."
+}

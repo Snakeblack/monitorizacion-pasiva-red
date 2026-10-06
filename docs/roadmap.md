@@ -8,7 +8,7 @@ La primera entrega debe operar en varias sedes, con continuidad, seguridad y cap
 |---|---|
 | [Brief](product/brief.md) y [alcance F-01–F-09](product/functional-scope.md) | Valor, funciones, matriz de acceso y exclusiones. |
 | [ADR-013](architecture/decisions/ADR-013.md), [ADR-014](architecture/decisions/ADR-014.md), [modelo S00](architecture/modelo-capacidad-s00.md) y [brechas G-01–G-09](roadmap-gaps.md) | Objetivos de aceptación, decisión de diseño por etapas, hipótesis de capacidad y evidencias pendientes. ADR-013 sustituye las cifras de piloto de ADR-012. |
-| [ADR-010](architecture/decisions/ADR-010.md) y [ADR-011](architecture/decisions/ADR-011.md) | Piezas candidatas, alternativas y observabilidad con responsable operativo. La decisión S00 adopta PostgreSQL provisionalmente. |
+| [ADR-010](architecture/decisions/ADR-010.md) y [ADR-011](architecture/decisions/ADR-011.md) | Historia de alternativas y observabilidad; [ADR-015–019](architecture/decisions/README.md) adoptan autoridad/outbox/búsqueda, identidad y sonda. |
 | [ADR-012](architecture/decisions/ADR-012.md) | Reglas de sesión, identidad, roles y transporte que no contradicen ADR-013; sus límites de piloto son históricos. |
 | [Base técnica](architecture/technical-baseline.md) y [flujo](architecture/flujo-completo.md) | Responsabilidades, enlaces, fallos y condiciones de evolución. |
 
@@ -22,6 +22,7 @@ Los [slices de desarrollo](development/slices.md) son entregas pequeñas y revis
 |---|---|---|---|
 | 0 | [S00](development/slices.md#s00) | Modelo reproducible con hipótesis, rangos, cálculos de volumen y sensibilidad; decisión arquitectónica provisional y riesgos registrados. | S01 puede comenzar con el almacén candidato y criterios explícitos de revisión. La capacidad, los costes y la recuperación se acreditan con ensayos posteriores. |
 | 1 | [S01–S04](development/slices.md#s01) | Base reproducible y ruta vertical con datos sintéticos: ingestión → bandeja → worker → API → Angular. | Contrato y almacenamiento conforme a la decisión provisional S00; CI reproduce pruebas. |
+| 1b | K01/K04/K02/K03/S09 | Decisiones adoptadas, stack reproducible, transacción canónica/outbox, CDC/sink y consulta Angular. | Demo buscable probado; no acredita capacidad S17 ni identidad productiva S12/S13. |
 | 2 | [S05–S08](development/slices.md#s05) | Captura, sesiones inferidas, spool por sonda, reenvío, idempotencia y cuarentena. | Descartes y duplicados reconciliables; desconexión y ráfaga medidas. |
 | 3 | [S09–S11](development/slices.md#s09) | Consultas selectivas de 30 días, candidatos e inventario manual auditado. | Mezcla de consultas y aislamiento de sede/sonda comprobados. |
 | 4 | [S12–S16](development/slices.md#s12) | OIDC/RBAC, TLS/mTLS, señales y guardia, retención, alta disponibilidad, copias y PITR. | Políticas de datos y matriz ratificadas; conmutación y restauración ensayadas. |

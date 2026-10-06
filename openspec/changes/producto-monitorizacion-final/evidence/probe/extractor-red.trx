@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f6f566a7-7922-4a1f-9d68-14135f96ea7c" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:57:47" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:57:47.8175842+02:00" queuing="2026-10-05T16:57:47.8175843+02:00" start="2026-10-05T16:57:47.0578927+02:00" finish="2026-10-05T16:57:47.8226002+02:00" />
+  <TestSettings name="default" id="696ec616-0115-4072-be30-e4dd2a8db218">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_57_47" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b944fc2f-afb1-4fa3-a99f-2142f7384cbd" testId="7aa3f3a3-2956-563e-8362-7b360f92bc46" testName="Monitoring.Probe.Tests.ExtractorTests.RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0754922" startTime="2026-10-05T16:57:47.6598099+02:00" endTime="2026-10-05T16:57:47.7243765+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b944fc2f-afb1-4fa3-a99f-2142f7384cbd">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Empty() Failure: Collection was not empty&#xD;
+Collection: [FlowState { EventId = 1000fc613fee47fb9de2a39d71b23de3, Scope = ProbeScope { SiteId = s, SensorId = p }, First = PacketMetadata { Timestamp = 05/10/2026 10:00:00 +00:00, Length = 64, SourceIp = 10.0.0.1, DestinationIp = 10.0.0.2, SourcePort = 12345, DestinationPort = 443, Protocol = TCP, VlanId = , Syn = False, Ack = False, SourceMac = , DestinationMac =  }, Last = 05/10/2026 10:00:00 +00:00, PacketCount = 1, ByteCount = 64, SawReverse = False, SawSyn = False, SawSynAck = False }]</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.ExtractorTests.RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs:line 51&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e6ae1aca-ff2c-49c3-88db-374fc3a1ba62" testId="26109e9d-ba67-7b9a-d7a7-bdb200a3bb50" testName="Monitoring.Probe.Tests.ExtractorTests.LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0060830" startTime="2026-10-05T16:57:47.6319832+02:00" endTime="2026-10-05T16:57:47.6486612+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6ae1aca-ff2c-49c3-88db-374fc3a1ba62">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Contains() Failure: Item not found in collection&#xD;
+Collection: []&#xD;
+Not found:  "-r"</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.ExtractorTests.LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs:line 15&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="27433713-cad8-4858-9fd4-6d156f7054f3" testId="be8b18ba-61fc-64bc-1943-9942e941d468" testName="Monitoring.Probe.Tests.ExtractorTests.InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0139293" startTime="2026-10-05T16:57:47.7251276+02:00" endTime="2026-10-05T16:57:47.7389523+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27433713-cad8-4858-9fd4-6d156f7054f3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 3&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Probe.Tests.ExtractorTests.InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs:line 31&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Probe.Tests.ExtractorTests.LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="26109e9d-ba67-7b9a-d7a7-bdb200a3bb50">
+      <Execution id="e6ae1aca-ff2c-49c3-88db-374fc3a1ba62" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.ExtractorTests" name="LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.ExtractorTests.InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="be8b18ba-61fc-64bc-1943-9942e941d468">
+      <Execution id="27433713-cad8-4858-9fd4-6d156f7054f3" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.ExtractorTests" name="InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Probe.Tests.ExtractorTests.RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.probe.tests\bin\debug\net10.0\monitoring.probe.tests.dll" id="7aa3f3a3-2956-563e-8362-7b360f92bc46">
+      <Execution id="b944fc2f-afb1-4fa3-a99f-2142f7384cbd" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\bin\Debug\net10.0\Monitoring.Probe.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Probe.Tests.ExtractorTests" name="RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7aa3f3a3-2956-563e-8362-7b360f92bc46" executionId="b944fc2f-afb1-4fa3-a99f-2142f7384cbd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="26109e9d-ba67-7b9a-d7a7-bdb200a3bb50" executionId="e6ae1aca-ff2c-49c3-88db-374fc3a1ba62" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be8b18ba-61fc-64bc-1943-9942e941d468" executionId="27433713-cad8-4858-9fd4-6d156f7054f3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="3" executed="3" passed="0" failed="3" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.12]   Discovering: Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.15]   Discovered:  Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.17]   Starting:    Monitoring.Probe.Tests&#xD;
+[xUnit.net 00:00:00.20]       Assert.Contains() Failure: Item not found in collection&#xD;
+[xUnit.net 00:00:00.20]       Collection: []&#xD;
+[xUnit.net 00:00:00.20]       Not found:  "-r"&#xD;
+[xUnit.net 00:00:00.21]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.21]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs(15,0): at Monitoring.Probe.Tests.ExtractorTests.LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap()&#xD;
+[xUnit.net 00:00:00.21]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.21]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.28]       Assert.Empty() Failure: Collection was not empty&#xD;
+[xUnit.net 00:00:00.28]       Collection: [FlowState { EventId = 1000fc613fee47fb9de2a39d71b23de3, Scope = ProbeScope { SiteId = s, SensorId = p }, First = PacketMetadata { Timestamp = 05/10/2026 10:00:00 +00:00, Length = 64, SourceIp = 10.0.0.1, DestinationIp = 10.0.0.2, SourcePort = 12345, DestinationPort = 443, Protocol = TCP, VlanId = , Syn = False, Ack = False, SourceMac = , DestinationMac =  }, Last = 05/10/2026 10:00:00 +00:00, PacketCount = 1, ByteCount = 64, SawReverse = False, SawSyn = False, SawSynAck = False }]&#xD;
+[xUnit.net 00:00:00.28]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.28]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs(51,0): at Monitoring.Probe.Tests.ExtractorTests.RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit()&#xD;
+[xUnit.net 00:00:00.28]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.28]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.29]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:00.29]       Expected: 3&#xD;
+[xUnit.net 00:00:00.29]       Actual:   0&#xD;
+[xUnit.net 00:00:00.29]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.29]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Probe.Tests\ExtractorTests.cs(31,0): at Monitoring.Probe.Tests.ExtractorTests.InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial()&#xD;
+[xUnit.net 00:00:00.29]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:00.30]   Finished:    Monitoring.Probe.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:57:47.6508999+02:00">
+        <Text>[xUnit.net 00:00:00.20]     Monitoring.Probe.Tests.ExtractorTests.LiveCapturePipesOnlyToStdoutAndTsharkPersistsNoPcap [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:57:47.7246430+02:00">
+        <Text>[xUnit.net 00:00:00.28]     Monitoring.Probe.Tests.ExtractorTests.RecoveryClosesDurableCheckpointWithSameIdentityInSingleSpoolCommit [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:57:47.7391180+02:00">
+        <Text>[xUnit.net 00:00:00.29]     Monitoring.Probe.Tests.ExtractorTests.InvalidLineDoesNotStopValidCaptureAndUnexpectedExitClosesPartial [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

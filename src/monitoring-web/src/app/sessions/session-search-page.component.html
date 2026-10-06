@@ -1,0 +1,164 @@
+<section class="sessions-page" aria-labelledby="sessions-title">
+  <header class="view-header">
+    <h1 id="sessions-title">Sesiones iniciadas</h1>
+    <button type="button" (click)="recent()">Últimas 24 h</button>
+  </header>
+  <form
+    (submit)="search($event)"
+    (input)="filtersChanged()"
+    (change)="filtersChanged()"
+    novalidate
+    aria-describedby="query-help"
+  >
+    <div class="filter-grid">
+      <label
+        >Desde (UTC)<input
+          id="from"
+          type="text"
+          [formField]="filters.from"
+          aria-describedby="query-help query-validation"
+          spellcheck="false"
+      /></label>
+      <label
+        >Hasta (UTC, excluido)<input
+          id="to"
+          type="text"
+          [formField]="filters.to"
+          aria-describedby="query-help query-validation"
+          spellcheck="false"
+      /></label>
+      <label>Sede exacta<input id="siteId" type="text" [formField]="filters.siteId" /></label>
+      <label>Sonda exacta<input id="sensorId" type="text" [formField]="filters.sensorId" /></label>
+      <label
+        >IP de origen<input
+          id="sourceIp"
+          type="text"
+          [formField]="filters.sourceIp"
+          spellcheck="false"
+      /></label>
+      <label
+        >IP de destino<input
+          id="destinationIp"
+          type="text"
+          [formField]="filters.destinationIp"
+          spellcheck="false"
+      /></label>
+      <label
+        >Protocolo<select id="protocol" [formField]="filters.protocol">
+          <option value="">Todos</option>
+          <option value="TCP">TCP</option>
+          <option value="UDP">UDP</option>
+        </select></label
+      >
+      <label
+        >Puerto de origen<input
+          id="sourcePort"
+          type="text"
+          inputmode="numeric"
+          [formField]="filters.sourcePort"
+      /></label>
+      <label
+        >Puerto de destino<input
+          id="destinationPort"
+          type="text"
+          inputmode="numeric"
+          [formField]="filters.destinationPort"
+      /></label>
+      <label
+        >Sesiones por página<input id="pageSize" type="number" [formField]="filters.pageSize"
+      /></label>
+    </div>
+    <p id="query-help" class="supporting-text">
+      Fechas UTC con Z (por ejemplo, 2026-10-05T12:00:00Z). Inicio incluido y fin excluido, hasta 30
+      días consultables. Para más de 24 h: sede, sonda y una IP. Todos los filtros son exactos y se
+      combinan. Los selectores restringen tus permisos.
+    </p>
+    <p id="query-validation" [attr.role]="validation() ? 'alert' : null">{{ validation() }}</p>
+    <button type="submit" class="primary" [disabled]="loading()">Buscar sesiones</button>
+  </form>
+
+  <div class="results" [attr.aria-busy]="loading()">
+    @if (loading()) {
+      <p role="status">Consultando sesiones</p>
+    } @else if (error()) {
+      <p role="alert">{{ error() }}</p>
+      @if (expired()) {
+        <button type="button" (click)="search()">Reiniciar consulta</button>
+      } @else {
+        <button type="button" (click)="search()">Reintentar consulta</button>
+      }
+    } @else if (page(); as current) {
+      <p role="status">
+        {{
+          current.items.length
+            ? 'Sesiones en ámbito · ' + current.items.length + ' en esta página'
+            : 'Sin coincidencias en este intervalo y ámbito'
+        }}
+      </p>
+      <p class="supporting-text">{{ freshnessText() }}</p>
+      @if (current.freshness.state !== 'current') {
+        <p class="supporting-text">
+          La proyección puede estar por detrás de la autoridad. La ausencia en el listado no
+          confirma pérdida.
+        </p>
+      }
+      @if (current.items.length) {
+        <div class="table-scroll" role="region" aria-label="Resultados de sesiones" tabindex="0">
+          <table>
+            <caption class="visually-hidden">
+              Sesiones iniciadas en el intervalo consultado
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Sesión / ámbito</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Destino</th>
+                <th scope="col">Protocolo</th>
+                <th scope="col">Inicio / fin UTC</th>
+                <th scope="col">Procedencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (session of current.items; track identityKey(session)) {
+                <tr>
+                  <td>
+                    <a
+                      [routerLink]="['/sessions', session.eventId]"
+                      [queryParams]="{ siteId: session.siteId, sensorId: session.sensorId }"
+                      [attr.aria-label]="'Abrir detalle ' + session.eventId"
+                      >{{ session.eventId }}</a
+                    ><span class="secondary">{{ session.siteId }} / {{ session.sensorId }}</span>
+                  </td>
+                  <td>
+                    <span>{{ session.sourceIp }}</span
+                    ><span class="secondary">Puerto {{ session.sourcePort }}</span>
+                  </td>
+                  <td>
+                    <span>{{ session.destinationIp }}</span
+                    ><span class="secondary">Puerto {{ session.destinationPort }}</span>
+                  </td>
+                  <td>{{ session.protocol }}</td>
+                  <td>
+                    <time [attr.datetime]="session.startedAt">{{ session.startedAt }}</time
+                    ><time class="secondary" [attr.datetime]="session.endedAt">{{
+                      session.endedAt
+                    }}</time>
+                  </td>
+                  <td>{{ provenance(session) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    } @else {
+      <p role="status">Filtros modificados. Busca para iniciar una nueva consulta.</p>
+    }
+    <footer class="pagination">
+      <span class="supporting-text">Página acotada · snapshot de hasta 10 minutos</span>
+      <button type="button" (click)="next()" [disabled]="loading() || !page()?.nextCursor">
+        Página siguiente
+      </button>
+    </footer>
+  </div>
+</section>

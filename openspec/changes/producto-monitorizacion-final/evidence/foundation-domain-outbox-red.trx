@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="1e30417d-69c0-41cc-b736-736422c78698" name="sn4ke@DESKTOP-OCQ1IM7 2026-10-05 16:07:16" runUser="DESKTOP-OCQ1IM7\sn4ke" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-05T16:07:16.9260428+02:00" queuing="2026-10-05T16:07:16.9260429+02:00" start="2026-10-05T16:07:16.1567914+02:00" finish="2026-10-05T16:07:23.5941983+02:00" />
+  <TestSettings name="default" id="c57d4231-1108-481c-836f-f4dfccc3cc3b">
+    <Deployment runDeploymentRoot="sn4ke_DESKTOP-OCQ1IM7_2026-10-05_16_07_16" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="22775f8d-f038-45d2-be64-09b8359bba3a" testId="7aeffeb9-92c0-97a1-63f7-502ed527431f" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;vlanId&quot;, value: &quot;4095&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000151" startTime="2026-10-05T16:07:16.8827426+02:00" endTime="2026-10-05T16:07:16.8827657+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="22775f8d-f038-45d2-be64-09b8359bba3a" />
+    <UnitTestResult executionId="0cdd860c-757b-4a09-b593-3b22d3ea9cf6" testId="c07b0354-ffcb-d61f-db61-a4640fca8814" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;packetCount&quot;, value: &quot;-1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000119" startTime="2026-10-05T16:07:16.8828690+02:00" endTime="2026-10-05T16:07:16.8828920+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0cdd860c-757b-4a09-b593-3b22d3ea9cf6" />
+    <UnitTestResult executionId="6f7a3ed3-2e55-47aa-a5e9-ce52ee792a3a" testId="2c05a5db-dd17-c32b-1689-81b20bfc098a" testName="Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0018158" startTime="2026-10-05T16:07:16.9088041+02:00" endTime="2026-10-05T16:07:16.9088390+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6f7a3ed3-2e55-47aa-a5e9-ce52ee792a3a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+           ↓ (pos 0)&#xD;
+Expected: "c2l0ZQ.c2Vuc29y.ZXZlbnQ"&#xD;
+Actual:   ""</Message>
+          <StackTrace>   at Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs:line 63&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4d517ec7-caaf-4ace-9ab5-e8ec1c5037dc" testId="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;startedAt&quot;, value: &quot;\&quot;2026-09-29T12:00:00.1001Z\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000142" startTime="2026-10-05T16:07:16.8825430+02:00" endTime="2026-10-05T16:07:16.8825688+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4d517ec7-caaf-4ace-9ab5-e8ec1c5037dc" />
+    <UnitTestResult executionId="5ea4b98f-814a-46ed-be81-eee237287cc3" testId="4804bbd3-4419-b902-4d2d-35bdf3509cff" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;inferred&quot;, value: &quot;false&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000135" startTime="2026-10-05T16:07:16.8826108+02:00" endTime="2026-10-05T16:07:16.8826364+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5ea4b98f-814a-46ed-be81-eee237287cc3" />
+    <UnitTestResult executionId="74152794-c92c-4504-937e-a4056dcdae28" testId="b70b65d9-1c0e-445f-c2cc-8582aad64928" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;byteCount&quot;, value: &quot;1.1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000181" startTime="2026-10-05T16:07:16.8824598+02:00" endTime="2026-10-05T16:07:16.8824923+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="74152794-c92c-4504-937e-a4056dcdae28" />
+    <UnitTestResult executionId="f282f993-7a5e-4bb7-b957-8e27819bccfa" testId="411506ff-0f2a-312f-ff9c-5addffbe5049" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;sourceIp&quot;, value: &quot;\&quot;invalid\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000167" startTime="2026-10-05T16:07:16.9033333+02:00" endTime="2026-10-05T16:07:16.9033741+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f282f993-7a5e-4bb7-b957-8e27819bccfa" />
+    <UnitTestResult executionId="a54b5937-fd7a-4f67-9f8a-a32a82e2ad8b" testId="0ed523fc-db9c-11b9-e663-6ff8cde1cedb" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;endedAt&quot;, value: &quot;\&quot;2026-09-29T11:00:00Z\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0104601" startTime="2026-10-05T16:07:16.8585131+02:00" endTime="2026-10-05T16:07:16.8743301+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a54b5937-fd7a-4f67-9f8a-a32a82e2ad8b" />
+    <UnitTestResult executionId="522820cd-37d8-43ca-b932-80023772e44f" testId="0d1c103b-7763-14f4-9487-90db97deebea" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;extra&quot;, value: &quot;true&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000137" startTime="2026-10-05T16:07:16.9035451+02:00" endTime="2026-10-05T16:07:16.9035739+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="522820cd-37d8-43ca-b932-80023772e44f" />
+    <UnitTestResult executionId="e6ec4ebc-7e3e-413c-b3b6-7930447128e4" testId="013ad838-d955-7f53-0481-45470e42d584" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;closeReason&quot;, value: &quot;\&quot;unknown\&quot;&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000133" startTime="2026-10-05T16:07:16.8826771+02:00" endTime="2026-10-05T16:07:16.8827008+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6ec4ebc-7e3e-413c-b3b6-7930447128e4" />
+    <UnitTestResult executionId="3988980d-733b-4f9f-9644-3f159ed4f2b0" testId="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386" testName="Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" computerName="DESKTOP-OCQ1IM7" duration="00:00:01.7288148" startTime="2026-10-05T16:07:20.1952347+02:00" endTime="2026-10-05T16:07:21.9299002+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3988980d-733b-4f9f-9644-3f159ed4f2b0">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 42P01: relation "monitoring.session_metadata" does not exist&#xD;
+&#xD;
+POSITION: 22</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql) in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs:line 153&#xD;
+   at Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 36&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a45e5567-0986-46d5-b81a-7df60dd6b609" testId="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;partial&quot;, value: &quot;1&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0001807" startTime="2026-10-05T16:07:16.8820305+02:00" endTime="2026-10-05T16:07:16.8820844+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a45e5567-0986-46d5-b81a-7df60dd6b609" />
+    <UnitTestResult executionId="2512b07a-a134-45c9-877d-6166cc603485" testId="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586" testName="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;version&quot;, value: &quot;2&quot;)" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0000130" startTime="2026-10-05T16:07:16.8828058+02:00" endTime="2026-10-05T16:07:16.8828295+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2512b07a-a134-45c9-877d-6166cc603485" />
+    <UnitTestResult executionId="487bd3b3-6e4a-4ec6-8103-a3f7e9d37766" testId="87a08418-62f5-43ba-9174-11a0d9ae848d" testName="Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.8547060" startTime="2026-10-05T16:07:21.9319286+02:00" endTime="2026-10-05T16:07:22.7868636+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="487bd3b3-6e4a-4ec6-8103-a3f7e9d37766">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 2&#xD;
+Actual:   0</Message>
+          <StackTrace>   at Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 18&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c01153b6-d01c-4f84-af5b-e5bca1330912" testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" testName="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.1045513" startTime="2026-10-05T16:07:22.7881239+02:00" endTime="2026-10-05T16:07:22.8924245+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c01153b6-d01c-4f84-af5b-e5bca1330912">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : The migration '202609290003_SessionProjection' was not found.</Message>
+          <StackTrace>   at Microsoft.EntityFrameworkCore.Migrations.MigrationsAssemblyExtensions.GetMigrationId(IMigrationsAssembly assembly, String nameOrId)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.PopulateMigrations(IEnumerable`1 appliedMigrationEntries, String targetMigration, MigratorData&amp; parameters)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.&lt;&gt;c.&lt;&lt;MigrateAsync&gt;b__22_1&gt;d.MoveNext()&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 49&#xD;
+   at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs:line 49&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="75b0cdd2-6867-4f7b-95c9-891191036d3b" testId="ccba536a-dbf0-af61-1891-a39c93d465eb" testName="Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0027350" startTime="2026-10-05T16:07:16.9042543+02:00" endTime="2026-10-05T16:07:16.9046143+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="75b0cdd2-6867-4f7b-95c9-891191036d3b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs:line 17&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f9f1e80e-8dc9-4ca1-aa2c-115b4306c963" testId="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa" testName="Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata" computerName="DESKTOP-OCQ1IM7" duration="00:00:00.0002570" startTime="2026-10-05T16:07:16.9084407+02:00" endTime="2026-10-05T16:07:16.9084889+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f9f1e80e-8dc9-4ca1-aa2c-115b4306c963">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.True() Failure&#xD;
+Expected: True&#xD;
+Actual:   False</Message>
+          <StackTrace>   at Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata() in C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs:line 31&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;extra&quot;, value: &quot;true&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0d1c103b-7763-14f4-9487-90db97deebea">
+      <Execution id="522820cd-37d8-43ca-b932-80023772e44f" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="2c05a5db-dd17-c32b-1689-81b20bfc098a">
+      <Execution id="6f7a3ed3-2e55-47aa-a5e9-ce52ee792a3a" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;partial&quot;, value: &quot;1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8">
+      <Execution id="a45e5567-0986-46d5-b81a-7df60dd6b609" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;endedAt&quot;, value: &quot;\&quot;2026-09-29T11:00:00Z\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0ed523fc-db9c-11b9-e663-6ff8cde1cedb">
+      <Execution id="a54b5937-fd7a-4f67-9f8a-a32a82e2ad8b" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="ccba536a-dbf0-af61-1891-a39c93d465eb">
+      <Execution id="75b0cdd2-6867-4f7b-95c9-891191036d3b" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="CapturedContractNormalizesMetadataWithoutChangingAcceptedData" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386">
+      <Execution id="3988980d-733b-4f9f-9644-3f159ed4f2b0" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;closeReason&quot;, value: &quot;\&quot;unknown\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="013ad838-d955-7f53-0481-45470e42d584">
+      <Execution id="e6ec4ebc-7e3e-413c-b3b6-7930447128e4" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;inferred&quot;, value: &quot;false&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="4804bbd3-4419-b902-4d2d-35bdf3509cff">
+      <Execution id="5ea4b98f-814a-46ed-be81-eee237287cc3" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="87a08418-62f5-43ba-9174-11a0d9ae848d">
+      <Execution id="487bd3b3-6e4a-4ec6-8103-a3f7e9d37766" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;version&quot;, value: &quot;2&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586">
+      <Execution id="2512b07a-a134-45c9-877d-6166cc603485" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;vlanId&quot;, value: &quot;4095&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="7aeffeb9-92c0-97a1-63f7-502ed527431f">
+      <Execution id="22775f8d-f038-45d2-be64-09b8359bba3a" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;startedAt&quot;, value: &quot;\&quot;2026-09-29T12:00:00.1001Z\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911">
+      <Execution id="4d517ec7-caaf-4ace-9ab5-e8ec1c5037dc" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;byteCount&quot;, value: &quot;1.1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="b70b65d9-1c0e-445f-c2cc-8582aad64928">
+      <Execution id="74152794-c92c-4504-937e-a4056dcdae28" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;packetCount&quot;, value: &quot;-1&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="c07b0354-ffcb-d61f-db61-a4640fca8814">
+      <Execution id="0cdd860c-757b-4a09-b593-3b22d3ea9cf6" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.InvalidCapturedContractIsRejected(field: &quot;sourceIp&quot;, value: &quot;\&quot;invalid\&quot;&quot;)" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="411506ff-0f2a-312f-ff9c-5addffbe5049">
+      <Execution id="f282f993-7a5e-4bb7-b957-8e27819bccfa" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="InvalidCapturedContractIsRejected" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa">
+      <Execution id="f9f1e80e-8dc9-4ca1-aa2c-115b4306c963" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.CanonicalSessionTests" name="HistoricalSyntheticHasNoInventedCaptureMetadata" />
+    </UnitTest>
+    <UnitTest name="Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" storage="c:\users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\monitoring.tests\bin\debug\net10.0\monitoring.tests.dll" id="df815045-32e7-73bd-1fdc-9519ad7d9ffc">
+      <Execution id="c01153b6-d01c-4f84-af5b-e5bca1330912" />
+      <TestMethod codeBase="C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\bin\Debug\net10.0\Monitoring.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Monitoring.Tests.OutboxTests" name="UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7aeffeb9-92c0-97a1-63f7-502ed527431f" executionId="22775f8d-f038-45d2-be64-09b8359bba3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c07b0354-ffcb-d61f-db61-a4640fca8814" executionId="0cdd860c-757b-4a09-b593-3b22d3ea9cf6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2c05a5db-dd17-c32b-1689-81b20bfc098a" executionId="6f7a3ed3-2e55-47aa-a5e9-ce52ee792a3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c77c56e4-4db6-00ac-8ec1-dd7aea6a6911" executionId="4d517ec7-caaf-4ace-9ab5-e8ec1c5037dc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4804bbd3-4419-b902-4d2d-35bdf3509cff" executionId="5ea4b98f-814a-46ed-be81-eee237287cc3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b70b65d9-1c0e-445f-c2cc-8582aad64928" executionId="74152794-c92c-4504-937e-a4056dcdae28" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="411506ff-0f2a-312f-ff9c-5addffbe5049" executionId="f282f993-7a5e-4bb7-b957-8e27819bccfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ed523fc-db9c-11b9-e663-6ff8cde1cedb" executionId="a54b5937-fd7a-4f67-9f8a-a32a82e2ad8b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0d1c103b-7763-14f4-9487-90db97deebea" executionId="522820cd-37d8-43ca-b932-80023772e44f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="013ad838-d955-7f53-0481-45470e42d584" executionId="e6ec4ebc-7e3e-413c-b3b6-7930447128e4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a1d9d10e-6989-ef6e-e78a-7b3cd88ae386" executionId="3988980d-733b-4f9f-9644-3f159ed4f2b0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9eba9a70-6d97-4df3-3b54-d5dc98b8bcb8" executionId="a45e5567-0986-46d5-b81a-7df60dd6b609" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9aba2fb4-2cbe-83cc-13f5-069dc8a8a586" executionId="2512b07a-a134-45c9-877d-6166cc603485" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="87a08418-62f5-43ba-9174-11a0d9ae848d" executionId="487bd3b3-6e4a-4ec6-8103-a3f7e9d37766" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="df815045-32e7-73bd-1fdc-9519ad7d9ffc" executionId="c01153b6-d01c-4f84-af5b-e5bca1330912" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ccba536a-dbf0-af61-1891-a39c93d465eb" executionId="75b0cdd2-6867-4f7b-95c9-891191036d3b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0056e9ed-4c8c-246c-cdf6-3d5d93ca15aa" executionId="f9f1e80e-8dc9-4ca1-aa2c-115b4306c963" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="17" executed="17" passed="11" failed="6" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)&#xD;
+[xUnit.net 00:00:00.18]   Discovering: Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.23]   Discovered:  Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.26]   Starting:    Monitoring.Tests&#xD;
+[xUnit.net 00:00:00.32]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.32]       Expected: True&#xD;
+[xUnit.net 00:00:00.32]       Actual:   False&#xD;
+[xUnit.net 00:00:00.32]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.32]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs(17,0): at Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData()&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.32]       Assert.True() Failure&#xD;
+[xUnit.net 00:00:00.32]       Expected: True&#xD;
+[xUnit.net 00:00:00.32]       Actual:   False&#xD;
+[xUnit.net 00:00:00.32]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.32]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs(31,0): at Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata()&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.32]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:00.32]                  ↓ (pos 0)&#xD;
+[xUnit.net 00:00:00.32]       Expected: "c2l0ZQ.c2Vuc29y.ZXZlbnQ"&#xD;
+[xUnit.net 00:00:00.32]       Actual:   ""&#xD;
+[xUnit.net 00:00:00.32]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.32]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\CanonicalSessionTests.cs(63,0): at Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents()&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.32]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[testcontainers.org 00:00:00.10] Connected to Docker:&#xD;
+  Host: tcp://127.0.0.1:2375/&#xD;
+  Server Version: 29.8.2&#xD;
+  Kernel Version: 5.15.167.4-microsoft-standard-WSL2&#xD;
+  API Version: 1.56&#xD;
+  Operating System: Ubuntu 24.04.4 LTS&#xD;
+  Total Memory: 3.83 GB&#xD;
+[testcontainers.org 00:00:00.26] Docker container eebc75d63d57 created&#xD;
+[testcontainers.org 00:00:00.29] Start Docker container eebc75d63d57&#xD;
+[testcontainers.org 00:00:00.69] Wait for Docker container eebc75d63d57 to complete readiness checks&#xD;
+[testcontainers.org 00:00:01.71] Docker container eebc75d63d57 ready&#xD;
+[testcontainers.org 00:00:01.81] Docker container 6c11d43c8b4c created&#xD;
+[testcontainers.org 00:00:01.81] Start Docker container 6c11d43c8b4c&#xD;
+[testcontainers.org 00:00:02.15] Wait for Docker container 6c11d43c8b4c to complete readiness checks&#xD;
+[testcontainers.org 00:00:02.16] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 6c11d43c8b4c&#xD;
+[testcontainers.org 00:00:03.21] Execute "pg_isready --host localhost --dbname monitoring --username monitoring" at Docker container 6c11d43c8b4c&#xD;
+[testcontainers.org 00:00:03.26] Docker container 6c11d43c8b4c ready&#xD;
+[xUnit.net 00:00:05.35]       Npgsql.PostgresException : 42P01: relation "monitoring.session_metadata" does not exist&#xD;
+[xUnit.net 00:00:05.35]       &#xD;
+[xUnit.net 00:00:05.35]       POSITION: 22&#xD;
+[xUnit.net 00:00:05.35]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+[xUnit.net 00:00:05.35]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.35]            at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:05.35]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.35]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.35]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\SessionProjectionTests.cs(153,0): at Monitoring.Tests.SessionTestDatabase.ScalarAsync(String connectionString, String sql)&#xD;
+[xUnit.net 00:00:05.35]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs(36,0): at Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers()&#xD;
+[xUnit.net 00:00:05.35]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.20]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:06.20]       Expected: 2&#xD;
+[xUnit.net 00:00:06.20]       Actual:   0&#xD;
+[xUnit.net 00:00:06.20]       Stack Trace:&#xD;
+[xUnit.net 00:00:06.20]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs(18,0): at Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay()&#xD;
+[xUnit.net 00:00:06.20]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.31]       System.InvalidOperationException : The migration '202609290003_SessionProjection' was not found.&#xD;
+[xUnit.net 00:00:06.31]       Stack Trace:&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.MigrationsAssemblyExtensions.GetMigrationId(IMigrationsAssembly assembly, String nameOrId)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.PopulateMigrations(IEnumerable`1 appliedMigrationEntries, String targetMigration, MigratorData&amp; parameters)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.&lt;&gt;c.&lt;&lt;MigrateAsync&gt;b__22_1&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:06.31]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.31]            at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]            at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]            at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:06.31]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs(49,0): at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection()&#xD;
+[xUnit.net 00:00:06.31]         C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\tests\Monitoring.Tests\OutboxTests.cs(49,0): at Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection()&#xD;
+[xUnit.net 00:00:06.31]         --- End of stack trace from previous location ---&#xD;
+[testcontainers.org 00:00:05.96] Delete Docker container 6c11d43c8b4c&#xD;
+[xUnit.net 00:00:06.97]   Finished:    Monitoring.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:16.9298848+02:00">
+        <Text>[xUnit.net 00:00:00.32]     Monitoring.Tests.CanonicalSessionTests.CapturedContractNormalizesMetadataWithoutChangingAcceptedData [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:16.9301079+02:00">
+        <Text>[xUnit.net 00:00:00.32]     Monitoring.Tests.CanonicalSessionTests.HistoricalSyntheticHasNoInventedCaptureMetadata [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:16.9301452+02:00">
+        <Text>[xUnit.net 00:00:00.32]     Monitoring.Tests.CanonicalSessionTests.DocumentKeysAreUnambiguousAndIncludeAllIdentityComponents [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:21.9302071+02:00">
+        <Text>[xUnit.net 00:00:05.35]     Monitoring.Tests.OutboxTests.MarkingFailureRollsBackSessionMetadataIdentityAndOutboxThenRestartRecovers [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:22.7871251+02:00">
+        <Text>[xUnit.net 00:00:06.20]     Monitoring.Tests.OutboxTests.ProjectionPublishesOneCanonicalRecordAcrossConcurrentWorkersAndReplay [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-OCQ1IM7" outcome="Error" timestamp="2026-10-05T16:07:22.8927019+02:00">
+        <Text>[xUnit.net 00:00:06.31]     Monitoring.Tests.OutboxTests.UpgradeBackfillsValidHistoricalSessionsOnceWithoutChangingFiveColumnProjection [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

@@ -1,0 +1,211 @@
+change: producto-monitorizacion-final
+status: blocked
+revision: 12
+last_updated: "2026-10-05T15:00:09.482Z"
+artifact_store:
+  mode: openspec
+  backend: openspec
+execution_mode: auto
+delivery_strategy: exception-ok
+resolved_delivery: size:exception
+classification: high-risk
+impact: {auth_security: true, data_migration: true, public_api: true}
+route:
+  intended_route: standard
+  actual_route: standard
+  route_rationale: Arquitectura del producto con contratos públicos, migraciones de datos y fronteras de autenticación; clasificación determinista high-risk.
+  validated: true
+  validation_errors: []
+owner:
+  author: Manuel Retamozo
+  branch: codex/producto-monitorizacion-final
+base_commit: 72ffb503799585a11425a8195f712e665c5abe17
+scope:
+  intent: Completar los slices pendientes con arquitectura decidida y sesiones consultables desde Angular.
+  files: [src/**, tests/**, docs/**, openspec/config.yaml, compose*.yaml, compose*.yml, .github/workflows/**, README.md]
+  includes:
+    - Decisiones adoptadas de arquitectura, dependencias y continuación de los slices pendientes.
+    - Captura pasiva y entrega durable de sesiones.
+    - PostgreSQL como autoridad y Kafka/Connect hacia Elasticsearch como proyección de búsqueda.
+    - Consultas Angular por intervalo temporal, IP, protocolo y puerto, con paginación y límites en la API.
+    - Inventario, Keycloak/OIDC/RBAC, EJBCA/TLS/mTLS y operación definidos por el ejercicio.
+  excludes:
+    - Reescribir el historial de los changes archivados.
+    - Afirmar capacidad, disponibilidad o integraciones medidas sin evidencias ejecutadas.
+approvals:
+  - id: intent-briefing-001
+    gate: intent-briefing
+    decision: accepted
+    source: codex/plain-chat
+    accepted_at: 2026-10-05T12:35:49Z
+    synthesis: "Completar los slices pendientes con .NET/Angular, PostgreSQL como autoridad, Kafka/Connect hacia Elasticsearch para búsqueda y Keycloak/EJBCA para identidad y certificados. Angular consultará sesiones por intervalo temporal, IP, protocolo y puerto, con paginación y límites en la API. Primero cerrar arquitectura y dependencias; después continuar captura, indexación y consultas."
+    scope: Arquitectura del producto y continuación de los slices pendientes del ejercicio.
+    applies_to: [change-classification]
+  - id: execution-mode-001
+    gate: execution-mode
+    decision: auto
+    source: codex/plain-chat
+    accepted_at: 2026-10-05T12:35:49Z
+    applies_to: [sdd-explore, sdd-propose, sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify, sdd-archive]
+  - id: delivery-strategy-001
+    gate: delivery-strategy
+    decision: exception-ok
+    source: codex/plain-chat
+    accepted_at: 2026-10-05T12:35:49Z
+    applies_to: [sdd-tasks, sdd-apply]
+  - id: review-workload-001
+    gate: review-workload
+    decision: size:exception
+    source: codex/plain-chat
+    accepted_at: 2026-10-05T12:35:49Z
+    basis: delivery-strategy-001
+    applies_to: [sdd-apply]
+assumptions:
+  - id: sdd-explore-001
+    phase: sdd-explore
+    statement: La búsqueda temporal inicial seleccionará sesiones cuyo startedAt esté en [from,to), rotuladas como sesiones iniciadas.
+    reversibility: low
+    basis: El contrato sintético distingue startedAt y endedAt, pero el alcance actual no fija la semántica de búsqueda temporal.
+    recorded_at: 2026-10-05T12:35:49Z
+    status: promoted
+    promoted_to: openspec/changes/producto-monitorizacion-final/specs/consulta-sesiones/spec.md
+  - id: sdd-design-001
+    phase: sdd-design
+    statement: "El spool de sonda usará SQLite WAL transaccional y contratos propios compatibles sin referenciar ensamblados backend."
+    reversibility: high
+    basis: "La spec exige durabilidad local/reinicio/cota de disco; aislamiento actual Domain/Persistence/Host y ADR010 rechazan acoplar sonda al backend."
+    recorded_at: 2026-10-05T13:55:56.416Z
+    status: unresolved
+  - id: sdd-design-002
+    phase: sdd-design
+    statement: "Los metadatos normalizados se guardarán en tabla nueva ligada a session_projection conservando sus cinco columnas actuales."
+    reversibility: low
+    basis: "Las migraciones y SessionProjectionTests existentes insertan cinco valores; tabla aditiva preserva contenido/identidad y contratos S01–S04."
+    recorded_at: 2026-10-05T13:55:56.416Z
+    status: unresolved
+  - id: sdd-design-003
+    phase: sdd-design
+    statement: "El límite inicial interno configurable será dos snapshots por sujeto y20 búsquedas simultáneas globales."
+    reversibility: high
+    basis: "Consulta exige cotas por sujeto/concurrencia;20 corresponde al perfil de ensayo ADR013 y no acredita capacidad."
+    recorded_at: 2026-10-05T13:55:56.416Z
+    status: unresolved
+  - id: sdd-apply-001
+    phase: sdd-apply
+    statement: "Publicar DLL portable con el SDK host 10.0.303 antes de construir la imagen runtime ASP.NET 10.0.12 fijada por digest."
+    reversibility: high
+    basis: "El SDK host 10.0.303 está instalado y las suites pasan; pull oficial sdk:10.0.303 devuelve not found y MCR no contiene ese tag. La imagen runtime 10.0.12 sí se descargó y verificó."
+    recorded_at: 2026-10-05T14:40:31.967Z
+    status: unresolved
+  - id: sdd-apply-002
+    phase: sdd-apply
+    statement: "Enable sink synchronous flush for the required RegexRouter physical-index selection."
+    reversibility: high
+    basis: "Actual sink16 failed with topic-mutating SMT under async mode and passed after synchronous flush; official option documents this requirement."
+    recorded_at: 2026-10-05T14:59:39.075Z
+    status: unresolved
+  - id: sdd-apply-003
+    phase: sdd-apply
+    statement: "Set EventRouter JSON null behavior to optional_bytes to preserve nullable synthetic metadata in the schemaless JSON record."
+    reversibility: high
+    basis: "Real initial document omitted null fields; actual Debezium3.6.3 setting restored all expected fields and integration passed."
+    recorded_at: 2026-10-05T14:59:39.075Z
+    status: unresolved
+  - id: sdd-apply-004
+    phase: sdd-apply
+    statement: "Compile the pure Java transform with release21 using pinned Kafka4.3.1 API jars copied from the adopted image."
+    reversibility: high
+    basis: "Kafka runtime includes Java21 but no javac; installed compiler25 produces release21 classes loaded by real Connect and DLQ integration passes."
+    recorded_at: 2026-10-05T14:59:39.075Z
+    status: unresolved
+blocking_questions:
+  - "¿Cómo preservar la identidad completa y el límite128 con una clave de búsqueda que Elasticsearch pueda aceptar?"
+baseline_fingerprints:
+  aptitud-y-liberacion: null
+  bandeja-ingestion-durable: 9be245076a796c61abfc572f3a86ddc2da6f988e181f624a3b0348a94b42ef5f
+  base-ejecutable: 11db6aca2011d587599238608761ecaf9a0796ec7a2a1331a669f42c023f4a90
+  captura-y-entrega-sonda: null
+  consulta-sesiones: null
+  detalle-sesion-ambito: fc6cad6419ce1130bccaf387da063571a69375b8112f766b59330110c7b2e990
+  identidad-y-acceso: null
+  inventario-dispositivos: null
+  operacion-y-ciclo-datos: null
+  pipeline-busqueda: null
+  proyeccion-sesiones-idempotente: 258a9957487ca9f80c3c977c604fba820fe02377f49762f3b35b7b027e816cdd
+  sesiones-canonicas: null
+  transporte-y-pki: null
+  verificacion-base: d949fec105a83b180059b4a5e090e2c6fabfbd745bc081e3f640ec0ff2dd43d2
+  vista-detalle-sesion: 5e0d93c29e22b644eabbdc38b0adc2776f435ba627a3c8bddea782a9c524ffba
+phases:
+  clarify:
+    status: skipped
+    reason: Contrato sdd-spec validado sin ambigüedad residual ni preguntas pendientes.
+  propose:
+    status: done
+    artifact: "openspec/changes/producto-monitorizacion-final/exploration.md"
+    summary: "Decidida proyección PostgreSQL→outbox CDC→Kafka→Elasticsearch; K01–K04 completan dependencias antes del vertical de búsqueda."
+    key_decisions:
+      - "PostgreSQL conserva autoridad; outbox transaccional alimenta CDC/Debezium, Kafka y Connect sink a Elasticsearch."
+      - "Añadir K01–K04 sin renumerar S05–S18; cerrar primero decisiones y dependencias, después vertical sintético de búsqueda."
+      - "Keycloak OIDC/RBAC y EJBCA/mTLS quedan adoptados según el alcance, sujetos a integración y validación operativa."
+    last_payload_hash: "ca46cde49afbf6e71f9d9913e7fe5bb83b307f64fa1b2e66c3218da995063a97"
+  explore:
+    status: done
+    artifact: openspec/changes/producto-monitorizacion-final/exploration.md
+    summary: "Decidida proyección PostgreSQL→outbox CDC→Kafka→Elasticsearch; K01–K04 completan dependencias antes del vertical de búsqueda."
+    last_payload_hash: "ca46cde49afbf6e71f9d9913e7fe5bb83b307f64fa1b2e66c3218da995063a97"
+    key_decisions:
+      - "PostgreSQL conserva autoridad; outbox transaccional alimenta CDC/Debezium, Kafka y Connect sink a Elasticsearch."
+      - "Añadir K01–K04 sin renumerar S05–S18; cerrar primero decisiones y dependencias, después vertical sintético de búsqueda."
+      - "Keycloak OIDC/RBAC y EJBCA/mTLS quedan adoptados según el alcance, sujetos a integración y validación operativa."
+  proposal:
+    status: done
+    artifact: openspec/changes/producto-monitorizacion-final/proposal.md
+    summary: "Propuesta completa S05–S18/K01–K04 con arquitectura adoptada, vertical de búsqueda, lotes finitos, verificación y reversión."
+    key_decisions:
+      - "PostgreSQL autoritativo y outbox CDC/Debezium → Kafka/Connect → Elasticsearch; Keycloak y EJBCA adoptados."
+      - "Un único cambio conserva S01–S04 y S05–S18; K01/K04 habilitan primero el vertical K02/K03/S09, seguido de captura y capacidades restantes."
+      - "Cuotas dimensionadas por origen; S17/S18 conservan aceptación y liberación basadas en evidencias, sin extrapolar capacidad."
+    last_payload_hash: "09f5333da475dc95ac873f770b9fadb69970e5ae1c3af7ab78abd495163ba887"
+  spec:
+    status: done
+    summary: "15 especificaciones verificables cubren S05–S18/K01–K04, consulta acotada, publicación durable, seguridad y liberación con evidencia."
+    key_decisions:
+      - "La búsqueda selecciona startedAt en UTC [from,to); ventanas de más de 24 h exigen sede/sonda/IP y cursores ligados a identidad/permisos con vencimiento de 10 mi"
+      - "PostgreSQL confirma sesión/marcado/outbox conjuntamente; CDC/Kafka/Connect proyectan identidad/revisión completa con supresión resistente a replay y rebuild."
+      - "Keycloak/EJBCA y entorno real reproducible son requisitos adoptados; S17/S18 separan software funcional de aptitud y autorizaciones de producción."
+    last_payload_hash: "d0a894518027bbde6cc4490f2f96d7904edcdd3b629dc45e35c22f866b21373f"
+  design:
+    status: done
+    artifact: openspec/changes/producto-monitorizacion-final/design.md
+    summary: "Diseño implementable de S05–S18/K01–K04 con vertical buscable primero, cinco ADR sucesores, contratos, stack fijado y verificación real."
+    last_payload_hash: "337f62dc28ee756e998209610405a9d41a5445402d8d37d27ff3768c65352ab9"
+    key_decisions:
+      - "PostgreSQL confirma sesión/marcado/outbox; Debezium/Connect y sink16 usan revisión de autoridad y barreras mínimas para impedir resurrección."
+      - "Consulta UTC [from,to), filtros exactos/PIT ligado10min y verificación autoritativa; Keycloak humano separado de EJBCA/mTLS de sondas."
+      - "K01/K04→K02→K03→S09 entrega demo buscable primero; captura/inventario/operación siguen en lotes finitos y S17/S18 exigen evidencia completa."
+  tasks:
+    status: done
+    artifact: openspec/changes/producto-monitorizacion-final/tasks.md
+    summary: "Backlog trazable de nueve unidades; demo buscable K01/K04/K02/K03/S09 y gates S17/S18 preservados."
+    key_decisions:
+      - "Primer demo al cerrar K01→K04→K02→K03→S09, sin esperar capacidad de producción."
+      - "Lotes posteriores S05–S08, S10–S13, S14–S16; S17/S18 mantienen gate final explícito."
+      - "TDD focal RED/GREEN por bloque; progreso de apply lo fusiona runtime/orquestador."
+    last_payload_hash: "83680609ae979fcecd8a63e5b5dfa666730deb774332b16189b641dc310fed4b"
+  apply:
+    status: partial
+    artifact: openspec/changes/producto-monitorizacion-final/apply-progress.md
+    summary: "K03 integra CDC→Kafka→sink16→ES:4 pruebas reales verdes; la clave de515bytes supera el límite512 y exige revisión de diseño."
+    key_decisions:
+      - "Cliente HTTP real con el contrato plano de CanonicalSession y frescura current/lagging/recovering."
+      - "takeUntil cancela explícitamente requests al invalidar filtros/identidad porque rxResource22 conserva streams cuando params es undefined."
+      - "Detalle histórico sin selectores permanece compatible; autorización y permisos dependen del servidor."
+    last_payload_hash: "a59d37d4064c6a1c7c12528a24d352f2042e9be8d3b2b3b33707a379157b80d9"
+    blocker_type: design-mismatch
+  verify:
+    status: pending
+    artifact: openspec/changes/producto-monitorizacion-final/verify-report.md
+  archive:
+    status: pending
+    artifact: openspec/changes/producto-monitorizacion-final/archive-report.md

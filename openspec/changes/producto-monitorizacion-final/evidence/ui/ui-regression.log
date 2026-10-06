@@ -1,0 +1,13 @@
+> Building...
+√ Building...
+Application bundle generation complete. [1.245 seconds] - 2026-10-05T14:43:30.436Z
+
+
+ RUN  v5.0.3 C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web
+
+
+ Test Files  7 passed (7)
+      Tests  56 passed (56)
+   Start at  16:43:30
+   Duration  1.98s (environment 59%, setup 22%, tests 10%, import 4%, transform 4%, worker 1%)
+

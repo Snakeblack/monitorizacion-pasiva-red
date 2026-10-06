@@ -1,0 +1,134 @@
+> Building...
+√ Building...
+Application bundle generation failed. [1.294 seconds] - 2026-10-05T14:37:16.599Z
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:8:31:
+      8 │ ...  <label>Desde (UTC)<input name="from" type="text" [formField]="...
+        ╵                               ~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:9:41:
+      9 │ ...Hasta (UTC, excluido)<input name="to" type="text" [formField]="f...
+        ╵                                ~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:10:31:
+      10 │ ...<label>Sede exacta<input name="siteId" type="text" [formField]=...
+         ╵                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:11:32:
+      11 │ ...abel>Sonda exacta<input name="sensorId" type="text" [formField]...
+         ╵                            ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:12:32:
+      12 │ ...abel>IP de origen<input name="sourceIp" type="text" [formField]...
+         ╵                            ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:13:33:
+      13 │ ...l>IP de destino<input name="destinationIp" type="text" [formFie...
+         ╵                          ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:14:30:
+      14 │ ...<label>Protocolo<select name="protocol" [formField]="filters.pr...
+         ╵                            ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:15:36:
+      15 │ ...Puerto de origen<input name="sourcePort" type="text" inputmode=...
+         ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:16:37:
+      16 │ ...rto de destino<input name="destinationPort" type="text" inputmo...
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8022: Setting the 'name' attribute is not allowed on nodes using the '[formField]' directive [plugin angular-compiler]
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.html:17:39:
+      17 │ ...siones por página<input name="pageSize" type="number" [formFie...
+         ╵                           ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component SessionSearchPage.
+
+    C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web/src/app/sessions/session-search-page.component.ts:13:15:
+      13 │   templateUrl: './session-search-page.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

@@ -1,0 +1,137 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+  Monitoring.Domain -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Domain\bin\Release\net10.0\Monitoring.Domain.dll
+  Monitoring.Persistence -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Persistence\bin\Release\net10.0\Monitoring.Persistence.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\src\Monitoring.Host\bin\Release\net10.0\Monitoring.Host.dll
+  Monitoring.Host -> C:\Users\sn4ke\dev\activos\monitorizacion-pasiva-red\.ospec\runtime\producto-monitorizacion-final\publish\
+ Image monitoring/connect:foundation-20261005 Building 
+ Image monitoring/api:foundation-20261005 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.53kB done
+#1 DONE 0.0s
+
+#2 [connect internal] load build definition from Dockerfile
+#2 transferring dockerfile: 959B 0.0s done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${KAFKA_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [migrate internal] load build definition from Dockerfile
+#3 transferring dockerfile: 143B 0.0s done
+#3 WARN: InvalidDefaultArgInFrom: Default value for ARG ${ASPNET_IMAGE} results in empty or invalid base image name (line 2)
+#3 DONE 0.0s
+
+#4 [connect internal] load metadata for docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837
+#4 DONE 0.0s
+
+#5 [migrate internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0.12@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4
+#5 DONE 0.0s
+
+#6 [connect internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [connect 1/5] FROM docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837
+#7 resolve docker.io/apache/kafka:4.3.1@sha256:77e3df9054047a88b520d0cc46e16696d3b22022e1d580aeccd2632df6532837 0.0s done
+#7 DONE 0.0s
+
+#8 [connect internal] load build context
+#8 transferring context: 257B 0.0s done
+#8 DONE 0.0s
+
+#9 [connect 2/5] COPY vendor/debezium-connector-postgres-3.6.3.Final-plugin.tar.gz /tmp/debezium.tar.gz
+#9 CACHED
+
+#10 [connect 3/5] COPY vendor/confluentinc-kafka-connect-elasticsearch-16.0.0.zip /tmp/elasticsearch.zip
+#10 CACHED
+
+#11 [connect 4/5] RUN echo "68dfbd3aa0e22cbc164017311449f69dfe6b96b70e72c72c7a3a24ef5c7810e0  /tmp/debezium.tar.gz" | sha256sum -c -  && echo "3e658470966e1b419c349850a9db9da124fd8764e4d93710bb49b202ab51ba1e  /tmp/elasticsearch.zip" | sha256sum -c -  && mkdir -p /opt/monitoring/plugins/debezium /opt/monitoring/plugins/elasticsearch  && tar -xzf /tmp/debezium.tar.gz --strip-components=1 -C /opt/monitoring/plugins/debezium  && unzip -q /tmp/elasticsearch.zip -d /opt/monitoring/plugins/elasticsearch  && rm /tmp/debezium.tar.gz /tmp/elasticsearch.zip
+#11 CACHED
+
+#12 [connect 5/5] COPY connect.properties health.sh /opt/monitoring/
+#12 CACHED
+
+#13 [migrate internal] load .dockerignore
+#13 transferring context: 2B 0.1s done
+#13 DONE 0.1s
+
+#14 [migrate 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.12@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4
+#14 resolve mcr.microsoft.com/dotnet/aspnet:10.0.12@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4 0.0s done
+#14 DONE 0.0s
+
+#15 [connect] exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:18a35d42146284768ead5d0618d2605b5c06ed930dba27a5ca72e631c30aa43e done
+#15 exporting config sha256:f37608eab10a72417a05382c2d6e9c79381699ca35137884f09f2abbfc7a620b done
+#15 exporting attestation manifest sha256:4754c2bb2a9da6f4aa3944fed59a593a9a73303851f0162a19dadd7ec77e812d 0.0s done
+#15 exporting manifest list sha256:122ce9df973a87860149fbe9adc28dd52d427aea962821aab003d672d676e734 0.0s done
+#15 naming to docker.io/monitoring/connect:foundation-20261005 done
+#15 unpacking to docker.io/monitoring/connect:foundation-20261005 0.0s done
+#15 DONE 0.1s
+
+#16 [migrate internal] load build context
+#16 transferring context: 122.88kB 0.1s done
+#16 DONE 0.1s
+
+#17 [migrate 2/3] WORKDIR /app
+#17 CACHED
+
+#18 [connect] resolving provenance for metadata file
+#18 DONE 0.0s
+
+#19 [migrate 3/3] COPY . /app/
+#19 DONE 0.0s
+
+#20 [migrate] exporting to image
+#20 exporting layers 0.3s done
+#20 exporting manifest sha256:eebb8fd6862c670a38df94452616ce0146be3b0baf89d9372646e531c18ed5ee done
+#20 exporting config sha256:06da5e4b693b0aa2c91c5d2b80a0bb042814d1aa56f2b3699d5488e5032d1622 done
+#20 exporting attestation manifest sha256:9dc566e5f93ea0e63bcd184622d00d9bd7479ed0052a4c1621a7912acabe5225 0.0s done
+#20 exporting manifest list sha256:bd9d8d351e6ce1a7efb08dc3faccfde1157dc1b10e4ed7365d1dae2562ccfb06 done
+#20 naming to docker.io/monitoring/api:foundation-20261005 done
+#20 unpacking to docker.io/monitoring/api:foundation-20261005 0.0s done
+#20 DONE 0.4s
+
+#21 [migrate] resolving provenance for metadata file
+#21 DONE 0.0s
+ Image monitoring/api:foundation-20261005 Built 
+ Image monitoring/connect:foundation-20261005 Built 
+ Container monitoring-foundation-test-api-1 Recreate 
+ Container monitoring-foundation-test-migrate-1 Recreate 
+ Container monitoring-foundation-test-api-1 Recreated 
+ Container monitoring-foundation-test-migrate-1 Recreated 
+ Container monitoring-foundation-test-elasticsearch-1 Starting 
+ Container monitoring-foundation-test-postgres-1 Starting 
+ Container monitoring-foundation-test-kafka-1 Starting 
+ Container monitoring-foundation-test-elasticsearch-1 Started 
+ Container monitoring-foundation-test-postgres-1 Started 
+ Container monitoring-foundation-test-postgres-1 Waiting 
+ Container monitoring-foundation-test-kafka-1 Started 
+ Container monitoring-foundation-test-kafka-1 Waiting 
+ Container monitoring-foundation-test-postgres-1 Healthy 
+ Container monitoring-foundation-test-migrate-1 Starting 
+ Container monitoring-foundation-test-migrate-1 Started 
+ Container monitoring-foundation-test-migrate-1 Waiting 
+ Container monitoring-foundation-test-migrate-1 Exited 
+ Container monitoring-foundation-test-bootstrap-1 Starting 
+ Container monitoring-foundation-test-bootstrap-1 Started 
+ Container monitoring-foundation-test-bootstrap-1 Waiting 
+ Container monitoring-foundation-test-bootstrap-1 Exited 
+ Container monitoring-foundation-test-api-1 Starting 
+ Container monitoring-foundation-test-api-1 Started 
+ Container monitoring-foundation-test-kafka-1 Healthy 
+ Container monitoring-foundation-test-connect-1 Starting 
+ Container monitoring-foundation-test-connect-1 Started 
+ Container monitoring-foundation-test-bootstrap-1 Waiting 
+ Container monitoring-foundation-test-api-1 Waiting 
+ Container monitoring-foundation-test-postgres-1 Waiting 
+ Container monitoring-foundation-test-kafka-1 Waiting 
+ Container monitoring-foundation-test-elasticsearch-1 Waiting 
+ Container monitoring-foundation-test-connect-1 Waiting 
+ Container monitoring-foundation-test-migrate-1 Waiting 
+ Container monitoring-foundation-test-api-1 Healthy 
+ Container monitoring-foundation-test-kafka-1 Healthy 
+ Container monitoring-foundation-test-postgres-1 Healthy 
+ Container monitoring-foundation-test-bootstrap-1 Exited 
+ Container monitoring-foundation-test-migrate-1 Exited 
+ Container monitoring-foundation-test-connect-1 Healthy 
+ Container monitoring-foundation-test-elasticsearch-1 Healthy 

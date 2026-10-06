@@ -1,0 +1,38 @@
+> Building...
+√ Building...
+Application bundle generation complete. [0.931 seconds] - 2026-10-05T14:42:04.004Z
+
+
+ RUN  v5.0.3 C:/Users/sn4ke/dev/activos/monitorizacion-pasiva-red/src/monitoring-web
+
+ ❯ |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts (8 tests | 1 failed) 144ms
+   ❯ Session detail scoped identity (8)
+     × cancels a pending scoped request even when the next identity is incomplete 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |monitoring-web| src/app/session-detail/session-detail-scope.spec.ts > Session detail scoped identity > cancels a pending scoped request even when the next identity is incomplete
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/session-detail/session-detail-scope.spec.ts:68:27
+     66|     const old = ctx.http.expectOne(req => req.url === '/api/v1/session…
+     67|     await ctx.harness.navigateByUrl('/sessions/shared?siteId=b', Sessi…
+     68|     expect(old.cancelled).toBe(true);
+       |                           ^
+     69|     expect(ctx.text()).toContain('sede y sonda');
+     70|     ctx.http.expectNone(req => req.url.startsWith('/api/v1/sessions'));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  16:42:04
+   Duration  1.29s (environment 59%, setup 20%, tests 12%, import 5%, transform 4%, worker 1%)
+

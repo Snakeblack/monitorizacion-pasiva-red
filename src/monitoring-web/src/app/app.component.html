@@ -13,7 +13,7 @@
   </header>
   <div class="app-body">
     <nav id="app-nav" class="app-nav">
-      <button type="button" class="app-nav-item" aria-current="page">Detalle</button>
+      <a class="app-nav-item" routerLink="/sessions" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page">Sesiones</a>
     </nav>
     <main class="app-main">
       <router-outlet />

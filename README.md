@@ -104,4 +104,4 @@ La sesión conserva la identidad `(siteId, sensorId, eventId)`, `occurredAt` ori
 
 `GET /api/v1/sessions/{eventId}` devuelve exactamente `eventId`, `siteId`, `sensorId`, `occurredAt` y `data` si existe dentro del ámbito confiable (200), o 404 si falta/es ajena. Exige un feature interno de lectura distinto de la identidad de ingestión y solo admite Development/Testing. Sin ese contexto responde 401; headers y query no conceden acceso. El host público no crea ese feature: las pruebas lo suministran desde el servidor. Production y entornos desconocidos responden 401 incluso con proveedor sustituido. OIDC/RBAC humano corresponde a S12.
 
-PostgreSQL se adopta provisionalmente según ADR-014. Las pruebas S01/S02/S03 verifican migración, aceptación, rollback, replay, recuperación, concurrencia y aislamiento; la capacidad y preparación para producción se acreditarán en S17.
+PostgreSQL se adopta como autoridad según ADR-015; ADR-014 conserva la elección histórica provisional. Las pruebas S01/S02/S03 verifican migración, aceptación, rollback, replay, recuperación, concurrencia y aislamiento; la capacidad y preparación para producción se acreditarán en S17.
