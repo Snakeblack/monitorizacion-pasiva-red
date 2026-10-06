@@ -27,7 +27,7 @@ public sealed class MigrationTests(PostgresFixture postgres) : IClassFixture<Pos
         Assert.Equal(SessionTestDatabase.ExpectedMigrationCount(), await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
-        Assert.Equal(14L, await ScalarLongAsync(
+        Assert.Equal(17L, await ScalarLongAsync(
             connection,
             "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'monitoring'"));
     }

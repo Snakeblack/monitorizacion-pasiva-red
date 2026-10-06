@@ -66,7 +66,7 @@ Cada unidad es un límite sugerido de commit/trabajo; workers solo se despachan 
 
 ### Fase 3 — Inventario, identidad y PKI
 
-- [ ] 3.1 S10–S11: RED observación repetida/sin MAC, cambio de IP/ámbito, conflicto concurrente y auditoría obligatoria; GREEN candidatos versionados e inventario confirmado solo manualmente. [REQ-inventario-dispositivos-001–004]
+- [~] 3.1 S10–S11 (contrato, worker de observaciones/candidatos y servicio de inventario manual con revisiones, ámbitos y auditoría implementados y probados contra PostgreSQL real; faltan los endpoints HTTP con roles —S12— y la UI Angular de inventario): RED observación repetida/sin MAC, cambio de IP/ámbito, conflicto concurrente y auditoría obligatoria; GREEN candidatos versionados e inventario confirmado solo manualmente. [REQ-inventario-dispositivos-001–004]
 - [ ] 3.2 S12: RED token inválido, expirado, rol/cruce de ámbito y cierre de sesión; GREEN OIDC Keycloak validado, matriz de roles y denegación sin datos residuales. [REQ-identidad-y-acceso-001–004]
 - [ ] 3.3 S13: RED CA/nombre inválidos, downgrade, certificado vencido/revocado y permisos backend excesivos; GREEN TLS validado/mTLS ligado a sonda, rotación/renovación ensayada con EJBCA real y credenciales mínimas. [REQ-transporte-y-pki-001–004]
 
