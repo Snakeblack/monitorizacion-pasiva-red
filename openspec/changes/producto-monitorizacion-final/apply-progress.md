@@ -727,3 +727,13 @@ Mode: Strict TDD. Resuelve el bloqueo «Blocking design mismatch: documentary ke
 
 - `tests/stack/search-pipeline.test.mjs` (actualizado a v2 y con un caso nuevo de identidad de515 bytes indexada bajo su UUID) y `scripts/lab/pipeline.mjs` **no se ejecutaron**: no hay Docker en esta sesión. Deben correrse en el laboratorio (`prepare.ps1` + core up + `node scripts/lab/pipeline.mjs`) antes de dar por cerrada la compatibilidad con el sink real, en particular que `key.ignore=false` use la clave reescrita como `_id`.
 - Sigue pendiente K03: frescura/checkpoints, reconciliación, comando de supresión, snapshot de generación/rebuild, y las tareas1.5–1.7 y siguientes. `acceptedAt` de la reproyección v2 se toma de `ingestion_inbox`; sin retención implementada no hay pérdida, pero la futura caducidad de la bandeja debe conservar ese dato o recuperarlo del outbox v1.
+
+
+## Supresión en la autoridad (K03, parcial) — 2026-10-06
+
+PR [#24](https://github.com/Snakeblack/monitorizacion-pasiva-red/pull/24) (identidad compacta) está fusionado en `main` con CI `verify` en verde sobre PostgreSQL18, lo que cierra la reserva anterior sobre `SessionSchemaTests.UpgradeS02...` (el `23001` de RESTRICT sí se cumple en la imagen fijada).
+
+- `SessionSuppressor.SuppressAsync(identity)` (`src/Monitoring.Persistence/Sessions/`): en una transacción toma el lock compartido de publicación y luego el de fila, pasa la identidad a `deleted`, incrementa la revisión, borra sesión y metadatos (cascada desde la proyección; la bandeja aceptada conserva su propia retención) y confirma la barrera mínima `operation=delete` con el mismo `searchDocumentId`. Resultado `Suppressed`, `AlreadySuppressed` o `NotFound`; repetir o competir no duplica barrera.
+- Evidencia (PostgreSQL16 local, parche temporal del fixture ya revertido): RED por tipo inexistente; GREEN `SessionSuppressionTests` 5/5 (barrera atómica sin datos de tráfico a revisión 2 e historial v1/v2 intacto, idempotencia/desconocida, rollback ante fallo del outbox, 4 supresiones concurrentes → una barrera, replay de evento aceptado no resucita) y `OutboxTests` 7/7. Suite sin las clases Angular: 142/143; el fallo es el artefacto PostgreSQL16 ya descrito.
+- Aún sin conectar a un disparador: no hay endpoint, worker ni retención que lo invoque (S15 / tarea4.2). Tampoco prueba el efecto en el índice real: eso requiere el stack Docker (barrera sobre documento previo, ya cubierto por `search-pipeline.test.mjs` con fixtures).
+- Siguen pendientes de K03: frescura/checkpoints (`ProjectionStatus`), reconciliación contra la autoridad, snapshot/rebuild de generación y la ejecución en el laboratorio de los tests del stack actualizados a v2.

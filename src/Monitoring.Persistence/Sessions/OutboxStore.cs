@@ -77,7 +77,7 @@ public static class OutboxStore
         }, cancellationToken);
     }
 
-    private static async Task AcquirePublicationLockAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    internal static async Task AcquirePublicationLockAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken)
     {
         await using var publicationLock = new NpgsqlCommand("SELECT pg_advisory_xact_lock_shared(@lock)", connection, transaction);
         publicationLock.Parameters.AddWithValue("lock", PublicationLock);
