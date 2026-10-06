@@ -6,6 +6,7 @@ using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Monitoring.Domain.Sessions.Search;
 using Monitoring.Host.Sessions;
+using Monitoring.Persistence.Search;
 using Monitoring.Persistence.Sessions;
 using Npgsql;
 
@@ -75,6 +76,26 @@ else
     builder.Services.TryAddScoped<ISessionReader, PersistentSessionReader>();
     builder.Services.TryAddScoped<SessionProjector>();
     builder.Services.AddHostedService<SessionProjectionWorker>();
+    builder.Services.TryAddScoped<ISessionVisibility, PostgresSessionVisibility>();
+    builder.Services.TryAddSingleton(builder.Configuration.GetSection("Search:Leases").Get<SnapshotLeaseOptions>() ?? new SnapshotLeaseOptions());
+    builder.Services.TryAddScoped<ISnapshotLeases, PostgresSnapshotLeases>();
+    builder.Services.TryAddScoped<IProjectionStatus, UnknownProjectionStatus>();
+    if (builder.Configuration["Search:Elasticsearch:Url"] is { Length: > 0 } searchUrl)
+    {
+        var searchOptions = builder.Configuration.GetSection("Search:Elasticsearch").Get<ElasticsearchOptions>() ?? new ElasticsearchOptions();
+        builder.Services.TryAddSingleton(searchOptions);
+        // The 10 s search deadline lives in the request token, so the client itself never imposes a shorter or longer one.
+        builder.Services.AddHttpClient<ElasticsearchSessionSearch>(client =>
+        {
+            client.BaseAddress = new Uri(searchUrl);
+            client.Timeout = Timeout.InfiniteTimeSpan;
+            if (builder.Configuration["Search:Elasticsearch:ApiKey"] is { Length: > 0 } apiKey)
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("ApiKey", apiKey);
+            }
+        });
+        builder.Services.AddTransient<ISessionSearch>(provider => provider.GetRequiredService<ElasticsearchSessionSearch>());
+    }
 }
 
 var app = builder.Build();
