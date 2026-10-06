@@ -58,6 +58,27 @@ if (args.Length > 0 && args[0] == "--quarantine")
     return;
 }
 
+if (args.Contains("--project-pending", StringComparer.Ordinal))
+{
+    // One projection pass over everything pending, for operations and recovery rehearsals; the worker does the same continuously.
+    var projectionConnection = builder.Configuration.GetConnectionString("Monitoring");
+    if (string.IsNullOrWhiteSpace(projectionConnection))
+    {
+        Console.Error.WriteLine("Projection failed: ConnectionStrings:Monitoring is required.");
+        Environment.ExitCode = 1;
+        return;
+    }
+    await using var projectionDb = new MonitoringDbContext(new DbContextOptionsBuilder<MonitoringDbContext>().UseNpgsql(projectionConnection).Options);
+    await new SessionProjector(projectionDb).RunPassAsync(CancellationToken.None);
+    return;
+}
+
+if (args.Contains("--restore-finalize", StringComparer.Ordinal))
+{
+    Environment.ExitCode = await RestoreFinalizeCommand.RunAsync(builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
+    return;
+}
+
 if (args.Length > 0 && args[0] == "--probes")
 {
     Environment.ExitCode = await ProbesCommand.RunAsync(args[1..], builder.Configuration, Console.Out, Console.Error, CancellationToken.None);

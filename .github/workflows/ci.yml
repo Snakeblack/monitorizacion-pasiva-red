@@ -132,3 +132,24 @@ jobs:
       - name: Stop the stack
         if: always()
         run: pwsh scripts/lab/core.ps1 -Action down -Project monitoring-ci
+
+  # Backup / PITR rehearsal on a throw-away PostgreSQL cluster (scripts/lab/pitr-rehearsal.sh). Started by hand until it has passed
+  # once on a runner; then drop the `if` so every pull request runs it.
+  recovery:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Build the host
+        run: dotnet build src/Monitoring.Host
+
+      - name: Rehearse backup, loss, point-in-time recovery and post-restore finalization
+        run: bash scripts/lab/pitr-rehearsal.sh
