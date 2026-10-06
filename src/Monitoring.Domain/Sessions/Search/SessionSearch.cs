@@ -60,9 +60,11 @@ public interface IProjectionStatus
 
 public sealed record IndexedDocument(long Revision, string Operation);
 
-// Read side of the search projection used to verify it against the authority. Values are what is actually visible after a refresh.
+// Read side of a search index used to verify it against the authority; a null index is the read alias. Values are what is
+// actually visible after a refresh.
 public interface IProjectionIndex
 {
-    Task RefreshAsync(CancellationToken cancellationToken);
-    Task<IReadOnlyDictionary<Guid, IndexedDocument>> GetAsync(IReadOnlyCollection<Guid> searchDocumentIds, CancellationToken cancellationToken);
+    Task RefreshAsync(string? index, CancellationToken cancellationToken);
+    Task<IReadOnlyDictionary<Guid, IndexedDocument>> GetAsync(string? index, IReadOnlyCollection<Guid> searchDocumentIds, CancellationToken cancellationToken);
+    Task<long> CountAsync(string? index, CancellationToken cancellationToken);
 }

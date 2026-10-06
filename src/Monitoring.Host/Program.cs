@@ -47,6 +47,12 @@ if (args.Contains("--migrate", StringComparer.Ordinal))
     return;
 }
 
+if (args.Contains("--rebuild-search", StringComparer.Ordinal))
+{
+    Environment.ExitCode = await SearchRebuildCommand.RunAsync(builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
+    return;
+}
+
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
 builder.Services.TryAddSingleton<IngestionRejectionMetrics>();
 builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContextTrustedSessionReadContextProvider>();

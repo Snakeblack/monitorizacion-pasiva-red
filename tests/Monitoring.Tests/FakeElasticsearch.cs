@@ -14,6 +14,11 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
 
     private readonly object _gate = new();
     private readonly List<Doc> _docs = [];
+    private readonly Dictionary<string, List<Doc>> _indices = [];
+    private readonly Dictionary<string, string> _aliases = new() { ["sessions-read"] = DefaultIndex };
+    internal const string DefaultIndex = "sessions-v2-000001";
+    internal List<string> Created { get; } = [];
+    internal bool FailAliasSwitch { get; set; }
     private readonly Dictionary<string, List<Doc>> _pits = [];
     private int _pitCounter;
 
@@ -25,6 +30,26 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
     internal int OpenPits => _pits.Count;
     internal List<int> MgetSizes { get; } = [];
     internal bool FailMget { get; set; }
+
+    // Documents of a physical index; the default one is the serving index backing the read alias.
+    internal List<Doc> Store(string name) => name == DefaultIndex ? _docs : (_indices.TryGetValue(name, out var docs) ? docs : (_indices[name] = []));
+    internal void Put(string index, Doc doc, bool onlyIfNewer = true)
+    {
+        lock (_gate)
+        {
+            var store = Store(index);
+            var existing = store.FirstOrDefault(item => item.Id == doc.Id);
+            if (existing is not null)
+            {
+                if (onlyIfNewer && existing.Source["revision"]!.GetValue<long>() >= doc.Source["revision"]!.GetValue<long>()) return;
+                store.Remove(existing);
+            }
+            store.Add(doc);
+        }
+    }
+    internal bool IndexExists(string name) { lock (_gate) return name == DefaultIndex || _indices.ContainsKey(name); }
+    internal IReadOnlyList<string> AliasTargets(string alias) { lock (_gate) return _aliases.TryGetValue(alias, out var target) ? [target] : []; }
+    private string Resolve(string name) => _aliases.TryGetValue(name, out var target) ? target : name;
 
     internal void Remove(Guid id) { lock (_gate) _docs.RemoveAll(doc => doc.Id == id.ToString()); }
     internal void Replace(Doc doc) { lock (_gate) { _docs.RemoveAll(existing => existing.Id == doc.Id); _docs.Add(doc); } }
@@ -55,7 +80,7 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
             if (request.Method == HttpMethod.Post && path.EndsWith("/_pit", StringComparison.Ordinal))
             {
                 var id = $"pit-{++_pitCounter}";
-                _pits[id] = [.. _docs];
+                _pits[id] = [.. Store(Resolve(path.Split('/')[1]))];
                 return Reply(HttpStatusCode.OK, new JsonObject { ["id"] = id }.ToJsonString());
             }
             if (request.Method == HttpMethod.Delete && path == "/_pit")
@@ -70,15 +95,58 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
                 if (FailMget) return Reply(HttpStatusCode.ServiceUnavailable, "{}");
                 var ids = JsonNode.Parse(body!)!["ids"]!.AsArray().Select(id => id!.GetValue<string>()).ToList();
                 MgetSizes.Add(ids.Count);
+                var store = Store(Resolve(path.Split('/')[1]));
                 var docs = new JsonArray();
                 foreach (var id in ids)
                 {
-                    var found = _docs.FirstOrDefault(doc => doc.Id == id);
+                    var found = store.FirstOrDefault(doc => doc.Id == id);
                     docs.Add(found is null ? new JsonObject { ["_id"] = id, ["found"] = false }
                         : new JsonObject { ["_id"] = id, ["found"] = true, ["_source"] = found.Source.DeepClone() });
                 }
                 return Reply(HttpStatusCode.OK, new JsonObject { ["docs"] = docs }.ToJsonString());
             }
+        }
+        return Admin(request, path, body);
+    }
+
+    private HttpResponseMessage Admin(HttpRequestMessage request, string path, string? body)
+    {
+        var segments = path.Trim('/').Split('/');
+        if (request.Method == HttpMethod.Get && segments is [var index, "_count"])
+            return Reply(HttpStatusCode.OK, new JsonObject { ["count"] = Store(Resolve(index)).Count }.ToJsonString());
+        if (request.Method == HttpMethod.Put && segments.Length == 1)
+        {
+            if (IndexExists(segments[0])) return Reply(HttpStatusCode.BadRequest, "{\"error\":{\"type\":\"resource_already_exists_exception\"}}");
+            Store(segments[0]);
+            Created.Add(segments[0]);
+            return Reply(HttpStatusCode.OK, "{\"acknowledged\":true}");
+        }
+        if (request.Method == HttpMethod.Delete && segments.Length == 1)
+        {
+            var existed = _indices.Remove(segments[0]);
+            return Reply(existed ? HttpStatusCode.OK : HttpStatusCode.NotFound, "{\"acknowledged\":true}");
+        }
+        if (request.Method == HttpMethod.Get && segments is ["_alias", var alias])
+            return _aliases.TryGetValue(alias, out var target)
+                ? Reply(HttpStatusCode.OK, new JsonObject { [target] = new JsonObject { ["aliases"] = new JsonObject { [alias] = new JsonObject() } } }.ToJsonString())
+                : Reply(HttpStatusCode.NotFound, "{}");
+        if (request.Method == HttpMethod.Post && segments is ["_aliases"])
+        {
+            if (FailAliasSwitch) return Reply(HttpStatusCode.InternalServerError, "{}");
+            var actions = JsonNode.Parse(body!)!["actions"]!.AsArray();
+            var next = new Dictionary<string, string>(_aliases);
+            foreach (var action in actions)
+            {
+                if (action!["remove"] is JsonObject remove) next.Remove(remove["alias"]!.GetValue<string>());
+                if (action["add"] is JsonObject add)
+                {
+                    if (!IndexExists(add["index"]!.GetValue<string>())) return Reply(HttpStatusCode.NotFound, "{\"error\":{\"type\":\"index_not_found_exception\"}}");
+                    next[add["alias"]!.GetValue<string>()] = add["index"]!.GetValue<string>();
+                }
+            }
+            _aliases.Clear();
+            foreach (var pair in next) _aliases[pair.Key] = pair.Value;
+            return Reply(HttpStatusCode.OK, "{\"acknowledged\":true}");
         }
         return Reply(HttpStatusCode.BadRequest, "{\"error\":{\"type\":\"unsupported\"}}");
     }

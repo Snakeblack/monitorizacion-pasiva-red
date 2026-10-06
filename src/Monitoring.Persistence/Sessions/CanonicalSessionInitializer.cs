@@ -35,7 +35,7 @@ public sealed class CanonicalSessionInitializer(MonitoringDbContext dbContext)
                 LEFT JOIN monitoring.session_identity d USING(site_id,sensor_id,event_id)
                 WHERE (d.event_id IS NULL OR (d.state='active' AND NOT EXISTS (
                         SELECT 1 FROM monitoring.projection_outbox o
-                        WHERE o.aggregateid=d.document_key AND o.revision=d.revision AND o.target_topic=@topic)))
+                        WHERE o.aggregateid=d.document_key AND o.revision=d.revision AND o.target_topic=(SELECT target_topic FROM monitoring.search_generation WHERE state='active'))))
                   AND (@first OR (s.site_id,s.sensor_id,s.event_id)>(@site,@sensor,@event))
                 ORDER BY s.site_id,s.sensor_id,s.event_id LIMIT @limit
                 """, connection))
@@ -71,7 +71,7 @@ public sealed class CanonicalSessionInitializer(MonitoringDbContext dbContext)
                 SELECT d.site_id,d.sensor_id,d.event_id FROM monitoring.session_identity d
                 WHERE d.state='deleted' AND NOT EXISTS (
                         SELECT 1 FROM monitoring.projection_outbox o
-                        WHERE o.aggregateid=d.document_key AND o.revision=d.revision AND o.target_topic=@topic)
+                        WHERE o.aggregateid=d.document_key AND o.revision=d.revision AND o.target_topic=(SELECT target_topic FROM monitoring.search_generation WHERE state='active'))
                   AND (@first OR (d.site_id,d.sensor_id,d.event_id)>(@site,@sensor,@event))
                 ORDER BY d.site_id,d.sensor_id,d.event_id LIMIT @limit
                 """, connection))
@@ -94,7 +94,6 @@ public sealed class CanonicalSessionInitializer(MonitoringDbContext dbContext)
 
     private static void AddCursor(NpgsqlCommand command, SessionIdentity? cursor)
     {
-        command.Parameters.AddWithValue("topic", OutboxStore.SessionTopic);
         command.Parameters.AddWithValue("limit", PageSize);
         command.Parameters.AddWithValue("first", cursor is null);
         command.Parameters.AddWithValue("site", cursor?.SiteId ?? "");

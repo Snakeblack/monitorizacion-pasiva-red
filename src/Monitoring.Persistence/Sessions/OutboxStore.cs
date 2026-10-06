@@ -11,6 +11,7 @@ public static class OutboxStore
 {
     // Contract version, topic and index family move together; v1 history is retained on its own topic and never rewritten.
     public const int SchemaVersion = 2;
+    // Topic of generation 1. Writers publish to the topic of the active generation (see ActiveTopicAsync), which a rebuild changes.
     public const string SessionTopic = "monitoring.sessions.v2";
     // All session/retention writers share this lock; rebuild takes its exclusive counterpart at the alias switch.
     public const long PublicationLock = 7182041001;
@@ -104,11 +105,18 @@ public static class OutboxStore
             VALUES (@id,@key,'sessions',@topic,@revision,@schema,CAST(@payload AS jsonb)) ON CONFLICT DO NOTHING
             """, connection, transaction, identity);
         insert.Parameters.AddWithValue("id", Guid.NewGuid());
-        insert.Parameters.AddWithValue("topic", SessionTopic);
+        insert.Parameters.AddWithValue("topic", await ActiveTopicAsync(connection, transaction, cancellationToken));
         insert.Parameters.AddWithValue("revision", revision);
         insert.Parameters.AddWithValue("schema", SchemaVersion);
         insert.Parameters.AddWithValue("payload", JsonSerializer.Serialize(payload));
         await insert.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    // Read under the shared publication lock, so it cannot change between this read and the commit of the write.
+    internal static async Task<string> ActiveTopicAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        await using var command = new NpgsqlCommand("SELECT target_topic FROM monitoring.search_generation WHERE state='active'", connection, transaction);
+        return (string?)await command.ExecuteScalarAsync(cancellationToken) ?? throw new InvalidOperationException("No active search generation.");
     }
 
     private static void AddNullable(NpgsqlCommand command, string name, NpgsqlDbType type, object? value) =>

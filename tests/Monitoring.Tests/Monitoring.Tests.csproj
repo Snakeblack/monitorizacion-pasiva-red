@@ -19,6 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The reviewed Connect sink configuration is the template every generation's connector derives from. -->
+    <None Include="../../deploy/connect/sink.json" Link="sink.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
