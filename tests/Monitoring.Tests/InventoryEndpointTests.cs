@@ -28,6 +28,7 @@ public sealed class InventoryEndpointTests(PostgresFixture postgres) : IClassFix
         var host = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Production");
+            ProbeTestTrust.For(builder, "Production");
             builder.UseSetting("ConnectionStrings:Monitoring", connection);
             builder.UseSetting("Identity:Mode", "Oidc");
             builder.UseSetting("Identity:Authority", OidcTestIdp.Issuer);

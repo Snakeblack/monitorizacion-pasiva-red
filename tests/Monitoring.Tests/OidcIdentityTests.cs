@@ -36,6 +36,7 @@ public sealed class OidcIdentityTests : IDisposable
         var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
             builder.UseSetting("Identity:Mode", "Oidc");
             builder.UseSetting("Identity:Authority", OidcTestIdp.Issuer);
             builder.UseSetting("Identity:Audience", OidcTestIdp.Audience);

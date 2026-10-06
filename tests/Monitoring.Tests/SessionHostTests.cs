@@ -67,6 +67,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
         using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
             builder.UseSetting("Identity:Mode", "Oidc");
             builder.UseSetting("Identity:Authority", "https://idp.test/realms/monitoring");
             builder.UseSetting("Identity:Audience", "monitoring-api");
@@ -174,6 +175,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
             builder.UseSetting("ConnectionStrings:Monitoring", connection ?? "");
             builder.ConfigureTestServices(services =>
             {

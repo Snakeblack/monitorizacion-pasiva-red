@@ -43,6 +43,7 @@ public sealed class SessionSearchEndpointTests
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
             if (oidc)
             {
                 builder.UseSetting("Identity:Mode", "Oidc");

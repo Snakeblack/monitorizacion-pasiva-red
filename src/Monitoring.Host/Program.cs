@@ -56,6 +56,12 @@ if (args.Length > 0 && args[0] == "--quarantine")
     return;
 }
 
+if (args.Length > 0 && args[0] == "--probes")
+{
+    Environment.ExitCode = await ProbesCommand.RunAsync(args[1..], builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
+    return;
+}
+
 if (args.Contains("--rebuild-search", StringComparer.Ordinal))
 {
     Environment.ExitCode = await SearchRebuildCommand.RunAsync(builder.Configuration, Console.Out, Console.Error, CancellationToken.None);
@@ -101,6 +107,7 @@ else
     builder.Services.AddHostedService<QuarantineMetrics>();
     builder.Services.AddScoped<IAccessAudit, PostgresAccessAudit>();
     builder.Services.AddScoped<InventoryService>();
+    builder.Services.AddScoped<IProbeRegistry, ProbeRegistry>();
     builder.Services.TryAddScoped<ISessionVisibility, PostgresSessionVisibility>();
     builder.Services.TryAddSingleton(builder.Configuration.GetSection("Search:Leases").Get<SnapshotLeaseOptions>() ?? new SnapshotLeaseOptions());
     builder.Services.TryAddScoped<ISnapshotLeases, PostgresSnapshotLeases>();
@@ -138,11 +145,18 @@ else
     builder.Services.TryAddScoped<IProjectionStatus, UnknownProjectionStatus>();
 }
 
+var probeCertificates = builder.AddProbeCertificateAuthentication();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 {
     app.UseMiddleware<TrustedSessionReadScopeMiddleware>();
+}
+
+if (probeCertificates)
+{
+    app.UseMiddleware<ProbeCertificateMiddleware>();
 }
 
 app.MapGet("/health/live", () => Results.Ok());
