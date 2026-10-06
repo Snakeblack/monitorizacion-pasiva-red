@@ -39,10 +39,16 @@ public sealed class SessionSearchEndpointTests
         new(items, next, freshness ?? new SearchFreshness(FreshnessState.Current, Now, 2));
 
     private static WebApplicationFactory<Program> Host(FakeSearch search, TrustedSessionReadContext? context = null, string environment = "Testing",
-        Action<SessionSearchOptions>? options = null, MutableTime? time = null, DirectoryInfo? keyRing = null) =>
+        Action<SessionSearchOptions>? options = null, MutableTime? time = null, DirectoryInfo? keyRing = null, bool oidc = false) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            if (oidc)
+            {
+                builder.UseSetting("Identity:Mode", "Oidc");
+                builder.UseSetting("Identity:Authority", "https://idp.test/realms/monitoring");
+                builder.UseSetting("Identity:Audience", "monitoring-api");
+            }
             builder.ConfigureTestServices(services =>
             {
                 if (keyRing is not null) services.AddDataProtection().PersistKeysToFileSystem(keyRing).SetApplicationName("cursor-test");
@@ -182,7 +188,8 @@ public sealed class SessionSearchEndpointTests
             using var response = await anonymous.CreateClient().GetAsync("/api/v1/sessions?" + Day);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
-        using var production = Host(search, environment: "Production");
+        // A production host runs OIDC; the development context a test substitutes is never consulted there.
+        using var production = Host(search, environment: "Production", oidc: true);
         using var denied = await production.CreateClient().GetAsync("/api/v1/sessions?" + Day);
         Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
         Assert.Empty(search.Requests);

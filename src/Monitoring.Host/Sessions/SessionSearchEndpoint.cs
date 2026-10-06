@@ -1,5 +1,7 @@
 using System.Globalization;
+using Monitoring.Domain.Security;
 using Monitoring.Domain.Sessions.Search;
+using Monitoring.Host.Security;
 
 namespace Monitoring.Host.Sessions;
 
@@ -29,28 +31,27 @@ public static class SessionSearchEndpoint
     public static void MapSessionSearchEndpoint(this WebApplication app)
     {
         app.MapGet("/api/v1/sessions", async (
-            HttpContext httpContext, IHostEnvironment environment, ITrustedSessionReadContextProvider contextProvider,
+            HttpContext httpContext, IAccessProvider accessProvider,
             ISessionSearch search, SessionSearchGate gate, SessionSearchOptions options, SessionCursor cursors, TimeProvider time) =>
         {
-            // Until the identity slice lands, only the Development/Testing server context may authorize a read.
-            if (!environment.IsDevelopment() && !environment.IsEnvironment("Testing")) return Results.Unauthorized();
-            var context = contextProvider.Resolve(httpContext);
-            if (context is null) return Results.Unauthorized();
+            var access = await accessProvider.AuthorizeAsync(httpContext, Operation.ReadSessions, httpContext.RequestAborted);
+            if (access.Outcome == AccessOutcome.Unauthenticated) return Results.Unauthorized();
+            if (access.Outcome == AccessOutcome.Forbidden) return Results.StatusCode(StatusCodes.Status403Forbidden);
             var now = time.GetUtcNow();
             if (!SessionSearchQuery.TryParse(httpContext.Request.Query, now, out var query, out _))
                 return Results.StatusCode(StatusCodes.Status400BadRequest);
 
             // Client selectors may only narrow the authorized set; the narrowed set is applied inside the search itself.
-            var scope = new List<AuthorizedPair> { new(context.SiteId, context.SensorId) }
+            var authorized = access.Scopes!.ToList();
+            var scope = authorized
                 .Where(pair => (query!.SiteId is null || pair.SiteId == query.SiteId) && (query.SensorId is null || pair.SensorId == query.SensorId))
                 .ToList();
             if (scope.Count == 0) return Results.StatusCode(StatusCodes.Status403Forbidden);
             // The cursor binds the full authorized set (current permissions), not just the narrowed one.
-            var authorized = new List<AuthorizedPair> { new(context.SiteId, context.SensorId) };
             SessionSearchPosition? after = null;
             var expires = now + SessionCursor.Lifetime;
             if (query!.Cursor is not null
-                && !cursors.TryOpen(query.Cursor, context.Subject, authorized, query.Fingerprint(), query.PageSize, now, out after, out expires, out var failure))
+                && !cursors.TryOpen(query.Cursor, access.Subject!, authorized, query.Fingerprint(), query.PageSize, now, out after, out expires, out var failure))
                 return Results.StatusCode(failure switch
                 {
                     CursorFailure.Expired => StatusCodes.Status410Gone,
@@ -64,12 +65,12 @@ public static class SessionSearchEndpoint
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(httpContext.RequestAborted);
                 timeout.CancelAfter(options.Timeout);
                 var request = new SessionSearchRequest(query!.From, query.To, scope, query.SourceIp, query.DestinationIp,
-                    query.Protocol, query.SourcePort, query.DestinationPort, query.PageSize, after, context.Subject, expires);
+                    query.Protocol, query.SourcePort, query.DestinationPort, query.PageSize, after, access.Subject!, expires);
                 try
                 {
                     var page = await search.SearchAsync(request, timeout.Token);
                     return Results.Ok(Present(page, page.Next is null ? null
-                        : cursors.Issue(context.Subject, authorized, query.Fingerprint(), query.PageSize, page.Next, expires)));
+                        : cursors.Issue(access.Subject!, authorized, query.Fingerprint(), query.PageSize, page.Next, expires)));
                 }
                 catch (OperationCanceledException) when (!httpContext.RequestAborted.IsCancellationRequested)
                 {

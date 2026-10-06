@@ -61,16 +61,24 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     [Theory]
     [InlineData("Production")]
     [InlineData("Unknown")]
-    public async Task EnvironmentGuardRejectsEvenSubstitutedProviderBeforeReading(string environment)
+    public async Task OutsideDevelopmentAndTestingOnlyOidcServesReadsEvenIfADevelopmentProviderIsSubstituted(string environment)
     {
-        using var factory = CreateHost(null, new("site", "sensor"), environment);
         var reader = new FailingReader();
-        using var guarded = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
-            services.RemoveAll<ISessionReader>();
-            services.AddSingleton<ISessionReader>(reader);
-        }));
-        using var client = guarded.CreateClient();
+            builder.UseEnvironment(environment);
+            builder.UseSetting("Identity:Mode", "Oidc");
+            builder.UseSetting("Identity:Authority", "https://idp.test/realms/monitoring");
+            builder.UseSetting("Identity:Audience", "monitoring-api");
+            builder.ConfigureTestServices(services =>
+            {
+                services.RemoveAll<ITrustedSessionReadContextProvider>();
+                services.AddSingleton<ITrustedSessionReadContextProvider>(new ReadProvider(new("site", "sensor")));
+                services.RemoveAll<ISessionReader>();
+                services.AddSingleton<ISessionReader>(reader);
+            });
+        });
+        using var client = factory.CreateClient();
         Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/v1/sessions/event")).StatusCode);
         Assert.Equal(0, reader.Calls);
     }

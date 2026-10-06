@@ -5,6 +5,7 @@ using Monitoring.Persistence;
 using Monitoring.Persistence.Ingestion;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Monitoring.Domain.Sessions.Search;
+using Monitoring.Host.Security;
 using Monitoring.Host.Sessions;
 using Monitoring.Persistence.Search;
 using Monitoring.Persistence.Sessions;
@@ -62,6 +63,9 @@ if (args.Contains("--rebuild-search", StringComparer.Ordinal))
 builder.Services.TryAddSingleton<ITrustedSensorIdentityProvider, HostContextTrustedSensorIdentityProvider>();
 builder.Services.TryAddSingleton<IngestionRejectionMetrics>();
 builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContextTrustedSessionReadContextProvider>();
+// Human identity: the explicit development read mode only in Development/Testing, otherwise validated OIDC; an insecure or
+// incomplete configuration throws here and the host does not start.
+builder.Services.AddMonitoringIdentity(builder.Configuration, builder.Environment);
 builder.Services.TryAddSingleton(TimeProvider.System);
 builder.Services.TryAddSingleton(new SessionSearchOptions());
 builder.Services.TryAddSingleton<SessionSearchGate>();
