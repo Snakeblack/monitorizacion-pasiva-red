@@ -37,6 +37,25 @@ jobs:
       - name: Test with Docker-backed PostgreSQL
         run: dotnet test Monitoring.slnx --no-build
 
+      - name: Use JDK 21 for the Connect transform
+        run: echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch pinned Kafka API jars
+        run: ./scripts/lab/fetch-transform-libs.sh
+
+      - name: Test the Connect session contract guard
+        run: |
+          set -euo pipefail
+          node --test tests/stack/session-contract.test.mjs | tee contract-guard.txt
+          # A skipped or empty run must fail the build, never pass silently.
+          grep -q '^# pass 1$' contract-guard.txt
+          grep -q '^# skipped 0$' contract-guard.txt
+
+      - name: Check the stack tests parse
+        run: |
+          set -euo pipefail
+          for file in tests/stack/*.mjs scripts/lab/*.mjs; do node --check "$file"; done
+
       - name: Install SPA dependencies
         run: npm ci
         working-directory: src/monitoring-web
@@ -61,3 +80,49 @@ jobs:
             find publish-host -iname '*monitoring-web*' -print
             exit 1
           fi
+
+  # Real chain (PostgreSQL -> Debezium -> Kafka -> Connect sink -> Elasticsearch -> API). It is started by hand until it has
+  # passed once on a runner; then drop the `if` so every pull request runs it.
+  stack:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MONITORING_COMPOSE_PROJECT: monitoring-ci
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.16.0"
+
+      - name: Use JDK 21 for the Connect transform
+        run: echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+
+      - name: Start the core stack
+        run: pwsh scripts/lab/core.ps1 -Action up -Project monitoring-ci
+
+      - name: Configure index, alias and connectors
+        run: node scripts/lab/pipeline.mjs
+
+      - name: Run the stack tests
+        run: |
+          set -euo pipefail
+          node --test tests/stack/search-pipeline.test.mjs tests/stack/search-api.test.mjs | tee stack-tests.txt
+          grep -q '^# fail 0$' stack-tests.txt
+          grep -q '^# skipped 0$' stack-tests.txt
+
+      - name: Collect service logs on failure
+        if: failure()
+        run: docker compose --env-file deploy/versions.env -p monitoring-ci -f compose.yaml logs --no-color --tail 200
+
+      - name: Stop the stack
+        if: always()
+        run: pwsh scripts/lab/core.ps1 -Action down -Project monitoring-ci

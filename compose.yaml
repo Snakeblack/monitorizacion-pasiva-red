@@ -96,8 +96,15 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
+      # Development-only trusted read scope until the identity slice (S12) supplies real subjects and permissions.
+      TrustedSessionRead__SiteId: pipeline-site
+      TrustedSessionRead__SensorId: pipeline-sensor
+      Search__Elasticsearch__Url: http://elasticsearch:9200
+      # Cursors are sealed with Data Protection; the lab keeps the key ring in the container (cursors do not survive a restart).
+      DataProtection__KeysPath: /tmp/monitoring-keys
     depends_on:
       bootstrap: {condition: service_completed_successfully}
+      elasticsearch: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "bash", "/app/health.sh"]
       interval: 5s
