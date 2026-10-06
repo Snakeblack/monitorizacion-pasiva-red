@@ -153,6 +153,14 @@ internal static class SessionTestDatabase
         return (long)(await command.ExecuteScalarAsync())!;
     }
 
+    internal static async Task<string> TextAsync(string connectionString, string sql)
+    {
+        await using var connection = new NpgsqlConnection(connectionString);
+        await connection.OpenAsync();
+        await using var command = new NpgsqlCommand(sql, connection);
+        return (string)(await command.ExecuteScalarAsync())!;
+    }
+
     internal static Task InstallFailureTriggerAsync(string connection, string sqlState) => ExecuteAsync(connection, $$"""
         CREATE FUNCTION monitoring.fail_mark() RETURNS trigger LANGUAGE plpgsql AS $$
         BEGIN RAISE EXCEPTION 'sensitive-test-payload' USING ERRCODE = '{{sqlState}}'; END $$;

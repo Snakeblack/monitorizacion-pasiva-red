@@ -1,7 +1,7 @@
 {
   "settings":{"number_of_shards":1,"number_of_replicas":0},
   "mappings":{"dynamic":"strict","properties":{
-    "schemaVersion":{"type":"integer"},"operation":{"type":"keyword"},"documentKey":{"type":"keyword"},"revision":{"type":"long"},
+    "schemaVersion":{"type":"integer"},"operation":{"type":"keyword"},"documentKey":{"type":"keyword"},"searchDocumentId":{"type":"keyword"},"revision":{"type":"long"},
     "siteId":{"type":"keyword"},"sensorId":{"type":"keyword"},"eventId":{"type":"keyword"},
     "startedAt":{"type":"date","format":"strict_date_time||epoch_millis"},"endedAt":{"type":"date","format":"strict_date_time||epoch_millis"},
     "sourceIp":{"type":"ip"},"destinationIp":{"type":"ip"},"sourcePort":{"type":"integer"},"destinationPort":{"type":"integer"},

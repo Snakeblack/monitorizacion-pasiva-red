@@ -9,34 +9,23 @@ namespace Monitoring.Persistence.Sessions;
 // Both the live projector and the paged historical initializer use the same canonical publication contract.
 public static class OutboxStore
 {
-    public const string SessionTopic = "monitoring.sessions.v1";
+    // Contract version, topic and index family move together; v1 history is retained on its own topic and never rewritten.
+    public const int SchemaVersion = 2;
+    public const string SessionTopic = "monitoring.sessions.v2";
     // All session/retention writers share this lock; rebuild takes its exclusive counterpart at the alias switch.
     public const long PublicationLock = 7182041001;
 
     public static async Task WriteSessionAsync(NpgsqlConnection connection, NpgsqlTransaction transaction,
         SessionIdentity identity, CanonicalSession session, DateTimeOffset acceptedAt, CancellationToken cancellationToken)
     {
-        await using (var publicationLock = new NpgsqlCommand("SELECT pg_advisory_xact_lock_shared(@lock)", connection, transaction))
-        {
-            publicationLock.Parameters.AddWithValue("lock", PublicationLock);
-            await publicationLock.ExecuteNonQueryAsync(cancellationToken);
-        }
+        await AcquirePublicationLockAsync(connection, transaction, cancellationToken);
         await using (var command = Command("""
             INSERT INTO monitoring.session_identity(site_id,sensor_id,event_id,document_key,revision,state)
             VALUES (@site,@sensor,@event,@key,1,'active') ON CONFLICT DO NOTHING;
             """, connection, transaction, identity))
             await command.ExecuteNonQueryAsync(cancellationToken);
-        long revision;
-        await using (var command = Command("""
-            SELECT revision,state FROM monitoring.session_identity
-            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event FOR UPDATE
-            """, connection, transaction, identity))
-        await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
-        {
-            if (!await reader.ReadAsync(cancellationToken) || reader.GetString(1) != "active")
-                throw new InvalidOperationException("A suppressed session identity cannot be republished.");
-            revision = reader.GetInt64(0);
-        }
+        var (revision, state, searchDocumentId) = await LockIdentityAsync(connection, transaction, identity, cancellationToken);
+        if (state != "active") throw new InvalidOperationException("A suppressed session identity cannot be republished.");
         await using (var command = Command("""
             INSERT INTO monitoring.session_metadata(site_id,sensor_id,event_id,started_at,ended_at,source_ip,destination_ip,
               source_port,destination_port,protocol,vlan_id,provenance,revision,inferred,partial,close_reason,packet_count,byte_count)
@@ -61,9 +50,9 @@ public static class OutboxStore
             AddNullable(command, "bytes", NpgsqlDbType.Bigint, session.ByteCount);
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
-        var payload = JsonSerializer.Serialize(new
+        await InsertOutboxAsync(connection, transaction, identity, revision, new
         {
-            schemaVersion = 1, operation = "upsert", documentKey = identity.DocumentKey, revision,
+            schemaVersion = SchemaVersion, operation = "upsert", documentKey = identity.DocumentKey, searchDocumentId, revision,
             siteId = identity.SiteId, sensorId = identity.SensorId, eventId = identity.EventId,
             startedAt = UtcText(session.StartedAt), endedAt = UtcText(session.EndedAt),
             sourceIp = session.SourceIp.ToString(), destinationIp = session.DestinationIp.ToString(),
@@ -71,15 +60,54 @@ public static class OutboxStore
             vlanId = session.VlanId, provenance = session.Provenance, inferred = session.Inferred,
             partial = session.Partial, closeReason = session.CloseReason, packetCount = session.PacketCount,
             byteCount = session.ByteCount, acceptedAt = UtcText(acceptedAt)
-        });
+        }, cancellationToken);
+    }
+
+    // The permanent suppression barrier: a minimal replacement of the document, never carrying traffic metadata.
+    public static async Task WriteDeleteBarrierAsync(NpgsqlConnection connection, NpgsqlTransaction transaction,
+        SessionIdentity identity, CancellationToken cancellationToken)
+    {
+        await AcquirePublicationLockAsync(connection, transaction, cancellationToken);
+        var (revision, state, searchDocumentId) = await LockIdentityAsync(connection, transaction, identity, cancellationToken);
+        if (state != "deleted") throw new InvalidOperationException("Only a suppressed session identity publishes a delete barrier.");
+        await InsertOutboxAsync(connection, transaction, identity, revision, new
+        {
+            schemaVersion = SchemaVersion, operation = "delete", documentKey = identity.DocumentKey, searchDocumentId, revision,
+            siteId = identity.SiteId, sensorId = identity.SensorId, eventId = identity.EventId
+        }, cancellationToken);
+    }
+
+    private static async Task AcquirePublicationLockAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        await using var publicationLock = new NpgsqlCommand("SELECT pg_advisory_xact_lock_shared(@lock)", connection, transaction);
+        publicationLock.Parameters.AddWithValue("lock", PublicationLock);
+        await publicationLock.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    private static async Task<(long Revision, string State, Guid SearchDocumentId)> LockIdentityAsync(NpgsqlConnection connection,
+        NpgsqlTransaction transaction, SessionIdentity identity, CancellationToken cancellationToken)
+    {
+        await using var command = Command("""
+            SELECT revision,state,search_document_id FROM monitoring.session_identity
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event FOR UPDATE
+            """, connection, transaction, identity);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken)) throw new InvalidOperationException("The session identity does not exist.");
+        return (reader.GetInt64(0), reader.GetString(1), reader.GetGuid(2));
+    }
+
+    private static async Task InsertOutboxAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, SessionIdentity identity,
+        long revision, object payload, CancellationToken cancellationToken)
+    {
         await using var insert = Command("""
             INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
-            VALUES (@id,@key,'sessions',@topic,@revision,1,CAST(@payload AS jsonb)) ON CONFLICT DO NOTHING
+            VALUES (@id,@key,'sessions',@topic,@revision,@schema,CAST(@payload AS jsonb)) ON CONFLICT DO NOTHING
             """, connection, transaction, identity);
         insert.Parameters.AddWithValue("id", Guid.NewGuid());
         insert.Parameters.AddWithValue("topic", SessionTopic);
         insert.Parameters.AddWithValue("revision", revision);
-        insert.Parameters.AddWithValue("payload", payload);
+        insert.Parameters.AddWithValue("schema", SchemaVersion);
+        insert.Parameters.AddWithValue("payload", JsonSerializer.Serialize(payload));
         await insert.ExecuteNonQueryAsync(cancellationToken);
     }
 
