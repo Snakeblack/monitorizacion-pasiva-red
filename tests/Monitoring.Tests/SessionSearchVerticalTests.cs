@@ -48,6 +48,9 @@ public sealed class SessionSearchVerticalTests(PostgresFixture postgres) : IClas
                 builder.UseSetting("Search:Elasticsearch:Url", "http://elasticsearch.test:9200");
                 builder.ConfigureTestServices(services =>
                 {
+                    // The periodic reconciliation would race the freshness assertions; it is exercised by its own tests.
+                    foreach (var descriptor in services.Where(service => service.ImplementationType == typeof(ProjectionReconciliationWorker)).ToArray())
+                        services.Remove(descriptor);
                     services.RemoveAll<TimeProvider>();
                     services.AddSingleton<TimeProvider>(new FixedTime(now));
                     services.AddHttpClient<ElasticsearchSessionSearch>().ConfigurePrimaryHttpMessageHandler(() => elastic);

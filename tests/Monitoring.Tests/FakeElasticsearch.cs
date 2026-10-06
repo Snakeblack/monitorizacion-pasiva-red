@@ -23,6 +23,11 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
     internal HttpStatusCode? FailWith { get; set; }
     internal string? FailBody { get; set; }
     internal int OpenPits => _pits.Count;
+    internal List<int> MgetSizes { get; } = [];
+    internal bool FailMget { get; set; }
+
+    internal void Remove(Guid id) { lock (_gate) _docs.RemoveAll(doc => doc.Id == id.ToString()); }
+    internal void Replace(Doc doc) { lock (_gate) { _docs.RemoveAll(existing => existing.Id == doc.Id); _docs.Add(doc); } }
 
     internal static Doc MakeDoc(Guid id, string site, string sensor, string eventId, DateTimeOffset startedAt, string protocol = "TCP",
         string sourceIp = "192.0.2.1", string destinationIp = "192.0.2.2", int sourcePort = 1234, int destinationPort = 443,
@@ -59,6 +64,21 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
                 return Reply(_pits.Remove(id) ? HttpStatusCode.OK : HttpStatusCode.NotFound, "{\"succeeded\":true}");
             }
             if (request.Method == HttpMethod.Post && path == "/_search") return Search(JsonNode.Parse(body!)!.AsObject());
+            if (request.Method == HttpMethod.Post && path.EndsWith("/_refresh", StringComparison.Ordinal)) return Reply(HttpStatusCode.OK, "{\"_shards\":{\"failed\":0}}");
+            if (request.Method == HttpMethod.Post && path.EndsWith("/_mget", StringComparison.Ordinal))
+            {
+                if (FailMget) return Reply(HttpStatusCode.ServiceUnavailable, "{}");
+                var ids = JsonNode.Parse(body!)!["ids"]!.AsArray().Select(id => id!.GetValue<string>()).ToList();
+                MgetSizes.Add(ids.Count);
+                var docs = new JsonArray();
+                foreach (var id in ids)
+                {
+                    var found = _docs.FirstOrDefault(doc => doc.Id == id);
+                    docs.Add(found is null ? new JsonObject { ["_id"] = id, ["found"] = false }
+                        : new JsonObject { ["_id"] = id, ["found"] = true, ["_source"] = found.Source.DeepClone() });
+                }
+                return Reply(HttpStatusCode.OK, new JsonObject { ["docs"] = docs }.ToJsonString());
+            }
         }
         return Reply(HttpStatusCode.BadRequest, "{\"error\":{\"type\":\"unsupported\"}}");
     }

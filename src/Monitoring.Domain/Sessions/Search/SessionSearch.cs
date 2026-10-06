@@ -57,3 +57,12 @@ public interface IProjectionStatus
 {
     Task<SearchFreshness> CurrentAsync(CancellationToken cancellationToken);
 }
+
+public sealed record IndexedDocument(long Revision, string Operation);
+
+// Read side of the search projection used to verify it against the authority. Values are what is actually visible after a refresh.
+public interface IProjectionIndex
+{
+    Task RefreshAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyDictionary<Guid, IndexedDocument>> GetAsync(IReadOnlyCollection<Guid> searchDocumentIds, CancellationToken cancellationToken);
+}

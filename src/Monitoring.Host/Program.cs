@@ -79,7 +79,6 @@ else
     builder.Services.TryAddScoped<ISessionVisibility, PostgresSessionVisibility>();
     builder.Services.TryAddSingleton(builder.Configuration.GetSection("Search:Leases").Get<SnapshotLeaseOptions>() ?? new SnapshotLeaseOptions());
     builder.Services.TryAddScoped<ISnapshotLeases, PostgresSnapshotLeases>();
-    builder.Services.TryAddScoped<IProjectionStatus, UnknownProjectionStatus>();
     if (builder.Configuration["Search:Elasticsearch:Url"] is { Length: > 0 } searchUrl)
     {
         var searchOptions = builder.Configuration.GetSection("Search:Elasticsearch").Get<ElasticsearchOptions>() ?? new ElasticsearchOptions();
@@ -95,7 +94,23 @@ else
             }
         });
         builder.Services.AddTransient<ISessionSearch>(provider => provider.GetRequiredService<ElasticsearchSessionSearch>());
+        // Freshness is derived from recorded verifications of the index against the authority.
+        var projectionOptions = builder.Configuration.GetSection("Search:Projection").Get<ProjectionOptions>() ?? new ProjectionOptions();
+        builder.Services.TryAddSingleton(projectionOptions);
+        builder.Services.AddHttpClient<IProjectionIndex, ElasticsearchProjectionIndex>(client =>
+        {
+            client.BaseAddress = new Uri(searchUrl);
+            client.Timeout = TimeSpan.FromSeconds(30);
+            if (builder.Configuration["Search:Elasticsearch:ApiKey"] is { Length: > 0 } apiKey)
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("ApiKey", apiKey);
+            }
+        });
+        builder.Services.AddScoped<IProjectionStatus, PostgresProjectionStatus>();
+        builder.Services.AddScoped<ProjectionReconciler>();
+        builder.Services.AddHostedService<ProjectionReconciliationWorker>();
     }
+    builder.Services.TryAddScoped<IProjectionStatus, UnknownProjectionStatus>();
 }
 
 var app = builder.Build();

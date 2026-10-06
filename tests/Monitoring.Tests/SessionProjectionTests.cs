@@ -111,6 +111,10 @@ public sealed class SessionProjectionTests(PostgresFixture postgres) : IClassFix
 
 internal static class SessionTestDatabase
 {
+    // Every migration the assembly ships must be recorded; the count follows the code instead of a literal.
+    internal static long ExpectedMigrationCount() => typeof(Monitoring.Persistence.MonitoringDbContext).Assembly.GetTypes()
+        .Count(type => type.GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.Migrations.MigrationAttribute), false).Length > 0);
+
     internal static MonitoringDbContext Context(string connection) =>
         new(new DbContextOptionsBuilder<MonitoringDbContext>().UseNpgsql(connection).Options);
 
