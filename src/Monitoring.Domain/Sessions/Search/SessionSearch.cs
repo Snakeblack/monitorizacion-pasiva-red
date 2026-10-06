@@ -12,7 +12,7 @@ public sealed record AuthorizedPair(string SiteId, string SensorId);
 // time range is [From,To) over the session start, and Scope is the authorized set already narrowed by client selectors.
 public sealed record SessionSearchRequest(DateTimeOffset From, DateTimeOffset To, IReadOnlyList<AuthorizedPair> Scope,
     string? SourceIp, string? DestinationIp, string? Protocol, int? SourcePort, int? DestinationPort, int PageSize,
-    SessionSearchPosition? After);
+    SessionSearchPosition? After, string Subject, DateTimeOffset SnapshotExpiresAt);
 
 // Resume point inside one snapshot, in the total order (startedAt, document key). The host seals it into an opaque
 // cursor; implementations only see this typed value and never client-supplied text.
@@ -33,4 +33,27 @@ public enum SessionSearchFailure { Unavailable, Saturated, CursorExpired, Cursor
 public sealed class SessionSearchException(SessionSearchFailure failure, string? message = null) : Exception(message)
 {
     public SessionSearchFailure Failure { get; } = failure;
+}
+
+// Authority check applied to every page: only identities that are still active in PostgreSQL may be shown, so a lagging
+// index or an open snapshot can never serve a suppressed or expired session. Keyed by the compact search identity.
+public interface ISessionVisibility
+{
+    Task<IReadOnlySet<Guid>> VisibleAsync(IReadOnlyCollection<Guid> searchDocumentIds, CancellationToken cancellationToken);
+}
+
+// Bounds the open search snapshots per subject and globally. A lease lives until released or until the cursor deadline.
+public interface ISnapshotLeases
+{
+    // Throws SessionSearchException(Saturated) when a limit would be exceeded.
+    Task<Guid> AcquireAsync(string subject, DateTimeOffset expiresAt, DateTimeOffset now, CancellationToken cancellationToken);
+    // Records the current PIT id (digest only) and any change of it; false when the lease was released or has expired.
+    Task<bool> RecordPitAsync(Guid leaseId, string pitId, DateTimeOffset now, CancellationToken cancellationToken);
+    Task ReleaseAsync(Guid leaseId, CancellationToken cancellationToken);
+}
+
+// Freshness of the search projection for the response; unknown lag is null, never zero.
+public interface IProjectionStatus
+{
+    Task<SearchFreshness> CurrentAsync(CancellationToken cancellationToken);
 }

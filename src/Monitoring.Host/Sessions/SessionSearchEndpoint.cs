@@ -64,7 +64,7 @@ public static class SessionSearchEndpoint
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(httpContext.RequestAborted);
                 timeout.CancelAfter(options.Timeout);
                 var request = new SessionSearchRequest(query!.From, query.To, scope, query.SourceIp, query.DestinationIp,
-                    query.Protocol, query.SourcePort, query.DestinationPort, query.PageSize, after);
+                    query.Protocol, query.SourcePort, query.DestinationPort, query.PageSize, after, context.Subject, expires);
                 try
                 {
                     var page = await search.SearchAsync(request, timeout.Token);
