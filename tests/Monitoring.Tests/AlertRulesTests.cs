@@ -10,7 +10,7 @@ public sealed partial class AlertRulesTests
     private static readonly string Root = FindRoot();
     private static readonly string[] Severities = ["page", "ticket"];
     private static readonly string[] Owners = ["operaciones-red", "plataforma", "seguridad"];
-    private static readonly string[] Stages = ["probe", "ingestion", "projection", "cdc", "search"];
+    private static readonly string[] Stages = ["probe", "ingestion", "projection", "cdc", "search", "retention"];
 
     private static string FindRoot()
     {

@@ -149,3 +149,19 @@ Cada alerta de `deploy/observability/alerts.rules.json` (formato de reglas de Pr
 - **Qué significa:** La API dejó de publicar las métricas de la tubería.
 - **Causa probable:** La API está caída o la base de datos no es alcanzable: sin métricas no se detectaría ningún otro fallo.
 - **Qué hacer:** Restablecer la API y la base de datos antes de interpretar las demás alertas.
+
+## RetentionStalled
+
+- **Severidad / responsable / etapa:** page / plataforma / retention
+- **Condición:** `monitoring_retention_seconds_since_last_run > 10800` durante 0m
+- **Qué significa:** La retención no completa un ciclo desde hace más de 3 h.
+- **Causa probable:** El worker de retención falla (bloqueo de publicación mantenido por una reconstrucción, base de datos saturada) o se detuvo.
+- **Qué hacer:** Revisar el registro del worker y los bloqueos; los datos de tráfico caducados siguen almacenados mientras no se corrija.
+
+## RetentionNeverRan
+
+- **Severidad / responsable / etapa:** page / plataforma / retention
+- **Condición:** `absent(monitoring_retention_seconds_since_last_run)` durante 3h
+- **Qué significa:** La retención no ha completado ningún ciclo desde que arrancó la API.
+- **Causa probable:** La retención falla en cada intento o la API se reinicia antes de terminar.
+- **Qué hacer:** Revisar el registro del worker (tipo de fallo) y la base de datos; sin retención se incumple la promesa de borrado.

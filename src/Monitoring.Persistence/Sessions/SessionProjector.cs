@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace Monitoring.Persistence.Sessions;
 
-public sealed class SessionProjector(MonitoringDbContext dbContext)
+public sealed class SessionProjector(MonitoringDbContext dbContext, Retention.RetentionOptions? retention = null)
 {
     public async Task RunPassAsync(CancellationToken cancellationToken)
     {
@@ -89,7 +89,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         command.Parameters.AddWithValue(prefix + "_event", key.EventId);
     }
 
-    private enum Outcome { Projected, NotPending, InvalidContract }
+    private enum Outcome { Projected, NotPending, InvalidContract, Expired }
 
     private async Task ProjectAsync(EventKey key, CancellationToken cancellationToken)
     {
@@ -147,7 +147,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         var outcome = IsDeviceObservation(document.RootElement)
             ? await ProjectDeviceObservationAsync(key, document.RootElement, postgresTransaction, cancellationToken)
             : await ProjectSessionAsync(key, occurredAt, json, document.RootElement, postgresTransaction, cancellationToken);
-        if (outcome != Outcome.Projected)
+        if (outcome is not (Outcome.Projected or Outcome.Expired))
         {
             return outcome;
         }
@@ -158,7 +158,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         {
             await mark.ExecuteNonQueryAsync(cancellationToken);
         }
-        return Outcome.Projected;
+        return outcome;
     }
 
     private static bool IsDeviceObservation(JsonElement data) => data.ValueKind == JsonValueKind.Object
@@ -171,6 +171,8 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         {
             return Outcome.InvalidContract;
         }
+        // Past the retention window on arrival: acknowledged as handled but never stored, so it cannot come back after its expiry.
+        if (await IsExpiredAsync(session!.EndedAt, postgresTransaction, cancellationToken)) return Outcome.Expired;
 
         await using (var insert = Command("""
             INSERT INTO monitoring.session_projection(site_id,sensor_id,event_id,occurred_at_text,data)
@@ -198,6 +200,15 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         return Outcome.Projected;
     }
 
+    private async Task<bool> IsExpiredAsync(DateTimeOffset instant, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        if (retention is null) return false;
+        await using var command = new NpgsqlCommand("SELECT @instant < clock_timestamp() - @retention", Connection, transaction);
+        command.Parameters.AddWithValue("instant", instant);
+        command.Parameters.AddWithValue("retention", retention.SessionRetention);
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken))!;
+    }
+
     // Observations never create sessions or outbox records: they add facts and, when a MAC is present, a candidate with its
     // temporary IP association. Every statement is idempotent, so a replay of the same event changes nothing.
     private async Task<Outcome> ProjectDeviceObservationAsync(EventKey key, JsonElement data, NpgsqlTransaction transaction, CancellationToken cancellationToken)
@@ -206,6 +217,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         {
             return Outcome.InvalidContract;
         }
+        if (await IsExpiredAsync(observation!.ObservedAt, transaction, cancellationToken)) return Outcome.Expired;
         await using (var insert = Command("""
             INSERT INTO monitoring.device_observation(site_id,sensor_id,event_id,observed_at,ip,mac,vlan_id)
             VALUES (@site,@sensor,@event,@observed,@ip,CAST(@mac AS macaddr),@vlan) ON CONFLICT DO NOTHING

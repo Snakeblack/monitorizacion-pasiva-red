@@ -73,10 +73,12 @@ internal static class ProbeTestTrust
         return path;
     });
 
-    internal static void For(Microsoft.AspNetCore.Hosting.IWebHostBuilder builder, string environment)
+    internal static void For(Microsoft.AspNetCore.Hosting.IWebHostBuilder builder, string environment, bool withRetention = true)
     {
         if (environment is "Development" or "Testing") return;
         builder.UseSetting("Probes:Trust:CaCertificatePaths:0", CaFile.Value);
         builder.UseSetting("Probes:Trust:CrlLocations:0", "https://crl.invalid/ca.crl");
+        // Production also requires retention; these tests use fixed dates, so the window must never reach them.
+        if (withRetention) builder.UseSetting("Retention:SessionRetention", "36500.00:00:00");
     }
 }

@@ -10,6 +10,7 @@ using Monitoring.Host.Security;
 using Monitoring.Host.Sessions;
 using Monitoring.Host.Inventory;
 using Monitoring.Persistence.Inventory;
+using Monitoring.Persistence.Retention;
 using Monitoring.Persistence.Search;
 using Monitoring.Persistence.Sessions;
 using Npgsql;
@@ -98,12 +99,30 @@ if (string.IsNullOrWhiteSpace(monitoringConnection))
 else
 {
     builder.Services.AddDbContext<MonitoringDbContext>(options => options.UseNpgsql(monitoringConnection));
-    builder.Services.TryAddSingleton(builder.Configuration.GetSection("Ingestion").Get<IngestionOptions>() ?? new IngestionOptions());
+    // Retention is mandatory outside Development/Testing: keeping traffic data indefinitely is not a default this product accepts.
+    var retentionSection = builder.Configuration.GetSection("Retention");
+    var localEnvironment = builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing");
+    if (!retentionSection.Exists() && !localEnvironment)
+        throw new InvalidOperationException("Retention must be configured (Retention:SessionRetention, OutboxRetention, TombstoneMargin).");
+    var retention = retentionSection.Exists() ? retentionSection.Get<RetentionOptions>() ?? new RetentionOptions() : null;
+    retention?.Validate();
+    var ingestionOptions = builder.Configuration.GetSection("Ingestion").Get<IngestionOptions>() ?? new IngestionOptions();
+    if (retention is not null) ingestionOptions.EventRetention = retention.SessionRetention;
+    builder.Services.TryAddSingleton(ingestionOptions);
     builder.Services.TryAddScoped<InboxWriter>();
     builder.Services.TryAddScoped<IIngestionBatchWriter, PersistentIngestionBatchWriter>();
     builder.Services.TryAddScoped<SessionReader>();
     builder.Services.TryAddScoped<ISessionReader, PersistentSessionReader>();
-    builder.Services.TryAddScoped<SessionProjector>();
+    if (retention is not null)
+    {
+        builder.Services.TryAddSingleton(retention);
+        builder.Services.TryAddScoped(provider => new SessionProjector(provider.GetRequiredService<MonitoringDbContext>(), retention));
+        builder.Services.AddHostedService<RetentionWorker>();
+    }
+    else
+    {
+        builder.Services.TryAddScoped<SessionProjector>();
+    }
     builder.Services.AddHostedService<SessionProjectionWorker>();
     builder.Services.AddHostedService<QuarantineMetrics>();
     builder.Services.AddHostedService<PipelineMetrics>();

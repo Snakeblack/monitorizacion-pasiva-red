@@ -291,6 +291,38 @@
             "action": "Restablecer la API y la base de datos antes de interpretar las demás alertas.",
             "runbook": "docs/runbooks/pipeline-alerts.md#ingestionmetricsmissing"
           }
+        },
+        {
+          "alert": "RetentionStalled",
+          "expr": "monitoring_retention_seconds_since_last_run > 10800",
+          "for": "0m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "retention"
+          },
+          "annotations": {
+            "summary": "La retención no completa un ciclo desde hace más de 3 h.",
+            "cause": "El worker de retención falla (bloqueo de publicación mantenido por una reconstrucción, base de datos saturada) o se detuvo.",
+            "action": "Revisar el registro del worker y los bloqueos; los datos de tráfico caducados siguen almacenados mientras no se corrija.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#retentionstalled"
+          }
+        },
+        {
+          "alert": "RetentionNeverRan",
+          "expr": "absent(monitoring_retention_seconds_since_last_run)",
+          "for": "3h",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "retention"
+          },
+          "annotations": {
+            "summary": "La retención no ha completado ningún ciclo desde que arrancó la API.",
+            "cause": "La retención falla en cada intento o la API se reinicia antes de terminar.",
+            "action": "Revisar el registro del worker (tipo de fallo) y la base de datos; sin retención se incumple la promesa de borrado.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#retentionneverran"
+          }
         }
       ]
     }
