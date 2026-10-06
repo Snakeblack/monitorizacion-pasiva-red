@@ -4,44 +4,61 @@ import { randomUUID } from 'node:crypto';
 import { compose, http, sql, until } from '../../scripts/lab/compose.mjs';
 
 const key = (site, sensor, event) => [site,sensor,event].map(x=>Buffer.from(x).toString('base64url')).join('.');
-const document = documentKey => http('elasticsearch:9200',`/sessions-v1-000001/_doc/${documentKey}`);
+// The index _id is the compact authority-assigned search identity, never the (up to 515-byte) document key.
+const document = searchDocumentId => http('elasticsearch:9200',`/sessions-v2-000001/_doc/${searchDocumentId}`);
 const offsets = topic => compose(['exec','-T','kafka','/opt/kafka/bin/kafka-get-offsets.sh','--bootstrap-server','kafka:9092','--topic',topic]).trim();
 function replay(record, header = record.data.revision) {
-  compose(['exec','-T','kafka','/opt/kafka/bin/kafka-console-producer.sh','--bootstrap-server','kafka:9092','--topic','monitoring.sessions.v1',
+  compose(['exec','-T','kafka','/opt/kafka/bin/kafka-console-producer.sh','--bootstrap-server','kafka:9092','--topic','monitoring.sessions.v2',
     '--property','parse.key=true','--property','parse.headers=true','--producer-property','enable.idempotence=true'],
     `revision:${header}\t${record.documentKey}\t${JSON.stringify(record.data)}\n`);
 }
-export function commitFixture(event, fields = {}) {
-  const documentKey = key('pipeline-site','pipeline-sensor',event);
-  const data = { schemaVersion:1, operation:'upsert', documentKey, revision:1, siteId:'pipeline-site', sensorId:'pipeline-sensor',eventId:event,
+export function commitFixture(event, fields = {}, site = 'pipeline-site', sensor = 'pipeline-sensor') {
+  const documentKey = key(site,sensor,event);
+  const searchDocumentId = randomUUID();
+  const data = { schemaVersion:2, operation:'upsert', documentKey, searchDocumentId, revision:1, siteId:site, sensorId:sensor,eventId:event,
     startedAt:'2026-10-05T10:00:00.100Z',endedAt:'2026-10-05T10:00:01.000Z',sourceIp:'2001:db8::1',destinationIp:'192.0.2.2',
     sourcePort:1234,destinationPort:443,protocol:'TCP',vlanId:null,provenance:'synthetic',inferred:null,partial:null,closeReason:null,packetCount:null,byteCount:null,acceptedAt:'2026-10-05T10:00:02.000Z', ...fields };
   sql(`BEGIN;
-    INSERT INTO monitoring.session_identity(site_id,sensor_id,event_id,document_key,revision,state) VALUES ('pipeline-site','pipeline-sensor','${event}','${documentKey}',1,'active');
+    INSERT INTO monitoring.session_identity(site_id,sensor_id,event_id,document_key,search_document_id,revision,state) VALUES ('${site}','${sensor}','${event}','${documentKey}','${searchDocumentId}',1,'active');
     INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
-    VALUES ('${randomUUID()}','${documentKey}','sessions','monitoring.sessions.v1',1,1,'${JSON.stringify(data)}');
+    VALUES ('${randomUUID()}','${documentKey}','sessions','monitoring.sessions.v2',1,2,'${JSON.stringify(data)}');
     COMMIT;`);
-  return { documentKey, data };
+  return { documentKey, searchDocumentId, data };
 }
 
 test('committed authority outbox reaches the real sink with complete identity and authority revision', async () => {
   const event = `commit-${randomUUID()}`;
-  const {documentKey, data} = commitFixture(event);
-  const result = await until(()=>http('elasticsearch:9200',`/sessions-v1-000001/_doc/${documentKey}`), x=>x.status===200, 12);
+  const {documentKey, searchDocumentId, data} = commitFixture(event);
+  const result = await until(()=>document(searchDocumentId), x=>x.status===200, 12);
   assert.equal(result.body._version,1);
   assert.deepEqual(result.body._source,data);
-  http('elasticsearch:9200','/sessions-v1-000001/_refresh','POST');
+  http('elasticsearch:9200','/sessions-v2-000001/_refresh','POST');
   const search = http('elasticsearch:9200','/sessions-read/_search','POST',{query:{term:{documentKey}}});
   assert.equal(search.status,200);
   assert.equal(search.body.hits.total.value,1);
+  assert.equal(search.body.hits.hits[0]._id,searchDocumentId);
+});
+
+test('a maximum-length identity above the 512-byte _id limit is indexed under its compact search identity', async () => {
+  const [site,sensor,event]=['s','n','e'].map(letter=>letter.repeat(128));
+  const {documentKey, searchDocumentId, data} = commitFixture(event,{},site,sensor);
+  assert.equal(Buffer.byteLength(documentKey),515);
+  const result = await until(()=>document(searchDocumentId), x=>x.status===200, 15);
+  assert.equal(Buffer.byteLength(searchDocumentId),36);
+  assert.equal(result.body._source.documentKey,documentKey);
+  assert.deepEqual(result.body._source,data);
+  http('elasticsearch:9200','/sessions-v2-000001/_refresh','POST');
+  const search = http('elasticsearch:9200','/sessions-read/_search','POST',{query:{term:{documentKey}}});
+  assert.equal(search.body.hits.total.value,1);
+  assert.equal(search.body.hits.hits[0]._id,searchDocumentId);
 });
 
 test('unsupported contract is durably isolated while a later valid identity continues', async () => {
   const before=offsets('monitoring.sessions.dlq');
   const invalid=commitFixture(`invalid-${randomUUID()}`,{schemaVersion:999});
   const valid=commitFixture(`after-invalid-${randomUUID()}`);
-  await until(()=>http('elasticsearch:9200',`/sessions-v1-000001/_doc/${valid.documentKey}`),x=>x.status===200,15);
-  assert.equal(http('elasticsearch:9200',`/sessions-v1-000001/_doc/${invalid.documentKey}`).status,404);
+  await until(()=>document(valid.searchDocumentId),x=>x.status===200,15);
+  assert.equal(document(invalid.searchDocumentId).status,404);
   await until(()=>offsets('monitoring.sessions.dlq'),x=>x!==before,15);
   const offset=Number(before.split(':').at(-1));
   const dlq=compose(['exec','-T','kafka','/opt/kafka/bin/kafka-console-consumer.sh','--bootstrap-server','kafka:9092','--topic','monitoring.sessions.dlq',
@@ -53,38 +70,38 @@ test('unsupported contract is durably isolated while a later valid identity cont
 
 test('minimal permanent delete document resists old upserts at new Kafka offsets and restart', async () => {
   const record=commitFixture(`delete-${randomUUID()}`);
-  await until(()=>document(record.documentKey),x=>x.status===200,15);
-  const barrier={schemaVersion:1,operation:'delete',documentKey:record.documentKey,revision:2,siteId:'pipeline-site',sensorId:'pipeline-sensor',eventId:record.data.eventId};
+  await until(()=>document(record.searchDocumentId),x=>x.status===200,15);
+  const barrier={schemaVersion:2,operation:'delete',documentKey:record.documentKey,searchDocumentId:record.searchDocumentId,revision:2,siteId:'pipeline-site',sensorId:'pipeline-sensor',eventId:record.data.eventId};
   sql(`BEGIN; SELECT pg_advisory_xact_lock_shared(7182041001);
     UPDATE monitoring.session_identity SET state='deleted',revision=2,deleted_at=now() WHERE document_key='${record.documentKey}';
     INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
-    VALUES ('${randomUUID()}','${record.documentKey}','sessions','monitoring.sessions.v1',2,1,'${JSON.stringify(barrier)}'); COMMIT;`);
-  await until(()=>document(record.documentKey),x=>x.status===200&&x.body._version===2,15);
-  const before=offsets('monitoring.sessions.v1');
+    VALUES ('${randomUUID()}','${record.documentKey}','sessions','monitoring.sessions.v2',2,2,'${JSON.stringify(barrier)}'); COMMIT;`);
+  await until(()=>document(record.searchDocumentId),x=>x.status===200&&x.body._version===2,15);
+  const before=offsets('monitoring.sessions.v2');
   replay(record);
   const sentinel=commitFixture(`after-replay-${randomUUID()}`);
-  await until(()=>document(sentinel.documentKey),x=>x.status===200,15);
-  assert.notEqual(offsets('monitoring.sessions.v1'),before);
-  assert.deepEqual(document(record.documentKey).body._source,barrier);
-  assert.equal(document(record.documentKey).body._version,2);
+  await until(()=>document(sentinel.searchDocumentId),x=>x.status===200,15);
+  assert.notEqual(offsets('monitoring.sessions.v2'),before);
+  assert.deepEqual(document(record.searchDocumentId).body._source,barrier);
+  assert.equal(document(record.searchDocumentId).body._version,2);
   compose(['restart','connect']);
   compose(['up','--wait','--wait-timeout','120','connect']);
   await until(()=>http('connect:8083','/connectors/monitoring-sink/status'),x=>x.body?.tasks?.[0]?.state==='RUNNING',45);
   replay(record);
   const resumed=commitFixture(`after-restart-${randomUUID()}`);
-  await until(()=>document(resumed.documentKey),x=>x.status===200,30);
-  assert.deepEqual(document(record.documentKey).body._source,barrier);
+  await until(()=>document(resumed.searchDocumentId),x=>x.status===200,30);
+  assert.deepEqual(document(record.searchDocumentId).body._source,barrier);
 });
 
 test('real search outage preserves confirmed outbox and retries valid publication after recovery', async () => {
   compose(['stop','elasticsearch']);
   try {
-    const before=offsets('monitoring.sessions.v1');
+    const before=offsets('monitoring.sessions.v2');
     const record=commitFixture(`outage-${randomUUID()}`);
-    await until(()=>offsets('monitoring.sessions.v1'),x=>x!==before,20);
+    await until(()=>offsets('monitoring.sessions.v2'),x=>x!==before,20);
     assert.equal(sql(`SELECT count(*) FROM monitoring.projection_outbox WHERE aggregateid='${record.documentKey}'`),'1');
     compose(['up','--wait','--wait-timeout','120','elasticsearch']);
-    const result=await until(()=>document(record.documentKey),x=>x.status===200,60);
+    const result=await until(()=>document(record.searchDocumentId),x=>x.status===200,60);
     assert.equal(result.body._source.eventId,record.data.eventId);
     assert.equal(result.body._version,1);
   } finally { compose(['up','--wait','--wait-timeout','120','elasticsearch']); }

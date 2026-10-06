@@ -9,6 +9,7 @@ internal sealed class SessionIdentityEntity
     public required string SensorId { get; set; }
     public required string EventId { get; set; }
     public required string DocumentKey { get; set; }
+    public Guid SearchDocumentId { get; set; }
     public long Revision { get; set; }
     public required string State { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
@@ -59,6 +60,7 @@ internal static class CanonicalEntities
         identity.Property(x => x.SensorId).HasColumnName("sensor_id").HasMaxLength(128);
         identity.Property(x => x.EventId).HasColumnName("event_id").HasMaxLength(128);
         identity.Property(x => x.DocumentKey).HasColumnName("document_key");
+        identity.Property(x => x.SearchDocumentId).HasColumnName("search_document_id").ValueGeneratedOnAdd().HasDefaultValueSql("gen_random_uuid()");
         identity.Property(x => x.Revision).HasColumnName("revision");
         identity.Property(x => x.State).HasColumnName("state");
         identity.Property(x => x.DeletedAt).HasColumnName("deleted_at");
