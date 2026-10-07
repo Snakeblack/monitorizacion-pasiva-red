@@ -1,7 +1,10 @@
 {
   "realm": "monitoring",
   "enabled": true,
-  "sslRequired": "none",
+  "sslRequired": "external",
+  "internationalizationEnabled": true,
+  "supportedLocales": ["es", "en"],
+  "defaultLocale": "es",
   "registrationAllowed": false,
   "loginWithEmailAllowed": false,
   "duplicateEmailsAllowed": false,
@@ -40,11 +43,11 @@
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "fullScopeAllowed": false,
-      "redirectUris": ["http://127.0.0.1:4200/auth/callback"],
-      "webOrigins": ["http://127.0.0.1:4200"],
+      "redirectUris": ["http://127.0.0.1:4200/auth/callback", "http://localhost:4200/auth/callback"],
+      "webOrigins": ["http://127.0.0.1:4200", "http://localhost:4200"],
       "attributes": {
         "pkce.code.challenge.method": "S256",
-        "post.logout.redirect.uris": "http://127.0.0.1:4200/signed-out"
+        "post.logout.redirect.uris": "http://127.0.0.1:4200/signed-out##http://localhost:4200/signed-out"
       },
       "protocolMappers": [
         {

@@ -1,6 +1,9 @@
-# Laboratory identity provider (ADR-022; token contract ADR-023; metadata address ADR-024): a real Keycloak with the `monitoring` realm and the API switched to OIDC. Combine with
+# Laboratory identity provider (ADR-022; token contract ADR-023; metadata address ADR-024; TLS ADR-025): a real Keycloak with the `monitoring` realm
+# whose issuer is the loopback address the browser uses (plain HTTP: the SPA accepts it on loopback, so there is no certificate to trust), and the API
+# switched to OIDC, reading the discovery document and keys over HTTPS with the laboratory CA as its only anchor (ADR-025). Combine with
 # deploy/compose.e2e.yaml; the stack publishes 127.0.0.1:8081 (Keycloak) and 127.0.0.1:5080 (API) for the browser tests.
-# Lab only: start-dev, an embedded database and a throwaway password for the four synthetic users (lab-secrets/keycloak-lab.txt).
+# Lab only: start-dev, an embedded database, a throwaway password for the four synthetic users (lab-secrets/keycloak-lab.txt) and a throwaway CA
+# (lab-secrets/tls/, issued by scripts/lab/prepare.ps1).
 services:
   keycloak:
     image: ${KEYCLOAK_IMAGE:?Use --env-file deploy/versions.env}
@@ -8,14 +11,19 @@ services:
     entrypoint: ["bash", "-c", "export KEYCLOAK_LAB_PASSWORD=\"$$(cat /run/secrets/keycloak_lab)\" KC_BOOTSTRAP_ADMIN_PASSWORD=\"$$(cat /run/secrets/keycloak_lab)\"; exec /opt/keycloak/bin/kc.sh \"$$@\"", "kc"]
     command: ["start-dev", "--import-realm", "--health-enabled=true"]
     environment:
-      # Issuer and browser endpoints name the loopback address the SPA uses; back-channel endpoints (JWKS, token) follow the host the
-      # caller used, so the API reaches them as keycloak:8080 (Identity:MetadataAddress) while the issuer stays 127.0.0.1:8081.
+      # Issuer and browser endpoints name the loopback address the SPA uses; back-channel endpoints (JWKS, token) follow the scheme and host the
+      # caller used, so the API reaches them as https://keycloak:8443 (Identity:MetadataAddress) while the issuer stays http://127.0.0.1:8081.
       KC_HOSTNAME: http://127.0.0.1:8081
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
-      KC_HTTP_ENABLED: "true"
+      # start-dev cannot switch the plain listener off (Keycloak ignores http-enabled in dev mode). It is neither published nor advertised:
+      # the issuer, every endpoint in the discovery document and the published port are HTTPS, which is what the API and the browser use.
+      KC_HTTPS_CERTIFICATE_FILE: /run/secrets/keycloak_tls_cert
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /run/secrets/keycloak_tls_key
+      # The management port (health, container-internal only, never published) stays plain so the readiness probe needs no trust store.
+      KC_HTTP_MANAGEMENT_SCHEME: http
       KC_BOOTSTRAP_ADMIN_USERNAME: lab-admin
       JAVA_OPTS_KC_HEAP: -Xms256m -Xmx768m
-    secrets: [keycloak_lab]
+    secrets: [keycloak_lab, keycloak_tls_cert, keycloak_tls_key]
     volumes: ["./deploy/keycloak/realm-monitoring.json:/opt/keycloak/data/import/realm-monitoring.json:ro"]
     ports: ["127.0.0.1:8081:8080"]
     healthcheck:
@@ -29,9 +37,18 @@ services:
     environment:
       Identity__Mode: Oidc
       Identity__Authority: http://127.0.0.1:8081/realms/monitoring
-      Identity__MetadataAddress: http://keycloak:8080/realms/monitoring/.well-known/openid-configuration
+      Identity__MetadataAddress: https://keycloak:8443/realms/monitoring/.well-known/openid-configuration
       Identity__Audience: monitoring-api
+      # Laboratory only. Every load of the console runs a 24-hour search and a search with more than one page keeps one of the user's snapshots for
+      # ten minutes, so the production limit of 2 locks a person out after three page loads. Production keeps its default (Search:Leases, 2 per subject).
+      Search__Leases__MaxPerSubject: "8"
+      # Only this CA signs the provider's certificate for the API; the image's own roots are not consulted for that channel (ADR-025).
+      Identity__TrustedCaPaths__0: /run/secrets/lab_identity_ca
+    secrets: [lab_identity_ca]
     depends_on:
       keycloak: {condition: service_healthy}
 secrets:
   keycloak_lab: {file: ./lab-secrets/keycloak-lab.txt}
+  keycloak_tls_cert: {file: ./lab-secrets/tls/keycloak.pem}
+  keycloak_tls_key: {file: ./lab-secrets/tls/keycloak.key}
+  lab_identity_ca: {file: ./lab-secrets/tls/ca.pem}

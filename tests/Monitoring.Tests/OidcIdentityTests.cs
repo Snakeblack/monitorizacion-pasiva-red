@@ -213,6 +213,42 @@ public sealed class OidcIdentityTests : IDisposable
     }
 
     [Fact]
+    public void SigningKeysAreReReadEveryFiveMinutesByDefaultSoARetiredKeyStopsBeingTrustedQuickly()
+    {
+        using var factory = Host(_idp, new RecordingSearch());
+        var bearer = factory.Services.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme);
+        Assert.Equal(TimeSpan.FromMinutes(5), bearer.AutomaticRefreshInterval);
+        // An unknown key id still forces a refresh, but never more often than once a minute.
+        Assert.Equal(TimeSpan.FromMinutes(1), bearer.RefreshInterval);
+    }
+
+    [Fact]
+    public void TheKeyRefreshIntervalIsConfigurable()
+    {
+        using var factory = Host(_idp, new RecordingSearch(), settings: new() { ["Identity:KeysRefreshMinutes"] = "10" });
+        var bearer = factory.Services.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme);
+        Assert.Equal(TimeSpan.FromMinutes(10), bearer.AutomaticRefreshInterval);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("4")]
+    [InlineData("61")]
+    public void AKeyRefreshIntervalOutsideFiveToSixtyMinutesPreventsStartup(string minutes)
+    {
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Production");
+            ProbeTestTrust.For(builder, "Production");
+            builder.UseSetting("Identity:Mode", "Oidc");
+            builder.UseSetting("Identity:Authority", OidcTestIdp.Issuer);
+            builder.UseSetting("Identity:Audience", OidcTestIdp.Audience);
+            builder.UseSetting("Identity:KeysRefreshMinutes", minutes);
+        });
+        Assert.ThrowsAny<Exception>(() => factory.CreateClient());
+    }
+
+    [Fact]
     public void WithoutAMetadataAddressTheDiscoveryDocumentIsReadFromTheAuthority()
     {
         using var factory = Host(_idp, new RecordingSearch());

@@ -25,17 +25,18 @@ internal sealed class TestPki : IDisposable
     }
 
     internal X509Certificate2 Issue(string commonName, DateTimeOffset? notBefore = null, DateTimeOffset? notAfter = null, string eku = ClientAuth, byte[]? serial = null,
-        string? san = null)
+        string? san = null, string? dnsName = null)
     {
         using var key = RSA.Create(2048);
         var request = new CertificateRequest($"CN={commonName}", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         request.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
         request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, true));
         request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension([new Oid(eku)], false));
-        if (san is not null)
+        if (san is not null || dnsName is not null)
         {
             var names = new SubjectAlternativeNameBuilder();
-            names.AddUri(new Uri(san));
+            if (san is not null) names.AddUri(new Uri(san));
+            if (dnsName is not null) names.AddDnsName(dnsName);
             request.CertificateExtensions.Add(names.Build());
         }
         serial ??= BitConverter.GetBytes(Interlocked.Increment(ref _serial)).Reverse().ToArray();

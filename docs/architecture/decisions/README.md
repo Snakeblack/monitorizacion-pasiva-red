@@ -28,5 +28,7 @@
 | [022](ADR-022.md) | Aceptado: Keycloak real como perfil de laboratorio y puerta de CI; complementa ADR-018 |
 | [023](ADR-023.md) | Aceptado: contrato del token humano (roles, ámbitos, audiencia, cierre de sesión); concreta ADR-018 |
 | [024](ADR-024.md) | Aceptado: `Identity:MetadataAddress`, dirección de descubrimiento distinta del emisor; complementa ADR-018 y ADR-002 |
+| [025](ADR-025.md) | Propuesto: el API confía en el TLS del proveedor de identidad por una lista de CA propia (`Identity:TrustedCaPaths`), sin mTLS hacia él; complementa ADR-018, ADR-024 y ADR-002 |
+| [026](ADR-026.md) | Propuesto: refresco programado de claves y reintento acotado ante un `kid` desconocido; complementa ADR-018 y ADR-025 |
 
 Cada decisión futura registrará evidencia, coste recurrente, responsable, consecuencias y plan de reversión. El índice separa la propuesta histórica del contrato vigente.
