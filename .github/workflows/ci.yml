@@ -87,10 +87,8 @@ jobs:
             exit 1
           fi
 
-  # Real chain (PostgreSQL -> Debezium -> Kafka -> Connect sink -> Elasticsearch -> API). It is started by hand until it has
-  # passed once on a runner; then drop the `if` so every pull request runs it.
+  # Real chain (PostgreSQL -> Debezium -> Kafka -> Connect sink -> Elasticsearch -> API -> browser). Passed on a runner on 2026-10-07.
   stack:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -142,6 +140,9 @@ jobs:
         run: npx playwright test
         working-directory: tests/e2e
 
+      - name: Check the core stack restarts healthy with its database
+        run: node --test tests/stack/foundation.test.mjs
+
       - name: Collect service logs on failure
         if: failure()
         run: docker compose --env-file deploy/versions.env -p monitoring-ci -f compose.yaml logs --no-color --tail 200
@@ -150,10 +151,8 @@ jobs:
         if: always()
         run: pwsh scripts/lab/core.ps1 -Action down -Project monitoring-ci
 
-  # Backup / PITR rehearsal on a throw-away PostgreSQL cluster (scripts/lab/pitr-rehearsal.sh). Started by hand until it has passed
-  # once on a runner; then drop the `if` so every pull request runs it.
+  # Backup / PITR rehearsal on a throw-away PostgreSQL cluster (scripts/lab/pitr-rehearsal.sh). Passed on a runner on 2026-10-07.
   recovery:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
