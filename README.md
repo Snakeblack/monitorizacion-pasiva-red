@@ -5,6 +5,7 @@ Base ejecutable S01–S04 del sistema de monitorización: host ASP.NET Core, ing
 ## Guías
 
 - **[Guía de demo](docs/demo/guia-de-demo.md)**: arranque del laboratorio completo, enlaces, usuarios y roles, guion para enseñarlo y solución de problemas.
+- **[Arquitectura real (observada)](docs/architecture/arquitectura-real.md)**: diagramas de lo que de verdad corre, levantados desde el sistema en ejecución y el código, con lo que está y lo que no.
 - **[Instalación en otro equipo, para un agente (LLM) o una persona](docs/development/guia-instalacion-para-llm.md)**: requisitos con su comprobación, pasos verificables y fallos conocidos.
 
 ## Requisitos
