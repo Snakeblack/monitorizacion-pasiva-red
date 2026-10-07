@@ -202,6 +202,62 @@ public sealed class OidcIdentityTests : IDisposable
     }
 
     [Fact]
+    public void TheMetadataAddressMovesWhereTheDiscoveryDocumentIsReadWithoutChangingWhoIsTrustedAsIssuer()
+    {
+        const string internalAddress = "https://idp-internal.test/realms/monitoring/.well-known/openid-configuration";
+        using var factory = Host(_idp, new RecordingSearch(), settings: new() { ["Identity:MetadataAddress"] = internalAddress });
+        var bearer = factory.Services.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme);
+        Assert.Equal(internalAddress, bearer.MetadataAddress);
+        Assert.Equal(OidcTestIdp.Issuer, bearer.TokenValidationParameters.ValidIssuer);
+        Assert.Equal(OidcTestIdp.Issuer, bearer.Authority);
+    }
+
+    [Fact]
+    public void WithoutAMetadataAddressTheDiscoveryDocumentIsReadFromTheAuthority()
+    {
+        using var factory = Host(_idp, new RecordingSearch());
+        var bearer = factory.Services.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme);
+        Assert.Equal(OidcTestIdp.Issuer + "/.well-known/openid-configuration", bearer.MetadataAddress);
+    }
+
+    [Theory]
+    [InlineData("Production", "http://idp-internal.test/realms/monitoring/.well-known/openid-configuration")] // plain HTTP outside Development/Testing
+    [InlineData("Production", "/realms/monitoring/.well-known/openid-configuration")]                        // not absolute
+    [InlineData("Production", "not a url")]
+    [InlineData("Production", "https://user:secret@idp-internal.test/.well-known/openid-configuration")]      // credentials in the address
+    public void AnInsecureOrMalformedMetadataAddressPreventsStartup(string environment, string metadataAddress)
+    {
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment); // everything else is valid, so only the metadata address can stop the host
+            builder.UseSetting("Identity:Mode", "Oidc");
+            builder.UseSetting("Identity:Authority", OidcTestIdp.Issuer);
+            builder.UseSetting("Identity:Audience", OidcTestIdp.Audience);
+            builder.UseSetting("Identity:MetadataAddress", metadataAddress);
+        });
+        Assert.ThrowsAny<Exception>(() => factory.CreateClient());
+    }
+
+    [Fact]
+    public void AnInsecureMetadataAddressIsAcceptedWhereAnInsecureAuthorityIs()
+    {
+        // Development/Testing may run against a plain-HTTP laboratory provider (ADR-024); the same relaxation covers the metadata address.
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Testing");
+            ProbeTestTrust.For(builder, "Testing");
+            builder.UseSetting("Identity:Mode", "Oidc");
+            builder.UseSetting("Identity:Authority", "http://127.0.0.1:8081/realms/monitoring");
+            builder.UseSetting("Identity:Audience", OidcTestIdp.Audience);
+            builder.UseSetting("Identity:MetadataAddress", "http://keycloak:8080/realms/monitoring/.well-known/openid-configuration");
+        });
+        var bearer = factory.Services.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme);
+        Assert.Equal("http://keycloak:8080/realms/monitoring/.well-known/openid-configuration", bearer.MetadataAddress);
+        Assert.Equal("http://127.0.0.1:8081/realms/monitoring", bearer.TokenValidationParameters.ValidIssuer);
+    }
+
+    [Fact]
     public void DevelopmentAndTestingStillStartInTheExplicitDevelopmentReadModeByDefault()
     {
         foreach (var environment in new[] { "Development", "Testing" })

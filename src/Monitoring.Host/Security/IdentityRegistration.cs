@@ -29,6 +29,7 @@ public static class IdentityRegistration
         {
             bearer.Authority = authority;
             bearer.Audience = options.Audience;
+            if (!string.IsNullOrWhiteSpace(options.MetadataAddress)) bearer.MetadataAddress = options.MetadataAddress;
             // Keep claim names exactly as issued (sub, roles, monitoring_scopes); no legacy remapping.
             bearer.MapInboundClaims = false;
             bearer.RequireHttpsMetadata = !(environment.IsDevelopment() || environment.IsEnvironment("Testing"));
