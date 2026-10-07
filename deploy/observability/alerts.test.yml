@@ -1,0 +1,136 @@
+# Unit tests of the exporter-based rules (ADR-020), run with `promtool test rules`. Series use the names verified on real exporters;
+# `for` durations are exercised here because a real rehearsal of a 10-15 minute rule is slow. See scripts/lab/alert-rehearsal.mjs.
+rule_files: [alerts.rules.json]
+evaluation_interval: 30s
+tests:
+  - name: dead-letter queue growth pages at once, a flat queue is silent
+    interval: 1m
+    input_series:
+      - series: 'kafka_topic_partition_current_offset{topic="monitoring.sessions.dlq",partition="0"}'
+        values: '5 5 5 6 6 6 6'
+      - series: 'kafka_topic_partition_current_offset{topic="monitoring.sessions.v2",partition="0"}'
+        values: '1 2 3 4 5 6 7'
+    alert_rule_test:
+      - {eval_time: 2m, alertname: SinkDeadLetterGrowing, exp_alerts: []}
+      - eval_time: 4m
+        alertname: SinkDeadLetterGrowing
+        exp_alerts:
+          - exp_labels: {severity: page, owner: plataforma, stage: search, topic: monitoring.sessions.dlq, partition: "0"}
+            exp_annotations:
+              summary: "El sink de Elasticsearch ha desviado mensajes a la cola de errores: esas sesiones no están en el índice."
+              cause: "Un mensaje no cumple el contrato, Elasticsearch lo rechaza o la transformación de validación falla."
+              action: "Inspeccionar los mensajes de monitoring.sessions.dlq (cabeceras de error) y corregir la causa; reconstruir el índice desde PostgreSQL cuando se resuelva (--rebuild-search)."
+              runbook: "docs/runbooks/pipeline-alerts.md#sinkdeadlettergrowing"
+  - name: sink lag must persist ten minutes
+    interval: 1m
+    input_series:
+      - series: 'kafka_consumergroup_lag{consumergroup="connect-monitoring-sink",topic="monitoring.sessions.v2",partition="0"}'
+        values: '1500x30'
+      - series: 'kafka_consumergroup_lag{consumergroup="other-group",topic="x",partition="0"}'
+        values: '9000x30'
+    alert_rule_test:
+      - {eval_time: 6m, alertname: SinkConsumerLag, exp_alerts: []}
+      - eval_time: 12m
+        alertname: SinkConsumerLag
+        exp_alerts:
+          - exp_labels: {severity: ticket, owner: plataforma, stage: search}
+            exp_annotations:
+              summary: "El sink de Elasticsearch acumula más de 1000 mensajes sin consumir."
+              cause: "Connect o Elasticsearch van más lentos que la publicación, o el sink está detenido."
+              action: "Comprobar ConnectTaskNotRunning y la salud de Elasticsearch; si es carga sostenida, medir en S17 antes de cambiar el umbral."
+              runbook: "docs/runbooks/pipeline-alerts.md#sinkconsumerlag"
+  - name: a paused or failed connector task pages after two minutes
+    interval: 1m
+    input_series:
+      - series: 'kafka_connect_task_status{connector="monitoring-sink",task="0",status="running"}'
+        values: '1 1 _ _ _ _ _'
+      - series: 'kafka_connect_task_status{connector="monitoring-sink",task="0",status="paused"}'
+        values: '_ _ 1 1 1 1 1'
+    alert_rule_test:
+      - {eval_time: 1m, alertname: ConnectTaskNotRunning, exp_alerts: []}
+      - eval_time: 6m
+        alertname: ConnectTaskNotRunning
+        exp_alerts:
+          - exp_labels: {severity: page, owner: plataforma, stage: cdc, connector: monitoring-sink, task: "0", status: paused}
+            exp_annotations:
+              summary: "Una tarea de Kafka Connect (Debezium o sink) no está en ejecución."
+              cause: "La tarea falló (credenciales, conexión a PostgreSQL o Elasticsearch, contrato) o fue pausada."
+              action: "Ver el estado y la traza del conector en la API REST de Connect y reiniciar la tarea; el WAL se retiene mientras tanto (WalRetentionPressure)."
+              runbook: "docs/runbooks/pipeline-alerts.md#connecttasknotrunning"
+  - name: elasticsearch red pages, yellow only after fifteen minutes
+    interval: 1m
+    input_series:
+      - series: 'elasticsearch_cluster_health_status{color="red"}'
+        values: '0 0 1x30'
+      - series: 'elasticsearch_cluster_health_status{color="yellow"}'
+        values: '1x30'
+      - series: 'elasticsearch_cluster_health_status{color="green"}'
+        values: '0x30'
+    alert_rule_test:
+      - {eval_time: 3m, alertname: SearchEngineRed, exp_alerts: []}
+      - eval_time: 6m
+        alertname: SearchEngineRed
+        exp_alerts:
+          - exp_labels: {severity: page, owner: plataforma, stage: search, color: red}
+            exp_annotations:
+              summary: "Elasticsearch está en rojo: hay índices sin shards primarios asignados."
+              cause: "Un nodo cayó o el disco se llenó."
+              action: "Restaurar el nodo o el espacio; si el índice se perdió, reconstruirlo desde PostgreSQL (--rebuild-search)."
+              runbook: "docs/runbooks/pipeline-alerts.md#searchenginered"
+      - {eval_time: 10m, alertname: SearchEngineYellow, exp_alerts: []}
+      - eval_time: 17m
+        alertname: SearchEngineYellow
+        exp_alerts:
+          - exp_labels: {severity: ticket, owner: plataforma, stage: search, color: yellow}
+            exp_annotations:
+              summary: "Elasticsearch está en amarillo: faltan réplicas."
+              cause: "Un nodo de réplica no está disponible o no hay capacidad para asignarlas."
+              action: "Recuperar el nodo o la capacidad; las consultas siguen sirviéndose sin redundancia."
+              runbook: "docs/runbooks/pipeline-alerts.md#searchengineyellow"
+  - name: a live exporter without cluster health means elasticsearch is unreachable
+    interval: 1m
+    input_series:
+      - series: 'elasticsearch_exporter_build_info{version="1.11.0"}'
+        values: '1x20'
+      - series: 'elasticsearch_cluster_health_status{color="green"}'
+        values: '1 1 1 _ _ _ _ _ _ _'
+    alert_rule_test:
+      - {eval_time: 2m, alertname: SearchEngineUnreachable, exp_alerts: []}
+      - {eval_time: 5m, alertname: SearchEngineUnreachable, exp_alerts: []}
+      - eval_time: 9m
+        alertname: SearchEngineUnreachable
+        exp_alerts:
+          - exp_labels: {severity: page, owner: plataforma, stage: search, version: "1.11.0"}
+            exp_annotations:
+              summary: "El exportador de Elasticsearch está vivo pero Elasticsearch no responde."
+              cause: "Elasticsearch está detenido, sin red o sin memoria; las búsquedas fallan y el sink acumula lag."
+              action: "Restaurar Elasticsearch; la API responde 503 a las búsquedas mientras tanto. Después comprobar SinkConsumerLag y SinkDeadLetterGrowing."
+              runbook: "docs/runbooks/pipeline-alerts.md#searchengineunreachable"
+  - name: a down exporter target warns after five minutes and missing exporters after ten
+    interval: 1m
+    input_series:
+      - series: 'up{job="kafka",instance="kafka-exporter:9308"}'
+        values: '1 1 0x20'
+      - series: 'up{job="connect",instance="connect:9404"}'
+        values: '1x22'
+    alert_rule_test:
+      - {eval_time: 5m, alertname: PipelineExportersDown, exp_alerts: []}
+      - eval_time: 9m
+        alertname: PipelineExportersDown
+        exp_alerts:
+          - exp_labels: {severity: ticket, owner: plataforma, stage: search, job: kafka, instance: "kafka-exporter:9308"}
+            exp_annotations:
+              summary: "Un exportador de Kafka, Connect o Elasticsearch no responde."
+              cause: "El exportador o el servicio al que consulta están caídos, o la red entre ambos falló."
+              action: "Comprobar el contenedor del exportador y del servicio; mientras tanto no hay señal de DLQ, lag ni salud."
+              runbook: "docs/runbooks/pipeline-alerts.md#pipelineexportersdown"
+      - {eval_time: 8m, alertname: PipelineExportersMissing, exp_alerts: []}
+      - eval_time: 12m
+        alertname: PipelineExportersMissing
+        exp_alerts:
+          - exp_labels: {severity: ticket, owner: plataforma, stage: search}
+            exp_annotations:
+              summary: "Falta alguna de las métricas de Kafka, Connect o Elasticsearch."
+              cause: "El exportador no está desplegado o la plataforma no lo recolecta."
+              action: "Desplegar el perfil observability y añadir sus tres destinos a la recolección; sin ellos las reglas de la DLQ, del lag y de Elasticsearch no pueden disparar."
+              runbook: "docs/runbooks/pipeline-alerts.md#pipelineexportersmissing"

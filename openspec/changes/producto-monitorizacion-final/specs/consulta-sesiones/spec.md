@@ -8,7 +8,7 @@ Consultar sesiones iniciadas con filtros del caso, autorización en servidor y p
 
 ### Requirement: Validación y límites F-05 {#REQ-consulta-sesiones-001}
 
-La API MUST exigir `from`/`to` UTC `Z` con precisión ≤milisegundos y `from < to`. MUST limitar a 30 días de intervalo dentro de los30 días consultables; `to` MUST NOT ser futuro. Hasta24 h MUST permitir el intervalo y ámbito efectivo autorizado sin filtros opcionales adicionales. Para >24 h y ≤30 días MUST exigir sitio **y** sonda **y** IP de origen/destino. MUST aceptar filtros exactos `siteId`, `sensorId`, `sourceIp`, `destinationIp`, `protocol`, `sourcePort`, `destinationPort`, combinados por AND; IP MUST ser válida, protocolo TCP/UDP, puertos enteros0–65535. MUST rechazar campos desconocidos, búsqueda libre, intervalos/filtros inválidos o página fuera de1–100 con HTTP 400 antes de consultar backend; página predeterminada MUST ser50.
+La API MUST exigir `from`/`to` UTC `Z` con precisión ≤milisegundos y `from < to`. MUST limitar a 30 días de intervalo dentro de los30 días consultables; `to` MUST NOT ser futuro, salvo un desfase de reloj de hasta 5 s que MUST recortarse al instante del servidor. Hasta24 h MUST permitir el intervalo y ámbito efectivo autorizado sin filtros opcionales adicionales. Para >24 h y ≤30 días MUST exigir sitio **y** sonda **y** IP de origen/destino. MUST aceptar filtros exactos `siteId`, `sensorId`, `sourceIp`, `destinationIp`, `protocol`, `sourcePort`, `destinationPort`, combinados por AND; IP MUST ser válida, protocolo TCP/UDP, puertos enteros0–65535. MUST rechazar campos desconocidos, búsqueda libre, intervalos/filtros inválidos o página fuera de1–100 con HTTP 400 antes de consultar backend; página predeterminada MUST ser50.
 
 #### Scenario: Ventana selectiva
 

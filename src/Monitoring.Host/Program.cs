@@ -97,6 +97,7 @@ builder.Services.TryAddSingleton<ITrustedSessionReadContextProvider, HostContext
 // Human identity: the explicit development read mode only in Development/Testing, otherwise validated OIDC; an insecure or
 // incomplete configuration throws here and the host does not start.
 builder.Services.AddMonitoringIdentity(builder.Configuration, builder.Environment);
+builder.Services.AddMonitoringTelemetry(builder.Configuration);
 builder.Services.TryAddSingleton<IAccessAudit, LoggingAccessAudit>();
 builder.Services.AddScoped<AccessGate>();
 builder.Services.TryAddSingleton<InventoryCursor>();

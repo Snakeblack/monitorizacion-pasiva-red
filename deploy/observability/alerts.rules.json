@@ -323,6 +323,134 @@
             "action": "Revisar el registro del worker (tipo de fallo) y la base de datos; sin retención se incumple la promesa de borrado.",
             "runbook": "docs/runbooks/pipeline-alerts.md#retentionneverran"
           }
+        },
+        {
+          "alert": "SinkDeadLetterGrowing",
+          "expr": "increase(kafka_topic_partition_current_offset{topic=\"monitoring.sessions.dlq\"}[15m]) > 0",
+          "for": "0m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "El sink de Elasticsearch ha desviado mensajes a la cola de errores: esas sesiones no están en el índice.",
+            "cause": "Un mensaje no cumple el contrato, Elasticsearch lo rechaza o la transformación de validación falla.",
+            "action": "Inspeccionar los mensajes de monitoring.sessions.dlq (cabeceras de error) y corregir la causa; reconstruir el índice desde PostgreSQL cuando se resuelva (--rebuild-search).",
+            "runbook": "docs/runbooks/pipeline-alerts.md#sinkdeadlettergrowing"
+          }
+        },
+        {
+          "alert": "SinkConsumerLag",
+          "expr": "sum(kafka_consumergroup_lag{consumergroup=\"connect-monitoring-sink\"}) > 1000",
+          "for": "10m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "El sink de Elasticsearch acumula más de 1000 mensajes sin consumir.",
+            "cause": "Connect o Elasticsearch van más lentos que la publicación, o el sink está detenido.",
+            "action": "Comprobar ConnectTaskNotRunning y la salud de Elasticsearch; si es carga sostenida, medir en S17 antes de cambiar el umbral.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#sinkconsumerlag"
+          }
+        },
+        {
+          "alert": "ConnectTaskNotRunning",
+          "expr": "kafka_connect_task_status{status!=\"running\"} == 1",
+          "for": "2m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "cdc"
+          },
+          "annotations": {
+            "summary": "Una tarea de Kafka Connect (Debezium o sink) no está en ejecución.",
+            "cause": "La tarea falló (credenciales, conexión a PostgreSQL o Elasticsearch, contrato) o fue pausada.",
+            "action": "Ver el estado y la traza del conector en la API REST de Connect y reiniciar la tarea; el WAL se retiene mientras tanto (WalRetentionPressure).",
+            "runbook": "docs/runbooks/pipeline-alerts.md#connecttasknotrunning"
+          }
+        },
+        {
+          "alert": "SearchEngineRed",
+          "expr": "elasticsearch_cluster_health_status{color=\"red\"} == 1",
+          "for": "2m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "Elasticsearch está en rojo: hay índices sin shards primarios asignados.",
+            "cause": "Un nodo cayó o el disco se llenó.",
+            "action": "Restaurar el nodo o el espacio; si el índice se perdió, reconstruirlo desde PostgreSQL (--rebuild-search).",
+            "runbook": "docs/runbooks/pipeline-alerts.md#searchenginered"
+          }
+        },
+        {
+          "alert": "SearchEngineYellow",
+          "expr": "elasticsearch_cluster_health_status{color=\"yellow\"} == 1",
+          "for": "15m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "Elasticsearch está en amarillo: faltan réplicas.",
+            "cause": "Un nodo de réplica no está disponible o no hay capacidad para asignarlas.",
+            "action": "Recuperar el nodo o la capacidad; las consultas siguen sirviéndose sin redundancia.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#searchengineyellow"
+          }
+        },
+        {
+          "alert": "SearchEngineUnreachable",
+          "expr": "elasticsearch_exporter_build_info and on() absent(elasticsearch_cluster_health_status)",
+          "for": "2m",
+          "labels": {
+            "severity": "page",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "El exportador de Elasticsearch está vivo pero Elasticsearch no responde.",
+            "cause": "Elasticsearch está detenido, sin red o sin memoria; las búsquedas fallan y el sink acumula lag.",
+            "action": "Restaurar Elasticsearch; la API responde 503 a las búsquedas mientras tanto. Después comprobar SinkConsumerLag y SinkDeadLetterGrowing.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#searchengineunreachable"
+          }
+        },
+        {
+          "alert": "PipelineExportersDown",
+          "expr": "up{job=~\"kafka|elasticsearch|connect\"} == 0",
+          "for": "5m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "Un exportador de Kafka, Connect o Elasticsearch no responde.",
+            "cause": "El exportador o el servicio al que consulta están caídos, o la red entre ambos falló.",
+            "action": "Comprobar el contenedor del exportador y del servicio; mientras tanto no hay señal de DLQ, lag ni salud.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#pipelineexportersdown"
+          }
+        },
+        {
+          "alert": "PipelineExportersMissing",
+          "expr": "absent(kafka_brokers) or absent(elasticsearch_cluster_health_status) or absent(kafka_connect_task_status)",
+          "for": "10m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "plataforma",
+            "stage": "search"
+          },
+          "annotations": {
+            "summary": "Falta alguna de las métricas de Kafka, Connect o Elasticsearch.",
+            "cause": "El exportador no está desplegado o la plataforma no lo recolecta.",
+            "action": "Desplegar el perfil observability y añadir sus tres destinos a la recolección; sin ellos las reglas de la DLQ, del lag y de Elasticsearch no pueden disparar.",
+            "runbook": "docs/runbooks/pipeline-alerts.md#pipelineexportersmissing"
+          }
         }
       ]
     }

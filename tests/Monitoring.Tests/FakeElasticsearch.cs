@@ -172,7 +172,7 @@ internal sealed class FakeElasticsearch : HttpMessageHandler
         var size = request["size"]!.GetValue<int>();
         var hits = new JsonArray();
         foreach (var doc in matches.Take(size))
-            hits.Add(new JsonObject { ["_id"] = doc.Id, ["_source"] = doc.Source.DeepClone(), ["sort"] = new JsonArray(Millis(doc.Source), Key(doc.Source)) });
+            hits.Add(new JsonObject { ["_id"] = doc.Id, ["_source"] = doc.Source.DeepClone(), ["sort"] = new JsonArray(Millis(doc.Source), Key(doc.Source), 0L) }); // a PIT search appends its own _shard_doc tiebreaker
         var newPit = pit;
         if (RotatePitIdOnSearch) { newPit = pit + "'"; _pits[newPit] = _pits[pit]; _pits.Remove(pit); }
         return Reply(HttpStatusCode.OK, new JsonObject { ["pit_id"] = newPit, ["hits"] = new JsonObject { ["hits"] = hits } }.ToJsonString());

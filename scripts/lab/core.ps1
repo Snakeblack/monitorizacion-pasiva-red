@@ -7,7 +7,8 @@ Push-Location $taskRoot
 try {
     $taskCompose = @('compose','--env-file','deploy/versions.env','-p',$Project,'-f','compose.yaml')
     function Invoke-CoreCompose([string[]]$Arguments) {
-        if ($IsWindows) {
+        # Docker Desktop's daemon is used on Windows unless the older Ubuntu-WSL daemon is requested explicitly.
+        if ($IsWindows -and $env:MONITORING_COMPOSE_VIA_WSL -eq '1') {
             wsl.exe -d Ubuntu --cd $taskRoot env -u DOCKER_CONTEXT DOCKER_HOST=tcp://127.0.0.1:2375 TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 docker @taskCompose @Arguments
         } else { docker @taskCompose @Arguments }
         if ($LASTEXITCODE -ne 0) { throw 'Docker Compose action failed.' }

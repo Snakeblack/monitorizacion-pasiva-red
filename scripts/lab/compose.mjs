@@ -1,14 +1,17 @@
 import { spawnSync } from 'node:child_process';
-import { cwd } from 'node:process';
+import { fileURLToPath } from 'node:url';
 
+// The compose files are addressed relative to the repository root, whatever directory the caller runs from.
+const root = fileURLToPath(new URL('../..', import.meta.url));
 export const project = process.env.MONITORING_COMPOSE_PROJECT ?? 'monitoring-foundation-test';
 if (!/^monitoring-[a-z0-9-]+$/.test(project)) throw new Error('Use a task-owned monitoring-* project.');
 export function compose(args, input, timeout = 120000) {
   const base = ['compose', '--env-file', 'deploy/versions.env', '-p', project, '-f', 'compose.yaml'];
-  const windows = process.platform === 'win32';
+  // On Windows the daemon is Docker Desktop's unless the older Ubuntu-WSL daemon is requested explicitly.
+  const windows = process.platform === 'win32' && process.env.MONITORING_COMPOSE_VIA_WSL === '1';
   const result = spawnSync(windows ? 'wsl.exe' : 'docker', windows
-    ? ['-d', 'Ubuntu', '--cd', cwd(), '--exec', 'env', '-u', 'DOCKER_CONTEXT', 'DOCKER_HOST=tcp://127.0.0.1:2375', 'docker', ...base, ...args]
-    : [...base, ...args], { encoding: 'utf8', input, timeout, maxBuffer: 8 * 1024 * 1024 });
+    ? ['-d', 'Ubuntu', '--cd', root, '--exec', 'env', '-u', 'DOCKER_CONTEXT', 'DOCKER_HOST=tcp://127.0.0.1:2375', 'docker', ...base, ...args]
+    : [...base, ...args], { cwd: root, encoding: 'utf8', input, timeout, maxBuffer: 8 * 1024 * 1024 });
   if (result.status !== 0) throw new Error(`Compose ${args[0]} failed: ${result.stderr ?? result.error}`);
   return result.stdout;
 }

@@ -83,7 +83,7 @@ public sealed class SessionSearchEndpointTests
     [InlineData("from=2026-10-05&to=2026-10-06T11:00:00Z")]
     [InlineData("from=2026-10-06T11:00:00Z&to=2026-10-05T12:00:00Z")]
     [InlineData("from=2026-10-06T11:00:00Z&to=2026-10-06T11:00:00Z")]
-    [InlineData("from=2026-10-06T11:00:00Z&to=2026-10-06T12:00:00.001Z")]
+    [InlineData("from=2026-10-06T11:00:00Z&to=2026-10-06T12:00:05.001Z")]
     [InlineData("from=2026-10-05T12:00:00Z&to=2026-10-07T12:00:00Z")]
     [InlineData("from=2026-09-01T00:00:00Z&to=2026-09-30T00:00:00Z")]
     [InlineData("from=2026-09-05T11:00:00Z&to=2026-10-06T11:00:01Z")]
@@ -145,6 +145,16 @@ public sealed class SessionSearchEndpointTests
         Assert.Equal(50, request.PageSize);
         Assert.Null(request.SourceIp);
         Assert.Null(request.After);
+    }
+
+    [Theory]
+    [InlineData("2026-10-06T12:00:00.250Z")]
+    [InlineData("2026-10-06T12:00:05Z")]
+    public async Task AnEndSlightlyAheadOfTheServerClockIsClampedToNowInsteadOfRejected(string end)
+    {
+        var search = new FakeSearch();
+        Assert.Equal(HttpStatusCode.OK, await StatusAsync(search, "from=2026-10-05T12:00:00Z&to=" + end));
+        Assert.Equal(Now, Assert.Single(search.Requests).To);
     }
 
     [Theory]

@@ -172,7 +172,7 @@ public sealed class ElasticsearchSessionSearch(HttpClient http, ISessionVisibili
         try
         {
             if (!Guid.TryParse(node?["_id"]?.GetValue<string>(), out var id) || node["_source"] is not JsonObject source
-                || node["sort"] is not JsonArray { Count: 2 } sort) return null;
+                || node["sort"] is not JsonArray { Count: >= 2 } sort) return null; // a PIT search appends its own _shard_doc tiebreaker
             var item = new SessionSearchItem(Text(source, "eventId"), Text(source, "siteId"), Text(source, "sensorId"), Text(source, "sourceIp"),
                 Text(source, "destinationIp"), source["sourcePort"]!.GetValue<int>(), source["destinationPort"]!.GetValue<int>(),
                 Text(source, "protocol"), Text(source, "startedAt"), Text(source, "endedAt"), Text(source, "provenance"),

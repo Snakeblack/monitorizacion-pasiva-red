@@ -1,16 +1,18 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cwd } from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const project = process.env.MONITORING_COMPOSE_PROJECT ?? 'monitoring-foundation-test';
+const root = fileURLToPath(new URL('../..', import.meta.url));
 const args = ['compose', '--env-file', 'deploy/versions.env', '-p', project, '-f', 'compose.yaml'];
+// Same daemon rule as scripts/lab/compose.mjs: Docker Desktop's, unless the older Ubuntu-WSL daemon is requested explicitly.
 function compose(...command) {
-  const windows = process.platform === 'win32';
-  return spawnSync(windows ? 'wsl.exe' : 'docker', windows
-    ? ['-d', 'Ubuntu', '--cd', cwd(), 'env', '-u', 'DOCKER_CONTEXT', 'DOCKER_HOST=tcp://127.0.0.1:2375',
+  const viaWsl = process.platform === 'win32' && process.env.MONITORING_COMPOSE_VIA_WSL === '1';
+  return spawnSync(viaWsl ? 'wsl.exe' : 'docker', viaWsl
+    ? ['-d', 'Ubuntu', '--cd', root, 'env', '-u', 'DOCKER_CONTEXT', 'DOCKER_HOST=tcp://127.0.0.1:2375',
       'TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1', 'docker', ...args, ...command]
-    : [...args, ...command], { encoding: 'utf8', timeout: 660000 });
+    : [...args, ...command], { cwd: root, encoding: 'utf8', timeout: 660000 });
 }
 test('core stack becomes healthy and retains an initialized canonical database on restart', () => {
   const started = compose('up', '--build', '--wait', '--wait-timeout', '300');

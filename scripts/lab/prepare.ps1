@@ -4,7 +4,8 @@ $ErrorActionPreference = 'Stop'
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Push-Location $taskRoot
 try {
-    if ((dotnet --version).Trim() -ne '10.0.303') { throw 'SDK 10.0.303 is required.' }
+    # global.json pins 10.0.303 with rollForward latestFeature, so a CI runner may carry a newer 10.0 SDK; the published DLL is portable for the pinned runtime.
+    if (-not (dotnet --version).Trim().StartsWith('10.0.')) { throw 'A .NET 10.0 SDK is required.' }
     New-Item -ItemType Directory -Force lab-secrets,deploy/connect/vendor | Out-Null
     foreach ($taskName in @('postgres-admin','postgres-app','postgres-cdc')) {
         $taskPath = Join-Path $taskRoot "lab-secrets/$taskName.txt"
@@ -14,6 +15,7 @@ try {
     }
     $taskPlugins = @(
       @{file='debezium-connector-postgres-3.6.3.Final-plugin.tar.gz';hash='68dfbd3aa0e22cbc164017311449f69dfe6b96b70e72c72c7a3a24ef5c7810e0';url='https://repo.maven.apache.org/maven2/io/debezium/debezium-connector-postgres/3.6.3.Final/debezium-connector-postgres-3.6.3.Final-plugin.tar.gz'},
+      @{file='jmx_prometheus_javaagent-1.0.1.jar';hash='7d61f737fd661610ccc14aea79764faa1ea94a340cbc8f0029b3d2edea3d80c1';url='https://repo.maven.apache.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/1.0.1/jmx_prometheus_javaagent-1.0.1.jar'},
       @{file='confluentinc-kafka-connect-elasticsearch-16.0.0.zip';hash='3e658470966e1b419c349850a9db9da124fd8764e4d93710bb49b202ab51ba1e';url='https://hub-downloads.confluent.io/api/plugins/confluentinc/kafka-connect-elasticsearch/versions/16.0.0/confluentinc-kafka-connect-elasticsearch-16.0.0.zip'}
     )
     foreach ($taskPlugin in $taskPlugins) {

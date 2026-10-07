@@ -18,6 +18,7 @@ internal sealed record SessionSearchQuery(DateTimeOffset From, DateTimeOffset To
     private const int MaximumCursorLength = 2048;
     internal static readonly TimeSpan MaximumWindow = TimeSpan.FromDays(30);
     internal static readonly TimeSpan ShortWindow = TimeSpan.FromHours(24);
+    internal static readonly TimeSpan ClockSkewTolerance = TimeSpan.FromSeconds(5);
 
     private static readonly HashSet<string> Names = new(StringComparer.Ordinal)
     {
@@ -42,8 +43,10 @@ internal sealed record SessionSearchQuery(DateTimeOffset From, DateTimeOffset To
         }
         if (!values.TryGetValue("from", out var fromText) || !values.TryGetValue("to", out var toText)) return Fail("interval-required", out error);
         if (!TryInstant(fromText, out var from) || !TryInstant(toText, out var to)) return Fail("invalid-instant", out error);
+        // A client clock slightly ahead of the server (the SPA sends its own "now") is not a future query: it is clamped to the server's now.
+        if (to > now + ClockSkewTolerance) return Fail("future-interval", out error);
+        if (to > now) to = now;
         if (from >= to) return Fail("invalid-interval", out error);
-        if (to > now) return Fail("future-interval", out error);
         if (to - from > MaximumWindow || from < now - MaximumWindow) return Fail("interval-out-of-retention", out error);
 
         values.TryGetValue("siteId", out var site);

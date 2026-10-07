@@ -80,7 +80,16 @@ La ingestión (`POST /api/v1/ingestion/batches`) se autentica con el certificado
 
 ## Métricas y alertas de la tubería
 
-`Monitoring.Pipeline` publica la antigüedad del evento aceptado sin proyectar, el WAL retenido/sin confirmar/actividad por slot de replicación y la frescura de la búsqueda; junto a `Monitoring.Ingestion` (balance y cuarentena), `Monitoring.Probes` (rechazos de identidad) y las métricas de la sonda cubren cada etapa. `deploy/observability/alerts.rules.json` contiene las reglas (cargables como `rule_files` de Prometheus) y `docs/runbooks/pipeline-alerts.md` la causa y la acción de cada una. Los umbrales son provisionales hasta medir con la carga real (S17); DLQ de Kafka, lag del sink y salud de Elasticsearch no tienen regla porque el stack aún no despliega esos exportadores.
+`Monitoring.Pipeline` publica la antigüedad del evento aceptado sin proyectar, el WAL retenido/sin confirmar/actividad por slot de replicación y la frescura de la búsqueda; junto a `Monitoring.Ingestion` (balance y cuarentena), `Monitoring.Probes` (rechazos de identidad) y las métricas de la sonda cubren cada etapa. `deploy/observability/alerts.rules.json` contiene las reglas (cargables como `rule_files` de Prometheus) y `docs/runbooks/pipeline-alerts.md` la causa y la acción de cada una. Los umbrales son provisionales hasta medir con la carga real (S17). La DLQ de Kafka, el lag del sink, el estado de las tareas de Connect y la salud de Elasticsearch tienen regla desde que el perfil `observability` despliega sus exportadores ([ADR-020](../architecture/decisions/ADR-020.md)); la API empuja sus propias métricas por OTLP cuando `Telemetry:Otlp:Endpoint` está configurado ([ADR-021](../architecture/decisions/ADR-021.md)).
+
+### Observabilidad en el laboratorio
+
+```
+TELEMETRY_OTLP_ENDPOINT=http://prometheus:9090/api/v1/otlp/v1/metrics docker compose --env-file deploy/versions.env -p monitoring-local -f compose.yaml -f deploy/compose.e2e.yaml --profile observability --profile observability-lab up -d --build
+node scripts/lab/alert-rehearsal.mjs      # fallos reales: DLQ, tarea pausada, Elasticsearch parado, destino de métricas parado
+```
+
+Las reglas de 5–15 minutos se comprueban sin esperar con `promtool test rules deploy/observability/alerts.test.yml` (la imagen de Prometheus fijada incluye `promtool`). En producción solo se despliegan los exportadores; el Prometheus es del laboratorio.
 
 ## Retención y tombstones
 
