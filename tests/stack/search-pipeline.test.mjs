@@ -26,7 +26,9 @@ test('committed authority outbox reaches the real sink with complete identity an
 });
 
 test('a maximum-length identity above the 512-byte _id limit is indexed under its compact search identity', async () => {
-  const [site,sensor,event]=['s','n','e'].map(letter=>letter.repeat(128));
+  const [site,sensor]=['s','n'].map(letter=>letter.repeat(128));
+  // Unique per run so the test can be repeated on a stack that already holds an earlier identity; the length stays at the limit.
+  const event=(randomUUID().replaceAll('-','')+'e'.repeat(128)).slice(0,128);
   const {documentKey, searchDocumentId, data} = commitFixture(event,{},site,sensor);
   assert.equal(Buffer.byteLength(documentKey),515);
   const result = await until(()=>document(searchDocumentId), x=>x.status===200, 15);
