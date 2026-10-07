@@ -1,0 +1,4 @@
+# Publishes the API on the loopback interface for the browser tests (tests/e2e). The core stack publishes no port by default.
+services:
+  api:
+    ports: ["127.0.0.1:5080:8080"]

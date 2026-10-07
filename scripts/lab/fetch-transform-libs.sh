@@ -8,7 +8,7 @@ mkdir -p "$destination"
 fetch() { # name url sha256
   local file="$destination/$1"
   if [[ ! -f "$file" ]] || ! echo "$3  $file" | sha256sum -c --quiet - 2>/dev/null; then
-    curl -fsSL --retry 3 -o "$file" "$2"
+    curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors -o "$file" "$2"
   fi
   echo "$3  $file" | sha256sum -c --quiet - || { echo "Checksum mismatch for $1" >&2; rm -f "$file"; exit 1; }
 }
