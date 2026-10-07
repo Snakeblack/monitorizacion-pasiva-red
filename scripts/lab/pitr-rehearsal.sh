@@ -70,8 +70,12 @@ dotnet_host "$PORT_PRIMARY" --project-pending
 sql "$PORT_PRIMARY" "SELECT pg_create_restore_point('before_mistake')" >/dev/null
 sql "$PORT_PRIMARY" "DELETE FROM monitoring.session_projection"
 expect "sessions after the mistake" "$(sql $PORT_PRIMARY 'SELECT count(*) FROM monitoring.session_projection')" 0
+# Wait for the very segment that holds the mistake: the archiver ships segments in order, so once it is there the restore point
+# before it is there too. Counting archived files is not enough, because the base backup already archived some.
+segment=$(sql "$PORT_PRIMARY" "SELECT pg_walfile_name(pg_current_wal_lsn())")
 sql "$PORT_PRIMARY" "SELECT pg_switch_wal()" >/dev/null
-for _ in $(seq 1 30); do [ "$(ls "$ARCHIVE" | grep -vc '\.partial$')" -ge 2 ] && break; sleep 1; done
+for _ in $(seq 1 60); do [ -f "$ARCHIVE/$segment" ] && break; sleep 1; done
+[ -f "$ARCHIVE/$segment" ] || { echo "FAIL: WAL segment $segment was not archived in 60 s" >&2; exit 1; }
 
 echo "== the primary is lost abruptly"
 pg "$PG_BIN/pg_ctl" -D "$WORK/primary" -m immediate stop >/dev/null

@@ -57,27 +57,28 @@ test('unsupported contract is durably isolated while a later valid identity cont
 });
 
 test('minimal permanent delete document resists old upserts at new Kafka offsets and restart', async () => {
+  // Generous waits: a shared runner starts the connectors and restarts Connect several times slower than a workstation.
   const record=commitFixture(`delete-${randomUUID()}`);
-  await until(()=>document(record.searchDocumentId),x=>x.status===200,15);
+  await until(()=>document(record.searchDocumentId),x=>x.status===200,60);
   const barrier={schemaVersion:2,operation:'delete',documentKey:record.documentKey,searchDocumentId:record.searchDocumentId,revision:2,siteId:'pipeline-site',sensorId:'pipeline-sensor',eventId:record.data.eventId};
   sql(`BEGIN; SELECT pg_advisory_xact_lock_shared(7182041001);
     UPDATE monitoring.session_identity SET state='deleted',revision=2,deleted_at=now() WHERE document_key='${record.documentKey}';
     INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
     VALUES ('${randomUUID()}','${record.documentKey}','sessions','monitoring.sessions.v2',2,2,'${JSON.stringify(barrier)}'); COMMIT;`);
-  await until(()=>document(record.searchDocumentId),x=>x.status===200&&x.body._version===2,15);
+  await until(()=>document(record.searchDocumentId),x=>x.status===200&&x.body._version===2,60);
   const before=offsets('monitoring.sessions.v2');
   replay(record);
   const sentinel=commitFixture(`after-replay-${randomUUID()}`);
-  await until(()=>document(sentinel.searchDocumentId),x=>x.status===200,15);
+  await until(()=>document(sentinel.searchDocumentId),x=>x.status===200,60);
   assert.notEqual(offsets('monitoring.sessions.v2'),before);
   assert.deepEqual(document(record.searchDocumentId).body._source,barrier);
   assert.equal(document(record.searchDocumentId).body._version,2);
   compose(['restart','connect']);
   compose(['up','--wait','--wait-timeout','120','connect']);
-  await until(()=>http('connect:8083','/connectors/monitoring-sink/status'),x=>x.body?.tasks?.[0]?.state==='RUNNING',45);
+  await until(()=>http('connect:8083','/connectors/monitoring-sink/status'),x=>x.body?.tasks?.[0]?.state==='RUNNING',90);
   replay(record);
   const resumed=commitFixture(`after-restart-${randomUUID()}`);
-  await until(()=>document(resumed.searchDocumentId),x=>x.status===200,30);
+  await until(()=>document(resumed.searchDocumentId),x=>x.status===200,90);
   assert.deepEqual(document(record.searchDocumentId).body._source,barrier);
 });
 
