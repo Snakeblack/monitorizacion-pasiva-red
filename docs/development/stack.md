@@ -98,3 +98,15 @@ Las reglas de 5–15 minutos se comprueban sin esperar con `promtool test rules 
 ## Inicio de sesión en la SPA
 
 `src/monitoring-web/public/auth-config.json` es obligatorio en cada despliegue: `{ "enabled": false }` solo en desarrollo; en producción `{ "enabled": true, "authority": "https://…/realms/…", "clientId": "…", "scope": "openid" }` (la autoridad ha de ser HTTPS salvo loopback y debe coincidir con `Identity:Authority` del API; el cliente del proveedor debe ser público con PKCE S256, `redirect_uri` `<origen>/auth/callback` y `post_logout_redirect_uri` `<origen>/signed-out`). Ausente, ilegible o inseguro, la aplicación se cierra. Los tokens no se guardan en el navegador; al caducar, ser rechazados o cerrar sesión se descartan los resultados y se vuelve a `/signed-out`. Pruebas: `npm --prefix src/monitoring-web test` (necesita Node ≥ 22.22.3 o 24).
+
+## Keycloak real en el laboratorio
+
+[ADR-022](../architecture/decisions/ADR-022.md), contrato del token en [ADR-023](../architecture/decisions/ADR-023.md). `deploy/compose.identity.yaml` añade Keycloak 26.7.5 (fijado por digest, `start-dev`, `127.0.0.1:8081`) con el realm `monitoring` de `deploy/keycloak/realm-monitoring.json`, y pone el API en modo OIDC (`Identity__Authority=http://127.0.0.1:8081/realms/monitoring`, `Identity__Audience=monitoring-api`, `Identity__MetadataAddress=http://keycloak:8080/…/.well-known/openid-configuration`). `Identity:MetadataAddress` ([ADR-024](../architecture/decisions/ADR-024.md)) es opcional: mueve solo de dónde se lee el documento de descubrimiento; el emisor aceptado sigue siendo `Identity:Authority`.
+
+```
+pwsh scripts/lab/prepare.ps1        # crea lab-secrets/keycloak-lab.txt si falta
+docker compose --env-file deploy/versions.env -p monitoring-local -f compose.yaml -f deploy/compose.e2e.yaml -f deploy/compose.identity.yaml up -d --build
+cd tests/e2e && E2E_IDENTITY=1 MONITORING_COMPOSE_PROJECT=monitoring-local npx playwright test identity-keycloak
+```
+
+Usuarios sintéticos (misma contraseña, la de `lab-secrets/keycloak-lab.txt`; la consola de administración usa `lab-admin` con ella): `admin-inventario` (administrador-inventario; `pipeline-site/pipeline-sensor` y `lab-site-b/lab-sensor-b`), `analista` (solo el primero), `auditor` (solo el segundo) y `sin-ambito` (rol analista sin `monitoring_scopes`, debe dar 403). El E2E (`tests/e2e/identity-keycloak.spec.mjs`) recorre el inicio de sesión real con PKCE, comprueba el contrato del token (`iss`, `aud`, `roles`, `monitoring_scopes`), el aislamiento entre sitios, la matriz de roles, la denegación sin ámbito y el cierre de sesión por `end_session_endpoint`. Con `E2E_IDENTITY=1` el E2E sin identidad (`session-vertical`) se omite, porque el API ya no está en modo de desarrollo. Tras recrear Keycloak (nuevas claves de firma) el API puede responder 401 hasta un minuto.

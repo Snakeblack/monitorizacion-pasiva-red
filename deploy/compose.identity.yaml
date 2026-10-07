@@ -1,0 +1,37 @@
+# Laboratory identity provider (ADR-022; token contract ADR-023; metadata address ADR-024): a real Keycloak with the `monitoring` realm and the API switched to OIDC. Combine with
+# deploy/compose.e2e.yaml; the stack publishes 127.0.0.1:8081 (Keycloak) and 127.0.0.1:5080 (API) for the browser tests.
+# Lab only: start-dev, an embedded database and a throwaway password for the four synthetic users (lab-secrets/keycloak-lab.txt).
+services:
+  keycloak:
+    image: ${KEYCLOAK_IMAGE:?Use --env-file deploy/versions.env}
+    # The realm placeholders and the bootstrap admin password come from the environment, so the secret file is read here and never written to the image.
+    entrypoint: ["bash", "-c", "export KEYCLOAK_LAB_PASSWORD=\"$$(cat /run/secrets/keycloak_lab)\" KC_BOOTSTRAP_ADMIN_PASSWORD=\"$$(cat /run/secrets/keycloak_lab)\"; exec /opt/keycloak/bin/kc.sh \"$$@\"", "kc"]
+    command: ["start-dev", "--import-realm", "--health-enabled=true"]
+    environment:
+      # Issuer and browser endpoints name the loopback address the SPA uses; back-channel endpoints (JWKS, token) follow the host the
+      # caller used, so the API reaches them as keycloak:8080 (Identity:MetadataAddress) while the issuer stays 127.0.0.1:8081.
+      KC_HOSTNAME: http://127.0.0.1:8081
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: lab-admin
+      JAVA_OPTS_KC_HEAP: -Xms256m -Xmx768m
+    secrets: [keycloak_lab]
+    volumes: ["./deploy/keycloak/realm-monitoring.json:/opt/keycloak/data/import/realm-monitoring.json:ro"]
+    ports: ["127.0.0.1:8081:8080"]
+    healthcheck:
+      # The image ships no curl; the management port answers the readiness probe.
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.0\r\n\r\n' >&3 && grep -q '\"UP\"' <&3"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    stop_grace_period: 20s
+  api:
+    environment:
+      Identity__Mode: Oidc
+      Identity__Authority: http://127.0.0.1:8081/realms/monitoring
+      Identity__MetadataAddress: http://keycloak:8080/realms/monitoring/.well-known/openid-configuration
+      Identity__Audience: monitoring-api
+    depends_on:
+      keycloak: {condition: service_healthy}
+secrets:
+  keycloak_lab: {file: ./lab-secrets/keycloak-lab.txt}

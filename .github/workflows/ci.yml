@@ -140,6 +140,15 @@ jobs:
         run: npx playwright test
         working-directory: tests/e2e
 
+      - name: Start Keycloak and switch the API to OIDC
+        run: docker compose --env-file deploy/versions.env -p monitoring-ci -f compose.yaml -f deploy/compose.e2e.yaml -f deploy/compose.identity.yaml up -d --no-deps --wait keycloak api
+
+      - name: Run the authenticated browser test (SPA against the real Keycloak)
+        run: npx playwright test identity-keycloak
+        working-directory: tests/e2e
+        env:
+          E2E_IDENTITY: "1"
+
       - name: Check the core stack restarts healthy with its database
         run: node --test tests/stack/foundation.test.mjs
 

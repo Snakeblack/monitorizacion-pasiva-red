@@ -1,6 +1,6 @@
 # Registro de decisiones
 
-[ADR-013](ADR-013.md) define los objetivos de la primera entrega de producción. [ADR-014](ADR-014.md) conserva la elección histórica provisional S00. [ADR-015](ADR-015.md)–[ADR-019](ADR-019.md) adoptan autoridad PostgreSQL, conectores de búsqueda, revisiones/barreras, consulta finita, Keycloak/EJBCA y sonda/continuidad; S17/S18 siguen pendientes. [ADR-010](ADR-010.md) conserva la selección histórica; [ADR-011](ADR-011.md) define observabilidad [ADR-020](ADR-020.md) añade los exportadores de la tubería de búsqueda y [ADR-021](ADR-021.md) fija OTLP para las métricas de la API. [ADR-012](ADR-012.md) conserva el historial anterior, cuyas cifras de escala y continuidad fueron sustituidas. Las confirmaciones restantes están en [brechas](../../roadmap-gaps.md).
+[ADR-013](ADR-013.md) define los objetivos de la primera entrega de producción. [ADR-014](ADR-014.md) conserva la elección histórica provisional S00. [ADR-015](ADR-015.md)–[ADR-019](ADR-019.md) adoptan autoridad PostgreSQL, conectores de búsqueda, revisiones/barreras, consulta finita, Keycloak/EJBCA y sonda/continuidad; S17/S18 siguen pendientes. [ADR-010](ADR-010.md) conserva la selección histórica; [ADR-011](ADR-011.md) define observabilidad [ADR-020](ADR-020.md) añade los exportadores de la tubería de búsqueda y [ADR-021](ADR-021.md) fija OTLP para las métricas de la API. [ADR-022](ADR-022.md)–[ADR-024](ADR-024.md) consolidan con evidencia real la parte humana de ADR-018: Keycloak de laboratorio, contrato del token y dirección de metadatos. [ADR-012](ADR-012.md) conserva el historial anterior, cuyas cifras de escala y continuidad fueron sustituidas. Las confirmaciones restantes están en [brechas](../../roadmap-gaps.md).
 
 | ADR | Estado y alcance |
 |---|---|
@@ -25,5 +25,8 @@
 | [019](ADR-019.md) | Aceptado: sonda aislada, spool y continuidad operada |
 | [020](ADR-020.md) | Aceptado: exportadores de Kafka/Connect/Elasticsearch y Prometheus solo de laboratorio; complementa ADR-011 |
 | [021](ADR-021.md) | Aceptado: las métricas de la API salen por OTLP empujado; complementa ADR-011 y ADR-020 |
+| [022](ADR-022.md) | Aceptado: Keycloak real como perfil de laboratorio y puerta de CI; complementa ADR-018 |
+| [023](ADR-023.md) | Aceptado: contrato del token humano (roles, ámbitos, audiencia, cierre de sesión); concreta ADR-018 |
+| [024](ADR-024.md) | Aceptado: `Identity:MetadataAddress`, dirección de descubrimiento distinta del emisor; complementa ADR-018 y ADR-002 |
 
 Cada decisión futura registrará evidencia, coste recurrente, responsable, consecuencias y plan de reversión. El índice separa la propuesta histórica del contrato vigente.

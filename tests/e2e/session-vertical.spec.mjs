@@ -3,6 +3,9 @@ import { randomUUID } from 'node:crypto';
 import { http, until } from '../../scripts/lab/compose.mjs';
 import { ingestSyntheticSession } from '../stack/fixtures.mjs';
 
+// The API runs without identity here; the OIDC overlay has its own spec (identity-keycloak.spec.mjs).
+test.skip(process.env.E2E_IDENTITY === '1', 'The API is in OIDC mode.');
+
 // ingestion inbox -> projector -> authority PostgreSQL -> outbox -> Debezium -> Kafka -> sink -> Elasticsearch -> API -> Angular list -> detail.
 test('a committed session is listed and opens its five-field detail in the browser', async ({ page }) => {
   const eventId = `e2e-${randomUUID()}`;
