@@ -1,0 +1,16 @@
+# Demo only: opens loopback windows onto the laboratory services so they can be shown in a browser or with curl. Combine with the other overlays:
+#   docker compose --env-file deploy/versions.env -p monitoring-local -f compose.yaml -f deploy/compose.e2e.yaml -f deploy/compose.identity.yaml \
+#     -f deploy/compose.demo.yaml --profile observability --profile observability-lab up -d
+# Every port is bound to 127.0.0.1 only. The laboratory Elasticsearch and Connect have no authentication (the lab core is a closed network,
+# docs/development/stack.md), so never publish these on another interface or in a shared environment.
+services:
+  api:
+    environment:
+      # The API pushes its own meters to the laboratory Prometheus (ADR-021), which this overlay requires: use it with --profile observability-lab.
+      Telemetry__Otlp__Endpoint: http://prometheus:9090/api/v1/otlp/v1/metrics
+  prometheus:
+    ports: ["127.0.0.1:9090:9090"]
+  elasticsearch:
+    ports: ["127.0.0.1:9200:9200"]
+  connect:
+    ports: ["127.0.0.1:8083:8083"]

@@ -2,6 +2,11 @@
 
 Base ejecutable S01–S04 del sistema de monitorización: host ASP.NET Core, ingestión durable S02, proyección idempotente de sesiones sintéticas S03 con detalle aislado por sede/sonda, y vista Angular interna del detalle. Las pruebas usan PostgreSQL desechable. Captura real, inventario y acceso humano de producción pertenecen a slices posteriores.
 
+## Guías
+
+- **[Guía de demo](docs/demo/guia-de-demo.md)**: arranque del laboratorio completo, enlaces, usuarios y roles, guion para enseñarlo y solución de problemas.
+- **[Instalación en otro equipo, para un agente (LLM) o una persona](docs/development/guia-instalacion-para-llm.md)**: requisitos con su comprobación, pasos verificables y fallos conocidos.
+
 ## Requisitos
 
 - .NET SDK 10.0.303, fijado en `global.json`.
