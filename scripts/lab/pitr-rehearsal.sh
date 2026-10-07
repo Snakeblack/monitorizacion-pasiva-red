@@ -70,12 +70,13 @@ dotnet_host "$PORT_PRIMARY" --project-pending
 sql "$PORT_PRIMARY" "SELECT pg_create_restore_point('before_mistake')" >/dev/null
 sql "$PORT_PRIMARY" "DELETE FROM monitoring.session_projection"
 expect "sessions after the mistake" "$(sql $PORT_PRIMARY 'SELECT count(*) FROM monitoring.session_projection')" 0
-# Wait for the very segment that holds the mistake: the archiver ships segments in order, so once it is there the restore point
-# before it is there too. Counting archived files is not enough, because the base backup already archived some.
+# Wait until PostgreSQL itself reports the segment that holds the mistake as archived: the archiver ships segments in order, so the
+# restore point before it is archived too. Neither counting archived files (the base backup already archived some) nor testing that
+# the file exists is enough: `cp` creates the file before it finishes writing it, and the immediate stop below kills the archiver.
 segment=$(sql "$PORT_PRIMARY" "SELECT pg_walfile_name(pg_current_wal_lsn())")
 sql "$PORT_PRIMARY" "SELECT pg_switch_wal()" >/dev/null
-for _ in $(seq 1 60); do [ -f "$ARCHIVE/$segment" ] && break; sleep 1; done
-[ -f "$ARCHIVE/$segment" ] || { echo "FAIL: WAL segment $segment was not archived in 60 s" >&2; exit 1; }
+for _ in $(seq 1 60); do [ "$(sql "$PORT_PRIMARY" "SELECT coalesce(last_archived_wal >= '$segment', false) FROM pg_stat_archiver")" = t ] && break; sleep 1; done
+[ "$(sql "$PORT_PRIMARY" "SELECT coalesce(last_archived_wal >= '$segment', false) FROM pg_stat_archiver")" = t ]   || { echo "FAIL: WAL segment $segment was not reported as archived in 60 s" >&2; exit 1; }
 
 echo "== the primary is lost abruptly"
 pg "$PG_BIN/pg_ctl" -D "$WORK/primary" -m immediate stop >/dev/null
@@ -92,7 +93,7 @@ recovery_target_name = 'before_mistake'
 recovery_target_action = 'promote'
 CONF
 pg touch "$WORK/restored/recovery.signal"
-pg "$PG_BIN/pg_ctl" -D "$WORK/restored" -l "$WORK/restored.log" -w start >/dev/null
+pg "$PG_BIN/pg_ctl" -D "$WORK/restored" -l "$WORK/restored.log" -w start >/dev/null   || { echo "--- restored server log ---" >&2; tail -n 25 "$WORK/restored.log" >&2; exit 1; }
 for _ in $(seq 1 60); do [ "$(sql $PORT_RESTORED 'SELECT pg_is_in_recovery()' 2>/dev/null || echo t)" = f ] && break; sleep 1; done
 expect "recovery finished" "$(sql $PORT_RESTORED 'SELECT pg_is_in_recovery()')" f
 expect "sessions recovered to the restore point" "$(sql $PORT_RESTORED 'SELECT count(*) FROM monitoring.session_projection')" 5
