@@ -42,7 +42,7 @@ public sealed partial class AlertRulesTests
     {
         var rules = Rules();
         Assert.NotEmpty(rules);
-        var runbook = File.ReadAllText(Path.Combine(Root, "docs", "runbooks", "pipeline-alerts.md"));
+        var runbook = File.ReadAllText(Path.Combine(Root, "docs", "runbooks", "pipeline-alerts.md")).ReplaceLineEndings("\n");
         foreach (var rule in rules)
         {
             var name = rule.GetProperty("alert").GetString()!;
@@ -80,6 +80,45 @@ public sealed partial class AlertRulesTests
                 Assert.True(produced.Contains(name), $"{rule.GetProperty("alert")} reads {match.Value}, which no code produces");
             }
         }
+    }
+
+    // Names read from a real Prometheus scraping the exporters of ADR-020 (Kafka, the Connect JMX agent and Elasticsearch). A rule over any
+    // other external name was never observed and is rejected until its name is verified the same way.
+    private static readonly HashSet<string> VerifiedExternalMetrics = new(StringComparer.Ordinal)
+    {
+        "up", "kafka_brokers", "kafka_consumergroup_lag", "kafka_topic_partition_current_offset",
+        "kafka_connect_task_status", "kafka_connect_connector_status", "kafka_connect_task_error_total_record_errors",
+        "kafka_connect_task_error_deadletterqueue_produce_failures", "elasticsearch_cluster_health_status", "elasticsearch_exporter_build_info"
+    };
+
+    [GeneratedRegex(@"(?<![A-Za-z0-9_])(?:up|kafka_[a-z0-9_]+|elasticsearch_[a-z0-9_]+)(?![A-Za-z0-9_])")]
+    private static partial Regex ExternalMetricPattern();
+
+    [Fact]
+    public void EveryExternalMetricAnAlertReadsWasObservedOnARealExporter()
+    {
+        var found = 0;
+        foreach (var rule in Rules())
+        {
+            foreach (Match match in ExternalMetricPattern().Matches(rule.GetProperty("expr").GetString()!))
+            {
+                found++;
+                Assert.True(VerifiedExternalMetrics.Contains(match.Value), $"{rule.GetProperty("alert")} reads {match.Value}, whose name was never verified");
+            }
+        }
+        Assert.True(found > 0, "the pipeline exporters must have rules");
+    }
+
+    [Fact]
+    public void AMissingExporterIsDetectedForEveryExternalFamilyTheRulesRead()
+    {
+        var rules = Rules();
+        var missing = rules.Single(rule => rule.GetProperty("alert").GetString() == "PipelineExportersMissing").GetProperty("expr").GetString()!;
+        Assert.Contains("absent(kafka_brokers)", missing, StringComparison.Ordinal);
+        Assert.Contains("absent(elasticsearch_cluster_health_status)", missing, StringComparison.Ordinal);
+        Assert.Contains("absent(kafka_connect_task_status)", missing, StringComparison.Ordinal);
+        var down = rules.Single(rule => rule.GetProperty("alert").GetString() == "PipelineExportersDown").GetProperty("expr").GetString()!;
+        Assert.Contains("up{job=~\"kafka|elasticsearch|connect\"} == 0", down, StringComparison.Ordinal);
     }
 
     [Fact]

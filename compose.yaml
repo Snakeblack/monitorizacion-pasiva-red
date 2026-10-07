@@ -65,6 +65,8 @@ services:
         KAFKA_IMAGE: ${KAFKA_IMAGE:?Use --env-file deploy/versions.env}
     environment:
       KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+      # Prometheus JMX agent (ADR-020): listens only on the internal network; the whitelist in jmx-connect.yaml bounds what it exposes.
+      KAFKA_OPTS: -javaagent:/opt/monitoring/jmx_prometheus_javaagent.jar=9404:/opt/monitoring/jmx-connect.yaml
     secrets: [postgres_cdc]
     depends_on:
       kafka: {condition: service_healthy}
@@ -104,6 +106,8 @@ services:
       Search__Elasticsearch__Url: http://elasticsearch:9200
       # Cursors are sealed with Data Protection; the lab keeps the key ring in the container (cursors do not survive a restart).
       DataProtection__KeysPath: /tmp/monitoring-keys
+      # Empty exports nothing (ADR-021). The lab profile sets it to the Prometheus OTLP receiver.
+      Telemetry__Otlp__Endpoint: ${TELEMETRY_OTLP_ENDPOINT:-}
     depends_on:
       bootstrap: {condition: service_completed_successfully}
       elasticsearch: {condition: service_healthy}
@@ -113,6 +117,28 @@ services:
       timeout: 3s
       retries: 30
     stop_grace_period: 30s
+  # Exporters the product ships for the corporate platform to scrape (ADR-020). No port is published to the host.
+  kafka-exporter:
+    profiles: [observability]
+    image: ${KAFKA_EXPORTER_IMAGE:?Use --env-file deploy/versions.env}
+    command: ["--kafka.server=kafka:9092", "--topic.filter=^monitoring[.].*", "--group.filter=^connect-monitoring-.*", "--web.listen-address=:9308"]
+    depends_on:
+      kafka: {condition: service_healthy}
+  elasticsearch-exporter:
+    profiles: [observability]
+    image: ${ELASTICSEARCH_EXPORTER_IMAGE:?Use --env-file deploy/versions.env}
+    # Cluster health only: no per-index or per-shard series, which would grow with the number of generations.
+    command: ["--es.uri=http://elasticsearch:9200", "--no-es.all", "--no-es.indices", "--no-es.shards", "--web.listen-address=:9114"]
+    depends_on:
+      elasticsearch: {condition: service_healthy}
+  # Laboratory only: evaluates deploy/observability/alerts.rules.json for real. Production reuses the corporate platform (ADR-011, ADR-020).
+  prometheus:
+    profiles: [observability-lab]
+    image: ${PROMETHEUS_IMAGE:?Use --env-file deploy/versions.env}
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--web.enable-otlp-receiver", "--storage.tsdb.retention.time=2d", "--web.enable-lifecycle"]
+    volumes:
+      - ./deploy/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/observability/alerts.rules.json:/etc/prometheus/alerts.rules.yml:ro
 secrets:
   postgres_admin: {file: ./lab-secrets/postgres-admin.txt}
   postgres_app: {file: ./lab-secrets/postgres-app.txt}

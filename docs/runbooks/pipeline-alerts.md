@@ -4,7 +4,7 @@ Cada alerta de `deploy/observability/alerts.rules.json` (formato de reglas de Pr
 
 **Responsables:** `operaciones-red` (sondas y sedes), `plataforma` (API, base de datos, conectores, búsqueda), `seguridad` (identidad y PKI). **Severidad:** `page` exige respuesta inmediata; `ticket`, el siguiente día laborable.
 
-**No cubierto todavía:** profundidad de la DLQ de Kafka, lag del consumidor del sink y salud de Elasticsearch requieren exportadores (Kafka/Connect/Elasticsearch) que el stack interno aún no despliega; no se han escrito reglas sobre métricas cuyo nombre no se ha verificado. Las reglas tampoco se han ejecutado contra un Prometheus real.
+**Origen de las métricas:** las de `monitoring_*` las empuja la API por OTLP ([ADR-021](../architecture/decisions/ADR-021.md)); las de `kafka_*`, `kafka_connect_*` y `elasticsearch_*` salen de los exportadores del perfil `observability` ([ADR-020](../architecture/decisions/ADR-020.md)). Los nombres se verificaron en un Prometheus real del laboratorio; los umbrales siguen siendo provisionales hasta S17. **Sin cobertura todavía:** las métricas de la sonda (`monitoring_probe_*`) las publica el proceso de la sonda, que aún no las exporta.
 
 ## ProbeSpoolOldest
 
@@ -165,3 +165,67 @@ Cada alerta de `deploy/observability/alerts.rules.json` (formato de reglas de Pr
 - **Qué significa:** La retención no ha completado ningún ciclo desde que arrancó la API.
 - **Causa probable:** La retención falla en cada intento o la API se reinicia antes de terminar.
 - **Qué hacer:** Revisar el registro del worker (tipo de fallo) y la base de datos; sin retención se incumple la promesa de borrado.
+
+## SinkDeadLetterGrowing
+
+- **Severidad / responsable / etapa:** page / plataforma / search
+- **Condición:** `increase(kafka_topic_partition_current_offset{topic="monitoring.sessions.dlq"}[15m]) > 0` durante 0m
+- **Qué significa:** El sink de Elasticsearch ha desviado mensajes a la cola de errores: esas sesiones no están en el índice.
+- **Causa probable:** Un mensaje no cumple el contrato, Elasticsearch lo rechaza o la transformación de validación falla.
+- **Qué hacer:** Inspeccionar los mensajes de monitoring.sessions.dlq (cabeceras de error) y corregir la causa; reconstruir el índice desde PostgreSQL cuando se resuelva (--rebuild-search).
+
+## SinkConsumerLag
+
+- **Severidad / responsable / etapa:** ticket / plataforma / search
+- **Condición:** `sum(kafka_consumergroup_lag{consumergroup="connect-monitoring-sink"}) > 1000` durante 10m
+- **Qué significa:** El sink de Elasticsearch acumula más de 1000 mensajes sin consumir.
+- **Causa probable:** Connect o Elasticsearch van más lentos que la publicación, o el sink está detenido.
+- **Qué hacer:** Comprobar ConnectTaskNotRunning y la salud de Elasticsearch; si es carga sostenida, medir en S17 antes de cambiar el umbral.
+
+## ConnectTaskNotRunning
+
+- **Severidad / responsable / etapa:** page / plataforma / cdc
+- **Condición:** `kafka_connect_task_status{status!="running"} == 1` durante 2m
+- **Qué significa:** Una tarea de Kafka Connect (Debezium o sink) no está en ejecución.
+- **Causa probable:** La tarea falló (credenciales, conexión a PostgreSQL o Elasticsearch, contrato) o fue pausada.
+- **Qué hacer:** Ver el estado y la traza del conector en la API REST de Connect y reiniciar la tarea; el WAL se retiene mientras tanto (WalRetentionPressure).
+
+## SearchEngineRed
+
+- **Severidad / responsable / etapa:** page / plataforma / search
+- **Condición:** `elasticsearch_cluster_health_status{color="red"} == 1` durante 2m
+- **Qué significa:** Elasticsearch está en rojo: hay índices sin shards primarios asignados.
+- **Causa probable:** Un nodo cayó o el disco se llenó.
+- **Qué hacer:** Restaurar el nodo o el espacio; si el índice se perdió, reconstruirlo desde PostgreSQL (--rebuild-search).
+
+## SearchEngineYellow
+
+- **Severidad / responsable / etapa:** ticket / plataforma / search
+- **Condición:** `elasticsearch_cluster_health_status{color="yellow"} == 1` durante 15m
+- **Qué significa:** Elasticsearch está en amarillo: faltan réplicas.
+- **Causa probable:** Un nodo de réplica no está disponible o no hay capacidad para asignarlas.
+- **Qué hacer:** Recuperar el nodo o la capacidad; las consultas siguen sirviéndose sin redundancia.
+
+## SearchEngineUnreachable
+
+- **Severidad / responsable / etapa:** page / plataforma / search
+- **Condición:** `elasticsearch_exporter_build_info and on() absent(elasticsearch_cluster_health_status)` durante 2m
+- **Qué significa:** El exportador de Elasticsearch está vivo pero Elasticsearch no responde.
+- **Causa probable:** Elasticsearch está detenido, sin red o sin memoria; las búsquedas fallan y el sink acumula lag.
+- **Qué hacer:** Restaurar Elasticsearch; la API responde 503 a las búsquedas mientras tanto. Después comprobar SinkConsumerLag y SinkDeadLetterGrowing.
+
+## PipelineExportersDown
+
+- **Severidad / responsable / etapa:** ticket / plataforma / search
+- **Condición:** `up{job=~"kafka|elasticsearch|connect"} == 0` durante 5m
+- **Qué significa:** Un exportador de Kafka, Connect o Elasticsearch no responde.
+- **Causa probable:** El exportador o el servicio al que consulta están caídos, o la red entre ambos falló.
+- **Qué hacer:** Comprobar el contenedor del exportador y del servicio; mientras tanto no hay señal de DLQ, lag ni salud.
+
+## PipelineExportersMissing
+
+- **Severidad / responsable / etapa:** ticket / plataforma / search
+- **Condición:** `absent(kafka_brokers) or absent(elasticsearch_cluster_health_status) or absent(kafka_connect_task_status)` durante 10m
+- **Qué significa:** Falta alguna de las métricas de Kafka, Connect o Elasticsearch.
+- **Causa probable:** El exportador no está desplegado o la plataforma no lo recolecta.
+- **Qué hacer:** Desplegar el perfil observability y añadir sus tres destinos a la recolección; sin ellos las reglas de la DLQ, del lag y de Elasticsearch no pueden disparar.

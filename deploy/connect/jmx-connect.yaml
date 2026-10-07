@@ -1,0 +1,29 @@
+# Prometheus JMX agent for Kafka Connect (ADR-020). Only the task and error MBeans listed here leave the process; labels are the
+# connector and task names, never record contents. Other MBeans stay private.
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - "kafka.connect:type=connector-metrics,connector=*"
+  - "kafka.connect:type=connector-task-metrics,connector=*,task=*"
+  - "kafka.connect:type=task-error-metrics,connector=*,task=*"
+  - "kafka.connect:type=sink-task-metrics,connector=*,task=*"
+rules:
+  # status is a string attribute ("running", "failed", ...): one series per observed state, value 1.
+  - pattern: 'kafka.connect<type=connector-metrics, connector=(.+)><>status: (.+)'
+    name: kafka_connect_connector_status
+    type: GAUGE
+    value: 1
+    labels: { connector: "$1", status: "$2" }
+  - pattern: 'kafka.connect<type=connector-task-metrics, connector=(.+), task=(.+)><>status: (.+)'
+    name: kafka_connect_task_status
+    type: GAUGE
+    value: 1
+    labels: { connector: "$1", task: "$2", status: "$3" }
+  - pattern: 'kafka.connect<type=task-error-metrics, connector=(.+), task=(.+)><>(total-record-failures|total-record-errors|total-records-skipped|total-retries|deadletterqueue-produce-requests|deadletterqueue-produce-failures|last-error-timestamp)'
+    name: kafka_connect_task_error_$3
+    type: GAUGE
+    labels: { connector: "$1", task: "$2" }
+  - pattern: 'kafka.connect<type=sink-task-metrics, connector=(.+), task=(.+)><>(sink-record-lag-max|sink-record-read-total|sink-record-send-total|offset-commit-completion-total|offset-commit-skip-total)'
+    name: kafka_connect_sink_$3
+    type: GAUGE
+    labels: { connector: "$1", task: "$2" }
