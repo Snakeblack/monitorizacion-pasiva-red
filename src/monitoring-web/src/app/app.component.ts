@@ -1,10 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from './auth/auth.service';
+import { AuthService, AuthSession } from './auth/auth.service';
+import { Role } from './auth/claims';
+import { Icon } from './ui/icon.component';
+
+const ROLE_LABELS: Record<Role, string> = {
+  analista: 'Analista',
+  auditor: 'Auditor',
+  'administrador-inventario': 'Administrador de inventario',
+};
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [Icon, RouterLink, RouterLinkActive, RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.component.css',
   templateUrl: './app.component.html',
@@ -32,5 +40,13 @@ export class App {
 
   protected logout(): void {
     this.auth.logout();
+  }
+
+  protected initial(session: AuthSession): string {
+    return (session.name ?? session.subject).charAt(0);
+  }
+
+  protected roleLabels(session: AuthSession): string {
+    return session.roles.map((role) => ROLE_LABELS[role]).join(' · ');
   }
 }

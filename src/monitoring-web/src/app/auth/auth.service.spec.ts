@@ -84,6 +84,26 @@ async function begin(r: Rig, returnUrl = '/sessions'): Promise<{ state: string; 
 }
 
 describe('AuthService', () => {
+  it('keeps the user name for display when the access token carries one and falls back to nothing when it does not', async () => {
+    const named = rig();
+    const first = await begin(named);
+    named.respond.token = () => json({
+      token_type: 'Bearer',
+      access_token: jwt({ sub: 'user-1', preferred_username: 'analista', roles: ['analista'], exp: NOW / 1000 + 300 }),
+      id_token: jwt({ iss: AUTHORITY, aud: 'monitoring-web', sub: 'user-1', nonce: first.nonce, exp: NOW / 1000 + 300 }),
+      expires_in: 300,
+    });
+    await named.service.completeLogin(`?code=abc&state=${first.state}`);
+    expect(named.service.session()?.name).toBe('analista');
+
+    TestBed.resetTestingModule();
+    const anonymous = rig();
+    const second = await begin(anonymous);
+    anonymous.respond.token = () => validTokens(second.nonce);
+    await anonymous.service.completeLogin(`?code=abc&state=${second.state}`);
+    expect(anonymous.service.session()?.name).toBeUndefined();
+  });
+
   it('is disabled without configuration and never touches the network or storage', async () => {
     const r = rig(null);
     expect(r.service.enabled).toBe(false);

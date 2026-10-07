@@ -7,6 +7,8 @@ export default defineConfig({
   testMatch: '*.spec.mjs',
   timeout: 120_000,
   retries: 0,
+  // One stack, one identity provider and one realm are shared by every spec (the rotation spec even changes the realm's signing keys), so files must not overlap.
+  workers: 1,
   reporter: [['list']],
   use: { baseURL: 'http://127.0.0.1:4200', trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { browserName: 'chromium' } }],

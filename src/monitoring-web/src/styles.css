@@ -1,25 +1,42 @@
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/*
+ * Design system of the console: dark first, tinted neutrals (OKLCH, hue 265), one accent, hairline borders, small radii and a 4 px spacing
+ * scale. Components only add layout; every control, badge and table below is shared so the screens stay consistent.
+ * Light tokens exist under [data-theme='light'] (not switched on by default).
+ */
 :root {
-  --ui-bg: oklch(0.97 0.004 260);
-  --ui-surface-1: oklch(0.995 0.002 260);
-  --ui-surface-2: oklch(0.945 0.005 260);
-  --ui-surface-elevated: oklch(1 0 0);
+  color-scheme: dark;
 
-  --ui-border-subtle: color-mix(in oklab, black 10%, transparent);
-  --ui-border-strong: color-mix(in oklab, black 18%, transparent);
+  --ui-bg: oklch(0.155 0.008 265);
+  --ui-sidebar: oklch(0.135 0.008 265);
+  --ui-surface-1: oklch(0.185 0.009 265);
+  --ui-surface-2: oklch(0.22 0.01 265);
+  --ui-surface-3: oklch(0.26 0.011 265);
+  --ui-surface-elevated: oklch(0.235 0.011 265);
 
-  --ui-text: oklch(0.24 0.012 260);
-  --ui-text-muted: oklch(0.46 0.01 260);
-  --ui-text-faint: oklch(0.6 0.008 260);
-  --ui-icon: oklch(0.4 0.01 260);
-  --ui-icon-muted: oklch(0.56 0.008 260);
+  --ui-border-subtle: color-mix(in oklab, white 7%, transparent);
+  --ui-border-strong: color-mix(in oklab, white 13%, transparent);
 
-  --ui-accent: oklch(0.5 0.12 250);
-  --ui-accent-soft: color-mix(in oklab, var(--ui-accent) 12%, transparent);
-  --ui-focus: color-mix(in oklab, var(--ui-accent) 70%, white);
+  --ui-text: oklch(0.95 0.005 265);
+  --ui-text-muted: oklch(0.72 0.01 265);
+  --ui-text-faint: oklch(0.58 0.01 265);
+  --ui-icon: oklch(0.78 0.01 265);
+  --ui-icon-muted: oklch(0.6 0.01 265);
 
-  --ui-danger: oklch(0.52 0.18 25);
-  --ui-warning: oklch(0.68 0.14 75);
-  --ui-success: oklch(0.52 0.12 150);
+  --ui-accent: oklch(0.74 0.12 245);
+  --ui-accent-strong: oklch(0.8 0.11 245);
+  --ui-accent-on: oklch(0.18 0.02 250);
+  --ui-accent-soft: color-mix(in oklab, var(--ui-accent) 15%, transparent);
+  --ui-focus: color-mix(in oklab, var(--ui-accent) 85%, white);
+
+  --ui-danger: oklch(0.72 0.17 25);
+  --ui-danger-soft: color-mix(in oklab, var(--ui-danger) 14%, transparent);
+  --ui-warning: oklch(0.82 0.13 80);
+  --ui-warning-soft: color-mix(in oklab, var(--ui-warning) 14%, transparent);
+  --ui-success: oklch(0.78 0.14 155);
+  --ui-success-soft: color-mix(in oklab, var(--ui-success) 14%, transparent);
 
   --ui-radius-xs: 4px;
   --ui-radius-sm: 6px;
@@ -33,38 +50,52 @@
   --ui-space-6: 24px;
   --ui-space-8: 32px;
 
-  --ui-control-compact: 30px;
-  --ui-control: 34px;
-  --ui-row: 36px;
-  --ui-nav-expanded: 240px;
-  --ui-nav-collapsed: 56px;
+  --ui-control-compact: 28px;
+  --ui-control: 32px;
+  --ui-row: 40px;
+  --ui-nav-expanded: 232px;
+  --ui-nav-collapsed: 52px;
 
-  --ui-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif;
+  --ui-shadow-pop: 0 8px 24px -6px oklch(0 0 0 / 0.55), 0 0 0 1px var(--ui-border-strong);
+
+  --ui-font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ui-font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --ui-font-size-meta: 12px;
   --ui-font-size-control: 13px;
   --ui-font-size-body: 13px;
-  --ui-font-size-title: 18px;
+  --ui-font-size-title: 20px;
+
+  --ui-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-[data-theme='dark'] {
-  --ui-bg: oklch(0.18 0.008 260);
-  --ui-surface-1: oklch(0.21 0.008 260);
-  --ui-surface-2: oklch(0.25 0.01 260);
-  --ui-surface-elevated: oklch(0.27 0.01 260);
+[data-theme='light'] {
+  color-scheme: light;
+  --ui-bg: oklch(0.975 0.004 265);
+  --ui-sidebar: oklch(0.955 0.005 265);
+  --ui-surface-1: oklch(0.995 0.002 265);
+  --ui-surface-2: oklch(0.955 0.005 265);
+  --ui-surface-3: oklch(0.925 0.006 265);
+  --ui-surface-elevated: oklch(1 0 0);
+  --ui-border-subtle: color-mix(in oklab, black 8%, transparent);
+  --ui-border-strong: color-mix(in oklab, black 16%, transparent);
+  --ui-text: oklch(0.22 0.012 265);
+  --ui-text-muted: oklch(0.44 0.01 265);
+  --ui-text-faint: oklch(0.58 0.008 265);
+  --ui-icon: oklch(0.4 0.01 265);
+  --ui-icon-muted: oklch(0.56 0.008 265);
+  --ui-accent: oklch(0.5 0.14 250);
+  --ui-accent-strong: oklch(0.44 0.14 250);
+  --ui-accent-on: oklch(0.99 0 0);
+  --ui-danger: oklch(0.52 0.18 25);
+  --ui-warning: oklch(0.6 0.14 70);
+  --ui-success: oklch(0.5 0.12 150);
+  --ui-shadow-pop: 0 8px 24px -6px oklch(0 0 0 / 0.18), 0 0 0 1px var(--ui-border-strong);
+}
 
-  --ui-border-subtle: color-mix(in oklab, white 10%, transparent);
-  --ui-border-strong: color-mix(in oklab, white 16%, transparent);
-
-  --ui-text: oklch(0.92 0.006 260);
-  --ui-text-muted: oklch(0.72 0.008 260);
-  --ui-text-faint: oklch(0.58 0.006 260);
-  --ui-icon: oklch(0.78 0.006 260);
-  --ui-icon-muted: oklch(0.6 0.006 260);
-
-  --ui-accent: oklch(0.68 0.1 250);
-  --ui-accent-soft: color-mix(in oklab, var(--ui-accent) 16%, transparent);
-  --ui-focus: color-mix(in oklab, var(--ui-accent) 70%, white);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
@@ -78,9 +109,343 @@ body {
   color: var(--ui-text);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-font-size-body);
-  line-height: 1.4;
+  line-height: 1.45;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-button {
-  font-family: inherit;
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+a {
+  color: var(--ui-accent);
+  text-underline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--ui-accent) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 2px;
+}
+
+.mono {
+  font-family: var(--ui-font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.005em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- Buttons ---------------------------------------------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  height: var(--ui-control);
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  padding: 0 var(--ui-space-3);
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: var(--ui-font-size-control);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--ui-surface-3);
+}
+
+.btn:disabled {
+  color: var(--ui-text-faint);
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn--primary {
+  border-color: transparent;
+  background: var(--ui-accent);
+  color: var(--ui-accent-on);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--ui-accent-strong);
+}
+
+.btn--primary:disabled {
+  background: var(--ui-surface-3);
+  color: var(--ui-text-faint);
+}
+
+.btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ui-text-muted);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
+}
+
+.btn--compact {
+  height: var(--ui-control-compact);
+  padding: 0 var(--ui-space-2);
+}
+
+.btn--icon {
+  width: var(--ui-control-compact);
+  padding: 0;
+}
+
+/* ---- Fields ----------------------------------------------------------------------------------------------------------------- */
+.input {
+  width: 100%;
+  min-width: 0;
+  height: var(--ui-control);
+  padding: 0 var(--ui-space-3);
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface-1);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: var(--ui-font-size-control);
+}
+
+.input::placeholder {
+  color: var(--ui-text-faint);
+}
+
+.input:hover {
+  border-color: color-mix(in oklab, white 22%, transparent);
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--ui-accent);
+  box-shadow: 0 0 0 3px var(--ui-accent-soft);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--ui-danger);
+}
+
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  color: var(--ui-text-muted);
+  font-size: var(--ui-font-size-meta);
+  font-weight: 500;
+}
+
+/* ---- Badges ----------------------------------------------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  padding: 0 var(--ui-space-2);
+  border: 1px solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-surface-2);
+  color: var(--ui-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.badge--accent {
+  border-color: transparent;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-strong);
+}
+
+.badge--success {
+  border-color: transparent;
+  background: var(--ui-success-soft);
+  color: var(--ui-success);
+}
+
+.badge--warning {
+  border-color: transparent;
+  background: var(--ui-warning-soft);
+  color: var(--ui-warning);
+}
+
+.badge--danger {
+  border-color: transparent;
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.kbd {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border: 1px solid var(--ui-border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--ui-radius-xs);
+  color: var(--ui-text-muted);
+  font-family: var(--ui-font-mono);
+  font-size: 10px;
+}
+
+/* ---- Tables ----------------------------------------------------------------------------------------------------------------- */
+.table-scroll {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface-1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.table caption {
+  text-align: left;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0 var(--ui-space-3);
+  height: 32px;
+  background: var(--ui-surface-1);
+  border-bottom: 1px solid var(--ui-border-subtle);
+  color: var(--ui-text-faint);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  min-height: var(--ui-row);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-bottom: 1px solid var(--ui-border-subtle);
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr:hover {
+  background: var(--ui-surface-2);
+}
+
+.secondary {
+  display: block;
+  color: var(--ui-text-faint);
+  font-size: var(--ui-font-size-meta);
+}
+
+/* ---- Feedback --------------------------------------------------------------------------------------------------------------- */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  margin: 0;
+  padding: var(--ui-space-3);
+  border: 1px solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface-1);
+  color: var(--ui-text-muted);
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice app-icon {
+  margin-top: 2px;
+}
+
+.notice--danger {
+  border-color: color-mix(in oklab, var(--ui-danger) 35%, transparent);
+  background: var(--ui-danger-soft);
+  color: var(--ui-text);
+}
+
+.notice--warning {
+  border-color: color-mix(in oklab, var(--ui-warning) 30%, transparent);
+  background: var(--ui-warning-soft);
+  color: var(--ui-text);
+}
+
+.skeleton {
+  display: block;
+  height: 12px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-surface-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn,
+  .input {
+    transition:
+      background-color 120ms var(--ui-ease),
+      border-color 120ms var(--ui-ease),
+      box-shadow 120ms var(--ui-ease),
+      color 120ms var(--ui-ease);
+  }
+
+  .skeleton {
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-pulse {
+    50% {
+      opacity: 0.45;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .btn,
+  .input {
+    min-height: 44px;
+  }
 }

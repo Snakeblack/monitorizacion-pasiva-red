@@ -69,4 +69,18 @@ describe('SignedOutPage', () => {
     closed.detectChanges();
     expect((closed.nativeElement as HTMLElement).querySelector('button')).toBeNull();
   });
+
+  it('says so when the provider cannot be reached instead of leaving a button that does nothing', async () => {
+    const startLogin = vi.fn().mockRejectedValue(new Error('network'));
+    setup({ enabled: true, configurationFailed: false, startLogin }, { reason: 'logout' });
+    const fixture = TestBed.createComponent(SignedOutPage);
+    fixture.detectChanges();
+    (fixture.nativeElement as HTMLElement).querySelector('button')!.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const alert = (fixture.nativeElement as HTMLElement).querySelector('[role="alert"]');
+    expect(alert?.textContent).toContain('No se pudo contactar con el proveedor de identidad');
+    expect(alert?.textContent).toContain('Solución de problemas');
+    expect(alert?.textContent).not.toContain('network');
+  });
 });

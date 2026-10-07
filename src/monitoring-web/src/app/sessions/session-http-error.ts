@@ -6,12 +6,15 @@ export function sessionHttpStatus(error: unknown): number {
   return 0;
 }
 
-export function sessionErrorMessage(status: number): string {
+// `signInAvailable` is false when the console runs without an identity provider: a 401 then cannot be fixed by signing in, so the message names the cause.
+export function sessionErrorMessage(status: number, signInAvailable = true): string {
   switch (status) {
     case 400:
       return 'Consulta inválida. Revisa el intervalo y los filtros y vuelve a buscar.';
     case 401:
-      return 'Inicia sesión con una identidad válida para consultar sesiones.';
+      return signInAvailable
+        ? 'Inicia sesión con una identidad válida para consultar sesiones.'
+        : 'El servidor exige iniciar sesión, pero esta consola se ha arrancado sin proveedor de identidad. Arráncala con «npm run start:lab» (consulta la guía de demo).';
     case 403:
       return 'Acceso denegado. No tienes permiso para este ámbito o tus permisos han cambiado.';
     case 410:

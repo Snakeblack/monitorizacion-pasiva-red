@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Icon } from '../ui/icon.component';
+import { relativeTime } from '../ui/relative-time';
 import {
   CandidateView, DeviceView, inventoryErrorMessage, InventoryApi, inventoryStatus, ObservationView,
 } from './inventory-api';
@@ -16,6 +18,7 @@ const MAXIMUM_TEXT = 512;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Icon],
   selector: 'app-inventory-page',
   styleUrl: './inventory-page.component.css',
   templateUrl: './inventory-page.component.html',
@@ -59,6 +62,10 @@ export class InventoryPage implements OnInit {
 
   ngOnInit(): void {
     void this.load(true);
+  }
+
+  protected since(iso: string): string {
+    return relativeTime(iso, Date.now());
   }
 
   protected select(tab: Tab): void {

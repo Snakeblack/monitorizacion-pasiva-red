@@ -149,6 +149,13 @@ jobs:
         env:
           E2E_IDENTITY: "1"
 
+      - name: Run the key rotation and provider outage test (real Keycloak, API over TLS)
+        run: npx playwright test identity-rotation
+        working-directory: tests/e2e
+        env:
+          E2E_IDENTITY: "1"
+          MONITORING_COMPOSE_PROJECT: monitoring-ci
+
       - name: Check the core stack restarts healthy with its database
         run: node --test tests/stack/foundation.test.mjs
 

@@ -1,8 +1,8 @@
 import { test, expect, request as playwrightRequest } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
-import { readFileSync } from 'node:fs';
 import { http, until } from '../../scripts/lab/compose.mjs';
 import { ingestSyntheticSession } from '../stack/fixtures.mjs';
+import { AUTHORITY, API, authConfig, signIn, decode, searchByIp, captureToken } from './identity-lab.mjs';
 
 // Authenticated browser test against a real Keycloak (ADR-022, ADR-023; task 3.2). Requires the core stack, the API in OIDC mode and the
 // `monitoring` realm: docker compose ... -f deploy/compose.e2e.yaml -f deploy/compose.identity.yaml up -d, then E2E_IDENTITY=1.
@@ -10,13 +10,8 @@ import { ingestSyntheticSession } from '../stack/fixtures.mjs';
 // sin-ambito carries a valid role but no monitoring_scopes.
 test.skip(process.env.E2E_IDENTITY !== '1', 'Needs the Keycloak overlay (deploy/compose.identity.yaml); set E2E_IDENTITY=1.');
 
-const AUTHORITY = 'http://127.0.0.1:8081/realms/monitoring';
-const API = 'http://127.0.0.1:5080';
-const PASSWORD = process.env.KEYCLOAK_LAB_PASSWORD ?? readFileSync(new URL('../../lab-secrets/keycloak-lab.txt', import.meta.url), 'utf8').trim();
 const SITE_A = { site: 'pipeline-site', sensor: 'pipeline-sensor' };
 const SITE_B = { site: 'lab-site-b', sensor: 'lab-sensor-b' };
-const authConfig = { enabled: true, authority: AUTHORITY, clientId: 'monitoring-web', scope: 'openid' };
-
 const seeded = {};
 
 test.beforeAll(async () => {
@@ -40,37 +35,6 @@ test.beforeEach(async ({ page }) => {
   // The SPA ships `{ "enabled": false }`; a deployment provides its own file, which the browser test stands in for.
   await page.route('**/auth-config.json', route => route.fulfill({ json: authConfig }));
 });
-
-// Signs in through the real Keycloak form.
-async function signIn(page, username) {
-  await page.goto('/sessions');
-  await page.waitForURL(`${AUTHORITY}/**`);
-  await page.locator('#username').fill(username);
-  await page.locator('#password').fill(PASSWORD);
-  await page.locator('#kc-login').click();
-  await page.waitForURL('**/sessions');
-  await expect(page.getByRole('button', { name: 'Cerrar sesión' })).toBeVisible();
-}
-
-function decode(token) {
-  return JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'));
-}
-
-async function searchByIp(page, sourceIp) {
-  await page.getByRole('button', { name: 'Últimas 24 h' }).click();
-  await page.locator('#sourceIp').fill(sourceIp);
-  await page.getByRole('button', { name: 'Buscar sesiones' }).click();
-}
-
-// The token the SPA holds in memory only: the test observes it on the wire, like any proxy would.
-function captureToken(page) {
-  const holder = { token: null };
-  page.on('request', request => {
-    const value = request.headers()['authorization'];
-    if (value?.startsWith('Bearer ')) holder.token = value.slice(7);
-  });
-  return holder;
-}
 
 const asScope = ({ site, sensor }) => JSON.stringify({ site, sensor });
 

@@ -1,27 +1,47 @@
-<div class="app-shell" [class.app-shell--nav-collapsed]="!navOpen()">
-  <header class="app-header">
-    <button
-      type="button"
-      class="app-nav-toggle"
-      [attr.aria-expanded]="navOpen()"
-      aria-controls="app-nav"
-      (click)="toggleNav()"
-    >
-      {{ navToggleLabel() }}
-    </button>
-    <p class="app-header-title">Monitorización</p>
-    @if (auth.session(); as session) {
-      <p class="app-user" aria-label="Usuario">{{ session.subject }}</p>
-      <button type="button" class="app-logout" (click)="logout()">Cerrar sesión</button>
-    }
-  </header>
-  <div class="app-body">
-    <nav id="app-nav" class="app-nav">
-      <a class="app-nav-item" routerLink="/sessions" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page">Sesiones</a>
-      <a class="app-nav-item" routerLink="/inventory" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page">Inventario</a>
+<div class="shell" [class.shell--collapsed]="!navOpen()">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <span class="brand" aria-hidden="true"><span class="brand-mark"></span></span>
+      <p class="brand-name">Monitorización</p>
+      <button
+        type="button"
+        class="btn btn--ghost btn--icon btn--compact app-nav-toggle"
+        [attr.aria-expanded]="navOpen()"
+        [attr.aria-label]="navToggleLabel()"
+        aria-controls="app-nav"
+        (click)="toggleNav()"
+      >
+        <app-icon name="panel-left" />
+      </button>
+    </div>
+
+    <nav id="app-nav" class="app-nav" aria-label="Principal">
+      <a class="nav-item" routerLink="/sessions" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <app-icon name="activity" /><span class="nav-label">Sesiones</span>
+      </a>
+      <a class="nav-item" routerLink="/inventory" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <app-icon name="server" /><span class="nav-label">Inventario</span>
+      </a>
     </nav>
-    <main class="app-main">
-      <router-outlet />
-    </main>
-  </div>
+
+    @if (auth.session(); as session) {
+      <div class="sidebar-foot">
+        <div class="app-user" aria-label="Usuario">
+          <span class="avatar" aria-hidden="true">{{ initial(session) }}</span>
+          <span class="user-text">
+            <span class="user-name">{{ session.name ?? session.subject }}</span>
+            @if (session.roles.length) {
+              <span class="user-role">{{ roleLabels(session) }}</span>
+            }
+          </span>
+        </div>
+        <button type="button" class="btn btn--ghost btn--compact app-logout" (click)="logout()">
+          <app-icon name="log-out" /><span class="nav-label">Cerrar sesión</span>
+        </button>
+      </div>
+    }
+  </aside>
+  <main class="app-main">
+    <router-outlet />
+  </main>
 </div>

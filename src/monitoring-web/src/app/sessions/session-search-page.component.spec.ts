@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { AuthService } from '../auth/auth.service';
 import { SessionDetailPage } from '../session-detail/session-detail-page.component';
 import { SessionPage, SessionSummary } from './session-search-api';
 import { SessionSearchPage } from './session-search-page.component';
@@ -26,12 +27,13 @@ const page: SessionPage = {
   freshness: { state: 'current', measuredAt: '2026-10-05T12:00:00.123Z', lagSeconds: 3 },
 };
 
-async function openSearch() {
+async function openSearch(extraProviders: unknown[] = []) {
   vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-05T12:00:00.123Z'));
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(),
       provideHttpClientTesting(),
+      ...(extraProviders as never[]),
       provideRouter([
         { path: 'sessions', component: SessionSearchPage },
         { path: 'sessions/:eventId', component: SessionDetailPage },
@@ -50,7 +52,23 @@ async function openSearch() {
     expect(element, label).toBeInstanceOf(HTMLButtonElement);
     return element as HTMLButtonElement;
   };
+  // Filters are added from the "+ Filtro" menu and the custom range from its own button, as a person would.
+  const reveal = (name: string) => {
+    if (root().querySelector(`#${name}`)) return;
+    if (name === 'from' || name === 'to') {
+      button('Personalizado').click();
+    } else {
+      const add = [...root().querySelectorAll('button')].find((b) => b.textContent?.includes('Filtro')) as HTMLButtonElement;
+      add.click();
+      harness.fixture.detectChanges();
+      const labels: Record<string, string> = { sourceIp: 'IP origen', destinationIp: 'IP destino', siteId: 'Sede', sensorId: 'Sonda' };
+      const item = [...root().querySelectorAll('[role="menuitem"]')].find((candidate) => candidate.textContent?.trim().startsWith(labels[name])) as HTMLButtonElement;
+      item.click();
+    }
+    harness.fixture.detectChanges();
+  };
   const field = (name: string, value: string) => {
+    reveal(name);
     const element = root().querySelector(`#${name}`) as HTMLInputElement;
     expect(element, name).toBeInstanceOf(HTMLInputElement);
     element.value = value;
@@ -169,18 +187,21 @@ describe('SessionSearchPage', () => {
     expect(ctx.root().querySelector('[role="alert"]')?.textContent).toContain(
       'sede, sonda y una IP',
     );
+    // The missing pieces are offered as one-press additions next to the message.
+    expect(ctx.text()).toContain('Más de 24 h solo se consulta con sede, sonda y una IP');
     ctx.http.expectNone((req) => req.url === '/api/v1/sessions');
+    // A malformed address is flagged on its own filter and never reaches the server.
     ctx.field('from', '2026-10-04T12:00:00.123Z');
-    ctx.field('pageSize', '101');
+    ctx.field('sourceIp', '999.0.0.1');
     await ctx.submit();
-    expect(ctx.text()).toContain('1–100');
+    expect(ctx.text()).toContain('IP origen: Escribe una dirección IPv4 o IPv6 completa');
     ctx.http.expectNone((req) => req.url === '/api/v1/sessions');
     ctx.http.verify();
   });
 
   it.each([
     { status: 400, message: 'Consulta inválida' },
-    { status: 401, message: 'Inicia sesión' },
+    { status: 401, message: 'sin proveedor de identidad' }, // the test console has no identity provider configured
     { status: 403, message: 'Acceso denegado' },
     { status: 429, message: 'Demasiadas consultas' },
     { status: 503, message: 'Búsqueda no disponible' },
@@ -241,7 +262,37 @@ describe('SessionSearchPage', () => {
     expect(ctx.text()).toContain('Índice en recuperación');
     expect(ctx.text()).toContain('Retraso desconocido');
     expect(ctx.text()).toContain('Capturada · inferida · parcial');
-    expect(ctx.text()).not.toContain('0 s');
+    expect(ctx.text()).not.toContain('Retraso 0 s');
+    ctx.http.verify();
+  });
+
+  it('asks the person to sign in on a 401 when an identity provider is configured', async () => {
+    const ctx = await openSearch([{ provide: AuthService, useValue: { enabled: true } }]);
+    ctx.request().flush('', { status: 401, statusText: 'Unauthorized' });
+    await ctx.harness.fixture.whenStable();
+    expect(ctx.root().querySelector('[role="alert"]')?.textContent).toContain('Inicia sesión');
+    ctx.http.verify();
+  });
+
+  it('adds a filter from the menu, lets it be removed, and a preset search always ends now', async () => {
+    const ctx = await openSearch();
+    ctx.request().flush(page);
+    await ctx.harness.fixture.whenStable();
+    ctx.field('sourceIp', '192.0.2.99');
+    expect(ctx.root().querySelector('#sourceIp')).toBeInstanceOf(HTMLInputElement);
+    (ctx.root().querySelector('button[aria-label="Quitar filtro IP origen"]') as HTMLButtonElement).click();
+    ctx.harness.fixture.detectChanges();
+    expect(ctx.root().querySelector('#sourceIp')).toBeNull();
+    // Time passes between choosing "1 h" and the search: the range is measured when it runs.
+    vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-05T12:30:00.000Z'));
+    (ctx.root().querySelector('button[aria-label="Última hora"]') as HTMLButtonElement).click();
+    ctx.harness.fixture.detectChanges();
+    const hour = ctx.request();
+    expect(hour.request.params.get('from')).toBe('2026-10-05T11:30:00.000Z');
+    expect(hour.request.params.get('to')).toBe('2026-10-05T12:30:00.000Z');
+    expect(hour.request.params.has('sourceIp')).toBe(false);
+    hour.flush({ ...page, nextCursor: null });
+    await ctx.harness.fixture.whenStable();
     ctx.http.verify();
   });
 });

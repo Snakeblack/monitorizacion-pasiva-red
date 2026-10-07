@@ -1,4 +1,4 @@
-import { recentSessionFilters, SessionFilters, sessionFilterError } from './session-query';
+import { recentSessionFilters, SessionFilters, sessionFieldErrors, sessionFilterError } from './session-query';
 
 const now = Date.parse('2026-10-05T12:00:00.123Z');
 const short: SessionFilters = {
@@ -63,5 +63,23 @@ describe('Session query boundaries', () => {
         now,
       ),
     ).toBe('');
+  });
+});
+
+describe('Per-field validation', () => {
+  it('reports nothing for an untouched or valid set of filters', () => {
+    expect(sessionFieldErrors(short)).toEqual({});
+    expect(sessionFieldErrors({ ...short, sourceIp: '192.0.2.1', destinationIp: '2001:db8::2', protocol: 'UDP', sourcePort: '0', destinationPort: '65535' })).toEqual({});
+  });
+
+  it('names the field that is wrong so its own chip can show it, and only that one', () => {
+    expect(Object.keys(sessionFieldErrors({ ...short, sourceIp: '999.0.0.1' }))).toEqual(['sourceIp']);
+    expect(Object.keys(sessionFieldErrors({ ...short, destinationIp: 'no-es-ip', sourcePort: '70000' })).sort()).toEqual(['destinationIp', 'sourcePort']);
+    expect(Object.keys(sessionFieldErrors({ ...short, destinationPort: '1.5', protocol: 'ICMP' })).sort()).toEqual(['destinationPort', 'protocol']);
+  });
+
+  it('gives each message in terms of what to type', () => {
+    expect(sessionFieldErrors({ ...short, sourceIp: '1.2.3' }).sourceIp).toContain('IPv4 o IPv6');
+    expect(sessionFieldErrors({ ...short, sourcePort: 'abc' }).sourcePort).toContain('0–65535');
   });
 });

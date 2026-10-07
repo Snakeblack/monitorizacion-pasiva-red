@@ -64,6 +64,23 @@ export function sessionFilterError(filters: SessionFilters, now: number): string
   return '';
 }
 
+// Which exact-match filters are wrong, so each can show its own message beside the value instead of one sentence for the whole form.
+export function sessionFieldErrors(filters: SessionFilters): Partial<Record<'sourceIp' | 'destinationIp' | 'protocol' | 'sourcePort' | 'destinationPort', string>> {
+  const errors: ReturnType<typeof sessionFieldErrors> = {};
+  const ipMessage = 'Escribe una dirección IPv4 o IPv6 completa; no se admite búsqueda libre.';
+  if (filters.sourceIp !== '' && !validIp(filters.sourceIp)) errors.sourceIp = ipMessage;
+  if (filters.destinationIp !== '' && !validIp(filters.destinationIp)) errors.destinationIp = ipMessage;
+  if (filters.protocol !== '' && !['TCP', 'UDP'].includes(filters.protocol)) errors.protocol = 'El protocolo debe ser TCP o UDP.';
+  const portMessage = 'Un número entero de 0–65535.';
+  if (filters.sourcePort !== '' && !validPort(filters.sourcePort)) errors.sourcePort = portMessage;
+  if (filters.destinationPort !== '' && !validPort(filters.destinationPort)) errors.destinationPort = portMessage;
+  return errors;
+}
+
+function validPort(port: string): boolean {
+  return /^\d+$/.test(port) && Number(port) <= 65535;
+}
+
 function utcTime(value: string): number {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/.test(value)) return NaN;
   const time = Date.parse(value);

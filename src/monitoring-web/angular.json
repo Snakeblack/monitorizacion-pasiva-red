@@ -66,8 +66,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all"
@@ -76,6 +76,12 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "lab": {
+              "assets": [
+                { "glob": "**/*", "input": "public-lab" },
+                { "glob": "favicon.ico", "input": "public" }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -91,6 +97,9 @@
             },
             "development": {
               "buildTarget": "monitoring-web:build:development"
+            },
+            "lab": {
+              "buildTarget": "monitoring-web:build:development,lab"
             }
           },
           "defaultConfiguration": "development"

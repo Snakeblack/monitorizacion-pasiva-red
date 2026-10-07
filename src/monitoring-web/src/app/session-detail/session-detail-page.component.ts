@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
+import { Icon } from '../ui/icon.component';
 import { SessionDetail, SessionDetailApi } from './session-detail-api';
 import { sessionErrorMessage, sessionHttpStatus } from '../sessions/session-http-error';
 
@@ -13,7 +14,7 @@ type SessionDetailView =
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [Icon, RouterLink],
   selector: 'app-session-detail-page',
   styleUrl: './session-detail-page.component.css',
   templateUrl: './session-detail-page.component.html',
@@ -80,8 +81,27 @@ export class SessionDetailPage {
     return { kind: 'loading' };
   });
 
+  protected readonly copied = signal(false);
+
   protected dataText(session: SessionDetail): string {
-    return JSON.stringify(session.data);
+    return JSON.stringify(session.data, null, 2);
+  }
+
+  /** The protocol the sensor recorded, when the payload carries one; the payload itself is shown untouched below. */
+  protected protocolOf(session: SessionDetail): string {
+    const data: unknown = session.data;
+    const protocol = typeof data === 'object' && data !== null ? (data as Record<string, unknown>)['protocol'] : undefined;
+    return typeof protocol === 'string' ? protocol : '';
+  }
+
+  protected copy(value: string): void {
+    void navigator.clipboard?.writeText(value).then(
+      () => {
+        this.copied.set(true);
+        setTimeout(() => this.copied.set(false), 1800);
+      },
+      () => undefined,
+    );
   }
 
   protected retry(): void {

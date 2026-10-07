@@ -28,7 +28,7 @@ describe('App', () => {
     await fixture.whenStable();
 
     expect(toggle?.getAttribute('aria-expanded')).toBe('false');
-    expect(toggle?.textContent?.trim()).toBe('Mostrar navegación');
+    expect(toggle?.getAttribute('aria-label')).toBe('Mostrar navegación');
   });
 
   it('navigates to the sessions work surface using a native named link', async () => {

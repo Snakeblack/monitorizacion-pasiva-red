@@ -23,6 +23,8 @@ export type EndReason = 'expired' | 'rejected' | 'logout';
 
 export interface AuthSession {
   subject: string;
+  // Display name from the token (`preferred_username`), for the interface only; authorization never reads it.
+  name?: string;
   roles: Role[];
   expiresAt: number;
 }
@@ -162,7 +164,8 @@ export class AuthService {
     this.idToken = tokens.idToken;
     const expiresAt = this.platform.now() + Math.max(0, tokens.lifetimeSeconds * 1000 - EARLY_END_MS);
     this.ended.set(null);
-    this.state.set({ subject, roles: rolesOf(accessClaims), expiresAt });
+    const name = typeof accessClaims?.['preferred_username'] === 'string' ? accessClaims['preferred_username'] : undefined;
+    this.state.set({ subject, name, roles: rolesOf(accessClaims), expiresAt });
     this.cancelTimer?.();
     this.cancelTimer = this.platform.setTimer(() => this.accessToken(), Math.max(0, expiresAt - this.platform.now()));
     return safeReturnUrl(pending.returnUrl);
