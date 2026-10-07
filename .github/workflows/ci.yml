@@ -28,6 +28,11 @@ jobs:
           cache: npm
           cache-dependency-path: src/monitoring-web/package-lock.json
 
+      - name: Install tshark for the real-extractor tests
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tshark
+
       - name: Restore
         run: dotnet restore Monitoring.slnx
 
@@ -36,6 +41,26 @@ jobs:
 
       - name: Test with Docker-backed PostgreSQL
         run: dotnet test Monitoring.slnx --no-build
+
+      - name: Use JDK 21 for the Connect transform
+        run: echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch pinned Kafka API jars
+        run: ./scripts/lab/fetch-transform-libs.sh
+
+      - name: Test the Connect session contract guard
+        run: |
+          set -euo pipefail
+          node --test tests/stack/session-contract.test.mjs | tee contract-guard.txt
+          # A skipped or empty run must fail the build, never pass silently. Node prints TAP (`# pass 1`) or the spec
+          # reporter (`ℹ pass 1`) depending on the version and the terminal, so both spellings are accepted.
+          grep -Eq '^(#|ℹ) pass 1$' contract-guard.txt
+          grep -Eq '^(#|ℹ) skipped 0$' contract-guard.txt
+
+      - name: Check the stack tests parse
+        run: |
+          set -euo pipefail
+          for file in tests/stack/*.mjs scripts/lab/*.mjs; do node --check "$file"; done
 
       - name: Install SPA dependencies
         run: npm ci
@@ -61,3 +86,70 @@ jobs:
             find publish-host -iname '*monitoring-web*' -print
             exit 1
           fi
+
+  # Real chain (PostgreSQL -> Debezium -> Kafka -> Connect sink -> Elasticsearch -> API). It is started by hand until it has
+  # passed once on a runner; then drop the `if` so every pull request runs it.
+  stack:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MONITORING_COMPOSE_PROJECT: monitoring-ci
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.16.0"
+
+      - name: Use JDK 21 for the Connect transform
+        run: echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+
+      - name: Start the core stack
+        run: pwsh scripts/lab/core.ps1 -Action up -Project monitoring-ci
+
+      - name: Configure index, alias and connectors
+        run: node scripts/lab/pipeline.mjs
+
+      - name: Run the stack tests
+        run: |
+          set -euo pipefail
+          node --test tests/stack/search-pipeline.test.mjs tests/stack/search-api.test.mjs | tee stack-tests.txt
+          grep -Eq '^(#|ℹ) fail 0$' stack-tests.txt
+          grep -Eq '^(#|ℹ) skipped 0$' stack-tests.txt
+
+      - name: Collect service logs on failure
+        if: failure()
+        run: docker compose --env-file deploy/versions.env -p monitoring-ci -f compose.yaml logs --no-color --tail 200
+
+      - name: Stop the stack
+        if: always()
+        run: pwsh scripts/lab/core.ps1 -Action down -Project monitoring-ci
+
+  # Backup / PITR rehearsal on a throw-away PostgreSQL cluster (scripts/lab/pitr-rehearsal.sh). Started by hand until it has passed
+  # once on a runner; then drop the `if` so every pull request runs it.
+  recovery:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Build the host
+        run: dotnet build src/Monitoring.Host
+
+      - name: Rehearse backup, loss, point-in-time recovery and post-restore finalization
+        run: bash scripts/lab/pitr-rehearsal.sh

@@ -56,11 +56,12 @@ public sealed class OutboxTests(PostgresFixture postgres) : IClassFixture<Postgr
             DELETE FROM monitoring.session_projection;
             UPDATE monitoring.ingestion_inbox SET processed_at=NULL;
             """);
-        await Assert.ThrowsAsync<InvalidOperationException>(() => SessionTestDatabase.ProjectAsync(connection));
+        // A permanent incompatibility is quarantined (see IngestionQuarantineTests), never a crash of the projection worker.
+        await SessionTestDatabase.ProjectAsync(connection);
         Assert.Equal(0L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.session_projection"));
         Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.session_identity WHERE revision=2 AND state='deleted'"));
         Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.projection_outbox WHERE revision=1"));
-        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_inbox WHERE processed_at IS NULL"));
+        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_inbox WHERE processed_at IS NULL AND quarantined_at IS NOT NULL"));
     }
 
     [Fact]

@@ -27,6 +27,31 @@ public sealed class CaptureTests
     }
 
     [Theory]
+    [InlineData("True", "False", true, false)]
+    [InlineData("True", "True", true, true)]
+    [InlineData("False", "True", false, true)]
+    [InlineData("1", "0", true, false)]
+    [InlineData("", "", false, false)]
+    public void ParserReadsTsharkFlagsInBothItsBooleanSpellings(string syn, string ack, bool expectedSyn, bool expectedAck)
+    {
+        // tshark 4.x prints True/False for boolean fields; older builds print 1/0. Both must be understood.
+        var packet = new TsharkParser().Parse(Line("1790000000.100000000", "54", "aa:bb:cc:00:00:01", "aa:bb:cc:00:00:02", "192.0.2.1", "192.0.2.2",
+            "", "", "6", "", "1234", "443", "", "", "", syn, ack, "False", "False"));
+        Assert.Equal((expectedSyn, expectedAck), (packet!.Syn, packet.Ack));
+    }
+
+    [Fact]
+    public void FramesWithoutAnIpHeaderAreCountedAsNonIpNotAsParserErrors()
+    {
+        var parser = new TsharkParser();
+        Assert.Null(parser.Parse(Line("1790000000.800000000", "42", "aa:bb:cc:00:00:01", "ff:ff:ff:ff:ff:ff", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")));
+        Assert.Equal((1L, 0L, 1L), (parser.PacketsSeen, parser.ParserErrors, parser.NonIpFrames));
+        // A frame whose IP fields are present but malformed is still a parser error.
+        Assert.Null(parser.Parse(Line("1790000000.900000000", "42", "", "", "999.1.1.1", "192.0.2.2", "", "", "6", "", "1", "2", "", "", "", "", "", "", "")));
+        Assert.Equal((2L, 1L, 1L), (parser.PacketsSeen, parser.ParserErrors, parser.NonIpFrames));
+    }
+
+    [Theory]
     [InlineData("-1", "17", "53", "123", "", "10.0.0.1")]
     [InlineData("64", "17", "65536", "123", "", "10.0.0.1")]
     [InlineData("64", "17", "53", "123", "4095", "10.0.0.1")]

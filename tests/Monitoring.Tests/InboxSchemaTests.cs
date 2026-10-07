@@ -21,12 +21,12 @@ public sealed class InboxSchemaTests(PostgresFixture postgres) : IClassFixture<P
             migration.ExitCode == 0,
             $"Migration process failed: {Redact(migration.StandardError, connectionString)} {Redact(migration.StandardOutput, connectionString)}");
 
-        Assert.Equal(5L, await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
+        Assert.Equal(SessionTestDatabase.ExpectedMigrationCount(), await ScalarLongAsync(connection, "SELECT count(*) FROM public.\"__EFMigrationsHistory\""));
         Assert.Equal(
             new[] { "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_origin"));
         Assert.Equal(
-            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "processed_at", "schema_version", "sensor_id", "site_id" },
+            new[] { "accepted_at", "batch_id", "data", "event_id", "occurred_at", "occurred_at_text", "processed_at", "quarantined_at", "schema_version", "sensor_id", "site_id" },
             await ColumnNamesAsync(connection, "ingestion_inbox"));
 
         Assert.Equal("jsonb", await ColumnTypeAsync(connection, "ingestion_inbox", "data"));

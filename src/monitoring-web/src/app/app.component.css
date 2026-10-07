@@ -112,3 +112,25 @@
     transition: width 120ms ease-out;
   }
 }
+
+.app-user {
+  margin: 0 0 0 auto;
+  color: var(--ui-text-muted);
+  font-size: var(--ui-font-size-control);
+}
+
+.app-logout {
+  height: var(--ui-control-compact);
+  border: 1px solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-sm);
+  background: transparent;
+  color: var(--ui-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--ui-font-size-control);
+  padding: 0 var(--ui-space-2);
+}
+
+.app-logout:hover {
+  background: var(--ui-surface-2);
+}

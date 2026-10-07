@@ -216,7 +216,7 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     public async Task HttpOverLimitResponseIs429AndDoesNotPersistNewRows()
     {
         var connection = await CreateDatabaseAsync();
-        using var factory = CreateHost(connection);
+        using var factory = CreateHost(connection, quota: 500);
         using var client = factory.CreateClient();
 
         using var fullQuota = await client.PostAsync(Route, Json(Batch(QuotaEvents(0, 500))));
@@ -236,10 +236,11 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
         return connection;
     }
 
-    private static WebApplicationFactory<Program> CreateHost(string connection) =>
+    private static WebApplicationFactory<Program> CreateHost(string connection, int? quota = null) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseSetting("ConnectionStrings:Monitoring", connection);
+            if (quota is { } limit) builder.UseSetting("Ingestion:MaxNewEventsPerMinute", limit.ToString(System.Globalization.CultureInfo.InvariantCulture));
             builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<ITrustedSensorIdentityProvider>();
@@ -250,10 +251,34 @@ public sealed class IngestionPersistenceTests(PostgresFixture postgres) : IClass
     private static MonitoringDbContext CreateContext(string connection) =>
         new(new DbContextOptionsBuilder<MonitoringDbContext>().UseNpgsql(connection).Options);
 
-    private static async Task<InboxWriteResult> WriteAsync(string connection, string site, string sensor, IngestionBatch batch)
+    // The historical quota tests pin the limit they were written for; the product default is 6000 (see the defaults test).
+    private static readonly IngestionOptions FiveHundred = new() { MaxNewEventsPerMinute = 500 };
+
+    private static async Task<InboxWriteResult> WriteAsync(string connection, string site, string sensor, IngestionBatch batch, IngestionOptions? options = null)
     {
         await using var db = CreateContext(connection);
-        return await new InboxWriter(db).WriteAsync(site, sensor, batch, default);
+        return await new InboxWriter(db, options ?? FiveHundred).WriteAsync(site, sensor, batch, default);
+    }
+
+    [Fact]
+    public void TheDefaultQuotaIsSixThousandNewEventsPerMinuteAndMustBePositive()
+    {
+        Assert.Equal(6000, new IngestionOptions().MaxNewEventsPerMinute);
+        foreach (var invalid in new[] { 0, -1 })
+            Assert.Throws<ArgumentOutOfRangeException>(() => new InboxWriter(CreateContext("Host=127.0.0.1"), new IngestionOptions { MaxNewEventsPerMinute = invalid }));
+    }
+
+    [Fact]
+    public async Task AConfiguredQuotaIsAppliedPerOriginAndAnOverLimitBatchLeavesNothingBehind()
+    {
+        var connection = await CreateDatabaseAsync();
+        var five = new IngestionOptions { MaxNewEventsPerMinute = 5 };
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(0, 4), five));
+        Assert.Equal(InboxWriteResult.RateLimited, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(4, 2), five));
+        Assert.Equal(4L, await InboxCountAsync(connection));
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-2", BatchOf(0, 5), five));
+        // A larger quota admits what a smaller one rejected, without any other change.
+        Assert.Equal(InboxWriteResult.Accepted, await WriteAsync(connection, "site-1", "sensor-1", BatchOf(4, 2), new IngestionOptions { MaxNewEventsPerMinute = 6 }));
     }
 
     private static IngestionBatch BatchOf(int firstEvent, int count) =>

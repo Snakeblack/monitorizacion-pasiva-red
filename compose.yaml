@@ -33,6 +33,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_LOG_DIRS: /var/lib/kafka/data
+      # Publication topics carry session data: their retention must stay below the tombstone life (SessionRetention + TombstoneMargin).
+      KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
       CLUSTER_ID: yULvkKnURwOhlSIfrph7Mw
     volumes: ["kafka:/var/lib/kafka/data"]
@@ -96,8 +98,15 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
+      # Development-only trusted read scope until the identity slice (S12) supplies real subjects and permissions.
+      TrustedSessionRead__SiteId: pipeline-site
+      TrustedSessionRead__SensorId: pipeline-sensor
+      Search__Elasticsearch__Url: http://elasticsearch:9200
+      # Cursors are sealed with Data Protection; the lab keeps the key ring in the container (cursors do not survive a restart).
+      DataProtection__KeysPath: /tmp/monitoring-keys
     depends_on:
       bootstrap: {condition: service_completed_successfully}
+      elasticsearch: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "bash", "/app/health.sh"]
       interval: 5s

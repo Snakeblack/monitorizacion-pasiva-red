@@ -36,7 +36,7 @@ public static class Program
                 {
                     await engine.CaptureOnceAsync(stopping.Token);
                     Console.WriteLine(JsonSerializer.Serialize(new { capture = captureMetrics.State, cause = captureMetrics.Cause,
-                        parser.PacketsSeen, parser.ParserErrors, captureMetrics.Restarts, captureMetrics.QueueDrops,
+                        parser.PacketsSeen, parser.ParserErrors, parser.NonIpFrames, captureMetrics.Restarts, captureMetrics.QueueDrops,
                         captureMetrics.CaptureDrops, correlator.DroppedPackets, correlator.Observations, spool = spool.Status(DateTimeOffset.UtcNow) }, ProbeJson.Options));
                     if (config.Capture.FixturePcap is not null) break;
                     if (!stopping.IsCancellationRequested) await Task.Delay(ProbeDelivery.Backoff(restartAttempt++, Random.Shared.NextDouble()), stopping.Token);

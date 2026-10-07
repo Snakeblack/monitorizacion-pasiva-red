@@ -9,4 +9,5 @@
   </ItemGroup>
   <ItemGroup><FrameworkReference Include="Microsoft.AspNetCore.App" /></ItemGroup>
   <ItemGroup><Using Include="Xunit" /></ItemGroup>
+  <ItemGroup><None Include="Fixtures/mixed.pcap" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
 </Project>

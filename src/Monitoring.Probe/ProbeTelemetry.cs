@@ -9,6 +9,7 @@ public sealed class ProbeTelemetry : IDisposable
     {
         meter.CreateObservableCounter("monitoring.probe.packets_seen", () => parser.PacketsSeen);
         meter.CreateObservableCounter("monitoring.probe.parser_errors", () => parser.ParserErrors);
+        meter.CreateObservableCounter("monitoring.probe.non_ip_frames", () => parser.NonIpFrames);
         meter.CreateObservableCounter("monitoring.probe.queue_drops", () => Interlocked.Read(ref capture.QueueDrops));
         meter.CreateObservableCounter("monitoring.probe.flow_drops", () => correlator.DroppedPackets);
         meter.CreateObservableCounter("monitoring.probe.capture_restarts", () => Interlocked.Read(ref capture.Restarts));

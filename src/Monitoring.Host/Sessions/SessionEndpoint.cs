@@ -1,4 +1,7 @@
+using Monitoring.Domain.Security;
 using Monitoring.Domain.Sessions;
+using Monitoring.Domain.Sessions.Search;
+using Monitoring.Host.Security;
 using Monitoring.Persistence.Sessions;
 
 namespace Monitoring.Host.Sessions;
@@ -8,19 +11,33 @@ public static class SessionEndpoint
     public static void MapSessionEndpoint(this WebApplication app)
     {
         app.MapGet("/api/v1/sessions/{eventId}", async (
-            string eventId, HttpContext httpContext, IHostEnvironment environment,
-            ITrustedSessionReadContextProvider contextProvider, ISessionReader reader, CancellationToken cancellationToken) =>
+            string eventId, HttpContext httpContext, AccessGate gate, ISessionReader reader, CancellationToken cancellationToken) =>
         {
-            if (!environment.IsDevelopment() && !environment.IsEnvironment("Testing"))
+            var access = await gate.AuthorizeAsync(httpContext, Operation.ReadSessions);
+            if (access.Outcome == AccessOutcome.Unauthenticated) return Results.Unauthorized();
+            if (access.Outcome == AccessOutcome.Forbidden) return Results.StatusCode(StatusCodes.Status403Forbidden);
+            var scopes = access.Scopes!;
+            AuthorizedPair selected;
+            if (access.ClientSelectorsAreAdvisory)
             {
-                return Results.Unauthorized();
+                // The development context is a single server-side pair; anything the client sends is ignored.
+                selected = scopes.Single();
             }
-            var context = contextProvider.Resolve(httpContext);
-            if (context is null)
+            else
             {
-                return Results.Unauthorized();
+                // Real identities may hold several scopes: the detail route names the one it addresses, and it must be one of theirs.
+                var site = httpContext.Request.Query["siteId"].ToString();
+                var sensor = httpContext.Request.Query["sensorId"].ToString();
+                if (site.Length == 0 && sensor.Length == 0 && scopes.Count == 1) selected = scopes.Single();
+                else if (site.Length == 0 || sensor.Length == 0) return Results.StatusCode(StatusCodes.Status400BadRequest);
+                else if (!scopes.Contains(new AuthorizedPair(site, sensor)))
+                {
+                    await gate.DenyAsync(httpContext, access, Operation.ReadSessions, "scope-not-authorized");
+                    return Results.StatusCode(StatusCodes.Status403Forbidden);
+                }
+                else selected = new AuthorizedPair(site, sensor);
             }
-            var detail = await reader.FindAsync(context.SiteId, context.SensorId, eventId, cancellationToken);
+            var detail = await reader.FindAsync(selected.SiteId, selected.SensorId, eventId, cancellationToken);
             return detail is null ? Results.NotFound() : Results.Ok(detail);
         });
     }

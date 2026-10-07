@@ -1,12 +1,13 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Monitoring.Domain.Inventory;
 using Monitoring.Domain.Sessions;
 using Npgsql;
 
 namespace Monitoring.Persistence.Sessions;
 
-public sealed class SessionProjector(MonitoringDbContext dbContext)
+public sealed class SessionProjector(MonitoringDbContext dbContext, Retention.RetentionOptions? retention = null)
 {
     public async Task RunPassAsync(CancellationToken cancellationToken)
     {
@@ -16,7 +17,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             EventKey? upper;
             await using (var command = new NpgsqlCommand("""
                 SELECT accepted_at, site_id, sensor_id, event_id FROM monitoring.ingestion_inbox
-                WHERE processed_at IS NULL ORDER BY accepted_at DESC,site_id DESC,sensor_id DESC,event_id DESC LIMIT 1
+                WHERE processed_at IS NULL AND quarantined_at IS NULL ORDER BY accepted_at DESC,site_id DESC,sensor_id DESC,event_id DESC LIMIT 1
                 """, Connection))
             await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
@@ -58,7 +59,7 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             : "AND (accepted_at,site_id,sensor_id,event_id) > (@cursor_at,@cursor_site,@cursor_sensor,@cursor_event)";
         await using var command = new NpgsqlCommand($"""
             SELECT accepted_at,site_id,sensor_id,event_id FROM monitoring.ingestion_inbox
-            WHERE processed_at IS NULL
+            WHERE processed_at IS NULL AND quarantined_at IS NULL
             AND (accepted_at,site_id,sensor_id,event_id) <= (@upper_at,@upper_site,@upper_sensor,@upper_event)
             {afterCursor}
             ORDER BY accepted_at,site_id,sensor_id,event_id LIMIT 100
@@ -88,32 +89,90 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
         command.Parameters.AddWithValue(prefix + "_event", key.EventId);
     }
 
+    private enum Outcome { Projected, NotPending, InvalidContract, Expired }
+
     private async Task ProjectAsync(EventKey key, CancellationToken cancellationToken)
     {
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-        var postgresTransaction = (NpgsqlTransaction)transaction.GetDbTransaction();
+        string? permanentCause;
+        await using (var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken))
+        {
+            var postgresTransaction = (NpgsqlTransaction)transaction.GetDbTransaction();
+            try
+            {
+                switch (await TryProjectAsync(key, postgresTransaction, cancellationToken))
+                {
+                    case Outcome.NotPending:
+                        return;
+                    case Outcome.InvalidContract:
+                        await QuarantineAsync(key, "contract-invalid", postgresTransaction, cancellationToken);
+                        await transaction.CommitAsync(cancellationToken);
+                        return;
+                    default:
+                        await transaction.CommitAsync(cancellationToken);
+                        return;
+                }
+            }
+            catch (PermanentProjectionException exception)
+            {
+                // Nothing the attempt wrote survives; the event is quarantined in a transaction of its own.
+                permanentCause = exception.Cause;
+                await transaction.RollbackAsync(cancellationToken);
+            }
+        }
+        await using var quarantine = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        await QuarantineAsync(key, permanentCause, (NpgsqlTransaction)quarantine.GetDbTransaction(), cancellationToken);
+        await quarantine.CommitAsync(cancellationToken);
+    }
+
+    private async Task<Outcome> TryProjectAsync(EventKey key, NpgsqlTransaction postgresTransaction, CancellationToken cancellationToken)
+    {
         string occurredAt;
         string json;
         await using (var select = Command("""
             SELECT occurred_at_text, data::text FROM monitoring.ingestion_inbox
-            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL AND quarantined_at IS NULL
             FOR UPDATE SKIP LOCKED
             """, key, postgresTransaction))
         await using (var reader = await select.ExecuteReaderAsync(cancellationToken))
         {
             if (!await reader.ReadAsync(cancellationToken))
             {
-                return;
+                return Outcome.NotPending;
             }
             occurredAt = reader.GetString(0);
             json = reader.GetString(1);
         }
 
         using var document = JsonDocument.Parse(json);
-        if (!CanonicalSession.TryParse(document.RootElement, out var session))
+        var outcome = IsDeviceObservation(document.RootElement)
+            ? await ProjectDeviceObservationAsync(key, document.RootElement, postgresTransaction, cancellationToken)
+            : await ProjectSessionAsync(key, occurredAt, json, document.RootElement, postgresTransaction, cancellationToken);
+        if (outcome is not (Outcome.Projected or Outcome.Expired))
         {
-            return;
+            return outcome;
         }
+        await using (var mark = Command("""
+            UPDATE monitoring.ingestion_inbox SET processed_at=clock_timestamp()
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event
+            """, key, postgresTransaction))
+        {
+            await mark.ExecuteNonQueryAsync(cancellationToken);
+        }
+        return outcome;
+    }
+
+    private static bool IsDeviceObservation(JsonElement data) => data.ValueKind == JsonValueKind.Object
+        && data.TryGetProperty("kind", out var kind) && kind.ValueKind == JsonValueKind.String && kind.GetString() == DeviceObservationContract.Kind;
+
+    private async Task<Outcome> ProjectSessionAsync(EventKey key, string occurredAt, string json, JsonElement data, NpgsqlTransaction postgresTransaction,
+        CancellationToken cancellationToken)
+    {
+        if (!CanonicalSession.TryParse(data, out var session))
+        {
+            return Outcome.InvalidContract;
+        }
+        // Past the retention window on arrival: acknowledged as handled but never stored, so it cannot come back after its expiry.
+        if (await IsExpiredAsync(session!.EndedAt, postgresTransaction, cancellationToken)) return Outcome.Expired;
 
         await using (var insert = Command("""
             INSERT INTO monitoring.session_projection(site_id,sensor_id,event_id,occurred_at_text,data)
@@ -133,19 +192,117 @@ public sealed class SessionProjector(MonitoringDbContext dbContext)
             compare.Parameters.AddWithValue("data", json);
             if (await compare.ExecuteScalarAsync(cancellationToken) is not true)
             {
-                throw new InvalidOperationException("Session projection conflicts with its accepted event.");
+                throw new PermanentProjectionException("projection-conflict");
             }
         }
         await OutboxStore.WriteSessionAsync(Connection, postgresTransaction,
             new SessionIdentity(key.SiteId, key.SensorId, key.EventId), session!, key.AcceptedAt, cancellationToken);
-        await using (var mark = Command("""
-            UPDATE monitoring.ingestion_inbox SET processed_at=clock_timestamp()
-            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event
-            """, key, postgresTransaction))
+        return Outcome.Projected;
+    }
+
+    private async Task<bool> IsExpiredAsync(DateTimeOffset instant, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        if (retention is null) return false;
+        await using var command = new NpgsqlCommand("SELECT @instant < clock_timestamp() - @retention", Connection, transaction);
+        command.Parameters.AddWithValue("instant", instant);
+        command.Parameters.AddWithValue("retention", retention.SessionRetention);
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken))!;
+    }
+
+    // Observations never create sessions or outbox records: they add facts and, when a MAC is present, a candidate with its
+    // temporary IP association. Every statement is idempotent, so a replay of the same event changes nothing.
+    private async Task<Outcome> ProjectDeviceObservationAsync(EventKey key, JsonElement data, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        if (!DeviceObservationContract.TryParse(data, out var observation))
         {
-            await mark.ExecuteNonQueryAsync(cancellationToken);
+            return Outcome.InvalidContract;
         }
-        await transaction.CommitAsync(cancellationToken);
+        if (await IsExpiredAsync(observation!.ObservedAt, transaction, cancellationToken)) return Outcome.Expired;
+        await using (var insert = Command("""
+            INSERT INTO monitoring.device_observation(site_id,sensor_id,event_id,observed_at,ip,mac,vlan_id)
+            VALUES (@site,@sensor,@event,@observed,@ip,CAST(@mac AS macaddr),@vlan) ON CONFLICT DO NOTHING
+            """, key, transaction))
+        {
+            AddObservation(insert, observation!);
+            await insert.ExecuteNonQueryAsync(cancellationToken);
+        }
+        if (observation!.Mac is null)
+        {
+            return Outcome.Projected;
+        }
+        Guid candidate;
+        await using (var upsert = Command("""
+            INSERT INTO monitoring.device_candidate(site_id,sensor_id,mac,vlan_id,first_seen,last_seen)
+            VALUES (@site,@sensor,CAST(@mac AS macaddr),@vlan,@observed,@observed)
+            ON CONFLICT (site_id,sensor_id,mac,(COALESCE(vlan_id,-1))) DO UPDATE
+              SET first_seen=LEAST(monitoring.device_candidate.first_seen,EXCLUDED.first_seen),
+                  last_seen=GREATEST(monitoring.device_candidate.last_seen,EXCLUDED.last_seen)
+            RETURNING candidate_id
+            """, key, transaction))
+        {
+            AddObservation(upsert, observation);
+            candidate = (Guid)(await upsert.ExecuteScalarAsync(cancellationToken))!;
+        }
+        await using (var association = Command("""
+            INSERT INTO monitoring.device_ip_association(candidate_id,ip,first_seen,last_seen) VALUES (@candidate,@ip,@observed,@observed)
+            ON CONFLICT (candidate_id,ip) DO UPDATE
+              SET first_seen=LEAST(monitoring.device_ip_association.first_seen,EXCLUDED.first_seen),
+                  last_seen=GREATEST(monitoring.device_ip_association.last_seen,EXCLUDED.last_seen)
+            """, key, transaction))
+        {
+            association.Parameters.AddWithValue("candidate", candidate);
+            association.Parameters.AddWithValue("ip", NpgsqlTypes.NpgsqlDbType.Inet, observation.Ip);
+            association.Parameters.AddWithValue("observed", observation.ObservedAt);
+            await association.ExecuteNonQueryAsync(cancellationToken);
+        }
+        return Outcome.Projected;
+    }
+
+    private static void AddObservation(NpgsqlCommand command, DeviceObservation observation)
+    {
+        command.Parameters.AddWithValue("observed", observation.ObservedAt);
+        command.Parameters.AddWithValue("ip", NpgsqlTypes.NpgsqlDbType.Inet, observation.Ip);
+        command.Parameters.AddWithValue("mac", NpgsqlTypes.NpgsqlDbType.Text, (object?)observation.Mac ?? DBNull.Value);
+        command.Parameters.AddWithValue("vlan", NpgsqlTypes.NpgsqlDbType.Integer, (object?)observation.VlanId ?? DBNull.Value);
+    }
+
+    // Moves a pending event to quarantine and records that single state change; a no-op when another worker already handled it.
+    private async Task QuarantineAsync(EventKey key, string cause, NpgsqlTransaction transaction, CancellationToken cancellationToken)
+    {
+        await using (var pending = Command("""
+            SELECT 1 FROM monitoring.ingestion_inbox
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event AND processed_at IS NULL AND quarantined_at IS NULL
+            FOR UPDATE SKIP LOCKED
+            """, key, transaction))
+        {
+            if (await pending.ExecuteScalarAsync(cancellationToken) is null)
+            {
+                return;
+            }
+        }
+        int inserted;
+        await using (var insert = Command("""
+            INSERT INTO monitoring.ingestion_quarantine(site_id,sensor_id,event_id,cause) VALUES (@site,@sensor,@event,@cause)
+            ON CONFLICT DO NOTHING
+            """, key, transaction))
+        {
+            insert.Parameters.AddWithValue("cause", cause);
+            inserted = await insert.ExecuteNonQueryAsync(cancellationToken);
+        }
+        if (inserted == 1)
+        {
+            await using var audit = Command("""
+                INSERT INTO monitoring.ingestion_quarantine_audit(site_id,sensor_id,event_id,action,cause,actor)
+                VALUES (@site,@sensor,@event,'quarantined',@cause,'system:projector')
+                """, key, transaction);
+            audit.Parameters.AddWithValue("cause", cause);
+            await audit.ExecuteNonQueryAsync(cancellationToken);
+        }
+        await using var mark = Command("""
+            UPDATE monitoring.ingestion_inbox SET quarantined_at=clock_timestamp()
+            WHERE site_id=@site AND sensor_id=@sensor AND event_id=@event
+            """, key, transaction);
+        await mark.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private NpgsqlCommand Command(string sql, EventKey key, NpgsqlTransaction? transaction = null)

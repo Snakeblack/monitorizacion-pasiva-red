@@ -124,6 +124,14 @@ public sealed class TrustedSessionReadScopeTests(PostgresFixture postgres) : ICl
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
+            if (environment is not ("Development" or "Testing"))
+            {
+                // Anywhere else the host needs real OIDC to start; the development trusted scope must still never be applied.
+                builder.UseSetting("Identity:Mode", "Oidc");
+                builder.UseSetting("Identity:Authority", "https://idp.test/realms/monitoring");
+                builder.UseSetting("Identity:Audience", "monitoring-api");
+            }
             builder.UseSetting("ConnectionStrings:Monitoring", connection ?? "");
             if (siteId is not null)
             {

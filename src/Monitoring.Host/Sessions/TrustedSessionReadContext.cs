@@ -2,7 +2,8 @@ using Monitoring.Domain.Sessions;
 
 namespace Monitoring.Host.Sessions;
 
-public sealed record TrustedSessionReadContext(string SiteId, string SensorId);
+// Subject identifies the caller a cursor is bound to; the Development/Testing context has a single fixed one until real identity lands.
+public sealed record TrustedSessionReadContext(string SiteId, string SensorId, string Subject = "trusted-server-context");
 
 public interface ITrustedSessionReadContextFeature
 {

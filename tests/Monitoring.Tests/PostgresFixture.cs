@@ -29,6 +29,8 @@ public sealed class PostgresFixture : IAsyncLifetime
         }
 
         connectionBuilder.Database = databaseName;
+        // Every test owns a throw-away database; pooled idle connections to hundreds of them would exhaust max_connections.
+        connectionBuilder.Pooling = false;
         return connectionBuilder.ConnectionString;
     }
 }

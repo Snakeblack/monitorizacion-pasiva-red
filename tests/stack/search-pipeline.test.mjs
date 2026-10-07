@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { compose, http, sql, until } from '../../scripts/lab/compose.mjs';
+import { commitFixture } from './fixtures.mjs';
 
-const key = (site, sensor, event) => [site,sensor,event].map(x=>Buffer.from(x).toString('base64url')).join('.');
 // The index _id is the compact authority-assigned search identity, never the (up to 515-byte) document key.
 const document = searchDocumentId => http('elasticsearch:9200',`/sessions-v2-000001/_doc/${searchDocumentId}`);
 const offsets = topic => compose(['exec','-T','kafka','/opt/kafka/bin/kafka-get-offsets.sh','--bootstrap-server','kafka:9092','--topic',topic]).trim();
@@ -12,20 +12,6 @@ function replay(record, header = record.data.revision) {
     '--property','parse.key=true','--property','parse.headers=true','--producer-property','enable.idempotence=true'],
     `revision:${header}\t${record.documentKey}\t${JSON.stringify(record.data)}\n`);
 }
-export function commitFixture(event, fields = {}, site = 'pipeline-site', sensor = 'pipeline-sensor') {
-  const documentKey = key(site,sensor,event);
-  const searchDocumentId = randomUUID();
-  const data = { schemaVersion:2, operation:'upsert', documentKey, searchDocumentId, revision:1, siteId:site, sensorId:sensor,eventId:event,
-    startedAt:'2026-10-05T10:00:00.100Z',endedAt:'2026-10-05T10:00:01.000Z',sourceIp:'2001:db8::1',destinationIp:'192.0.2.2',
-    sourcePort:1234,destinationPort:443,protocol:'TCP',vlanId:null,provenance:'synthetic',inferred:null,partial:null,closeReason:null,packetCount:null,byteCount:null,acceptedAt:'2026-10-05T10:00:02.000Z', ...fields };
-  sql(`BEGIN;
-    INSERT INTO monitoring.session_identity(site_id,sensor_id,event_id,document_key,search_document_id,revision,state) VALUES ('${site}','${sensor}','${event}','${documentKey}','${searchDocumentId}',1,'active');
-    INSERT INTO monitoring.projection_outbox(id,aggregateid,aggregatetype,target_topic,revision,schema_version,payload)
-    VALUES ('${randomUUID()}','${documentKey}','sessions','monitoring.sessions.v2',1,2,'${JSON.stringify(data)}');
-    COMMIT;`);
-  return { documentKey, searchDocumentId, data };
-}
-
 test('committed authority outbox reaches the real sink with complete identity and authority revision', async () => {
   const event = `commit-${randomUUID()}`;
   const {documentKey, searchDocumentId, data} = commitFixture(event);

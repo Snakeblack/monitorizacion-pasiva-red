@@ -34,17 +34,19 @@ public sealed class SessionProjectionTests(PostgresFixture postgres) : IClassFix
     }
 
     [Fact]
-    public async Task ConflictingProjectionRaisesInvariantWithoutOverwritingOrMarking()
+    public async Task ConflictingProjectionIsQuarantinedWithoutOverwritingOrMarkingProcessed()
     {
         var connection = await SessionTestDatabase.CreateAsync(postgres);
         await SessionTestDatabase.AcceptAsync(connection, "event");
         await SessionTestDatabase.ExecuteAsync(connection, """
             INSERT INTO monitoring.session_projection VALUES ('site','sensor','event','different','{"conflicting":true}')
             """);
-        await Assert.ThrowsAsync<InvalidOperationException>(() => SessionTestDatabase.ProjectAsync(connection));
+        // A conflict is a permanent cause: the event is quarantined and the worker is not stopped.
+        await SessionTestDatabase.ProjectAsync(connection);
         Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection,
             "SELECT count(*) FROM monitoring.session_projection WHERE occurred_at_text='different' AND data='{\"conflicting\":true}'::jsonb"));
-        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_inbox WHERE processed_at IS NULL"));
+        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_inbox WHERE processed_at IS NULL AND quarantined_at IS NOT NULL"));
+        Assert.Equal(1L, await SessionTestDatabase.ScalarAsync(connection, "SELECT count(*) FROM monitoring.ingestion_quarantine WHERE cause='projection-conflict' AND state='unresolved'"));
     }
 
     [Fact]
@@ -111,6 +113,10 @@ public sealed class SessionProjectionTests(PostgresFixture postgres) : IClassFix
 
 internal static class SessionTestDatabase
 {
+    // Every migration the assembly ships must be recorded; the count follows the code instead of a literal.
+    internal static long ExpectedMigrationCount() => typeof(Monitoring.Persistence.MonitoringDbContext).Assembly.GetTypes()
+        .Count(type => type.GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.Migrations.MigrationAttribute), false).Length > 0);
+
     internal static MonitoringDbContext Context(string connection) =>
         new(new DbContextOptionsBuilder<MonitoringDbContext>().UseNpgsql(connection).Options);
 

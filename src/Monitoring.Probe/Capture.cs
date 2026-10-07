@@ -19,13 +19,16 @@ public sealed class TsharkParser
 {
     public long ParserErrors { get; private set; }
     public long PacketsSeen { get; private set; }
+    // Frames without an IP header (ARP, LLDP, ...) are neither sessions nor parser errors; they are counted on their own.
+    public long NonIpFrames { get; private set; }
     public PacketMetadata? Parse(string line)
     {
         PacketsSeen++;
         var fields = line.Length <= 16384 ? line.Split('\t') : [];
         if (fields.Length != 19 || !decimal.TryParse(fields[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var epoch)
-            || epoch < 0 || epoch > 253402300799m || !int.TryParse(fields[1], out var length) || length < 0
-            || !IPAddress.TryParse(fields[4].Length > 0 ? fields[4] : fields[6], out var source)
+            || epoch < 0 || epoch > 253402300799m || !int.TryParse(fields[1], out var length) || length < 0) return Invalid();
+        if (fields[4].Length == 0 && fields[5].Length == 0 && fields[6].Length == 0 && fields[7].Length == 0) { NonIpFrames++; return null; }
+        if (!IPAddress.TryParse(fields[4].Length > 0 ? fields[4] : fields[6], out var source)
             || !IPAddress.TryParse(fields[5].Length > 0 ? fields[5] : fields[7], out var destination)
             || !int.TryParse(fields[8].Length > 0 ? fields[8] : fields[9], out var protocol)) return Invalid();
         var name = protocol switch { 6 => "TCP", 17 => "UDP", _ => $"IP-{protocol}" };
@@ -43,10 +46,12 @@ public sealed class TsharkParser
         }
         return new(DateTimeOffset.FromUnixTimeMilliseconds((long)decimal.Floor(epoch * 1000)), length,
             source.ToString(), destination.ToString(), sourcePort, destinationPort, name, vlan,
-            fields[15] == "1", fields[16] == "1", Empty(fields[2]), Empty(fields[3]));
+            Flag(fields[15]), Flag(fields[16]), Empty(fields[2]), Empty(fields[3]));
     }
     private PacketMetadata? Invalid() { ParserErrors++; return null; }
     private static string? Empty(string value) => value.Length == 0 ? null : value;
+    // tshark 4.x prints True/False for boolean fields, older builds 1/0.
+    private static bool Flag(string value) => value is "1" || value.Equals("True", StringComparison.OrdinalIgnoreCase);
 }
 public sealed class FlowCorrelator
 {

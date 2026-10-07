@@ -61,16 +61,25 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     [Theory]
     [InlineData("Production")]
     [InlineData("Unknown")]
-    public async Task EnvironmentGuardRejectsEvenSubstitutedProviderBeforeReading(string environment)
+    public async Task OutsideDevelopmentAndTestingOnlyOidcServesReadsEvenIfADevelopmentProviderIsSubstituted(string environment)
     {
-        using var factory = CreateHost(null, new("site", "sensor"), environment);
         var reader = new FailingReader();
-        using var guarded = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
-            services.RemoveAll<ISessionReader>();
-            services.AddSingleton<ISessionReader>(reader);
-        }));
-        using var client = guarded.CreateClient();
+            builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
+            builder.UseSetting("Identity:Mode", "Oidc");
+            builder.UseSetting("Identity:Authority", "https://idp.test/realms/monitoring");
+            builder.UseSetting("Identity:Audience", "monitoring-api");
+            builder.ConfigureTestServices(services =>
+            {
+                services.RemoveAll<ITrustedSessionReadContextProvider>();
+                services.AddSingleton<ITrustedSessionReadContextProvider>(new ReadProvider(new("site", "sensor")));
+                services.RemoveAll<ISessionReader>();
+                services.AddSingleton<ISessionReader>(reader);
+            });
+        });
+        using var client = factory.CreateClient();
         Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/v1/sessions/event")).StatusCode);
         Assert.Equal(0, reader.Calls);
     }
@@ -122,6 +131,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     {
         var connection = await SessionTestDatabase.CreateAsync(postgres);
         using var factory = CreateHost(connection, new("site", "sensor"), suppressWorker: true)
+            .WithWebHostBuilder(builder => builder.UseSetting("Ingestion:MaxNewEventsPerMinute", "500"))
             .WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<ITrustedSensorIdentityProvider>();
@@ -148,7 +158,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
             var events = Enumerable.Range(0, 498).Select(index => new Monitoring.Domain.Ingestion.IngestionEvent(
                 $"quota-{index}", "2026-09-29T12:00:00Z", document.RootElement.Clone())).ToArray();
             Assert.Equal(Monitoring.Persistence.Ingestion.InboxWriteResult.Accepted,
-                await new Monitoring.Persistence.Ingestion.InboxWriter(db).WriteAsync("site", "sensor",
+                await new Monitoring.Persistence.Ingestion.InboxWriter(db, new Monitoring.Persistence.Ingestion.IngestionOptions { MaxNewEventsPerMinute = 500 }).WriteAsync("site", "sensor",
                     new Monitoring.Domain.Ingestion.IngestionBatch(1, "quota", "site", "sensor", events), default));
         }
         using var resend = await client.PostAsync("/api/v1/ingestion/batches", new StringContent(batch, Encoding.UTF8, "application/json"));
@@ -165,6 +175,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment(environment);
+            ProbeTestTrust.For(builder, environment);
             builder.UseSetting("ConnectionStrings:Monitoring", connection ?? "");
             builder.ConfigureTestServices(services =>
             {
@@ -186,7 +197,7 @@ public sealed class SessionHostTests(PostgresFixture postgres) : IClassFixture<P
     {
         public TrustedSensorIdentity Identity => new("site", "sensor");
     }
-    private sealed class ReadProvider(TrustedSessionReadContext? context) : ITrustedSessionReadContextProvider
+    internal sealed class ReadProvider(TrustedSessionReadContext? context) : ITrustedSessionReadContextProvider
     {
         public TrustedSessionReadContext? Resolve(HttpContext httpContext) => context;
     }
